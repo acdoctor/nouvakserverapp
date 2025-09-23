@@ -1,0 +1,16 @@
+# Node modules
+node_modules/
+
+# Build folders
+dist/
+build/
+
+# Ignore env files
+.env
+.env.*
+
+# Optional: ignore config files
+*.config.js
+
+# Optional: ignore minified files
+*.min.js
