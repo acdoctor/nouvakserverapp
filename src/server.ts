@@ -8,4 +8,3 @@ app.listen(PORT, () =>
 );
 
 // adding a comment to test husky and lint-staged
-// adding another comment to test husky and lint-staged
