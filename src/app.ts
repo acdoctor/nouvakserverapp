@@ -7,10 +7,9 @@ dotenv.config();
 
 const app = express();
 
-connectDB();
-
 app.use(express.json());
 
+connectDB();
 // app.use("/api/v1", adminRoutes);
 
 export default app;
