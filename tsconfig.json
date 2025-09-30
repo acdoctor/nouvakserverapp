@@ -1,50 +1,82 @@
 {
-  // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
+    // =========================================
     // File Layout
-    // "rootDir": "./src",
-    // "outDir": "./dist",
+    // =========================================
 
+    "rootDir": "./src",
+    // Specifies the root folder for TypeScript source files.
+
+    "outDir": "./dist",
+    // Specifies the output folder for compiled JavaScript files.
+
+
+    // =========================================
     // Environment Settings
-    // See also https://aka.ms/tsconfig/module
-    // "module": "nodenext",
-    // "target": "esnext",
+    // =========================================
+
     "target": "ES2020",
-    "module": "ES2020",
-    "rootDir": "src",
-    "outDir": "dist",
-    "moduleResolution": "node",
-    "types": ["node"],
-    // For nodejs:
-    // "lib": ["esnext"],
-    // "types": ["node"],
-    // and npm install -D @types/node
+    // Compiles to ECMAScript 2020 – suitable for modern Node.js versions.
 
-    // Other Outputs
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
+    "module": "commonjs",
+    // Uses CommonJS module system – default for Node.js (unless using ESM).
 
-    // Stricter Typechecking Options
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
 
-    // Style Options
-    // "noImplicitReturns": true,
-    // "noImplicitOverride": true,
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
-    // "noFallthroughCasesInSwitch": true,
-    // "noPropertyAccessFromIndexSignature": true,
+    // =========================================
+    // Module Compatibility & Imports
+    // =========================================
 
-    // Recommended Options
-    "strict": true,
     "esModuleInterop": true,
-    // "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
+    // Enables default imports from CommonJS modules (e.g., import express from 'express').
+
+    "allowSyntheticDefaultImports": true,
+    // Allows default imports from modules without a default export.
+
+    "resolveJsonModule": true,
+    // Enables importing .json files directly into TypeScript.
+
+    "types": ["node"],
+    // Includes Node.js global type definitions (like `__dirname`, `process`, etc).
+
+
+    // =========================================
+    // Type Safety & Best Practices
+    // =========================================
+
+    "strict": true,
+    // Enables all strict type-checking options (recommended for catching bugs early).
+
     "skipLibCheck": true,
-  }
+    // Skips type-checking for .d.ts files to speed up compilation.
+
+    "forceConsistentCasingInFileNames": true,
+    // Ensures consistent casing in import paths across platforms.
+
+    "noUncheckedIndexedAccess": true,
+    // Treats all indexed object access as potentially undefined unless explicitly checked.
+
+    "exactOptionalPropertyTypes": true,
+    // Makes optional properties truly optional (they don’t imply undefined).
+    
+
+    // =========================================
+    // Debug/Dev Support
+    // =========================================
+
+    "sourceMap": true,
+    // Generates .map files for better debugging in editors or browser dev tools.
+
+    "declaration": true
+    // Generates .d.ts files for the compiled output (useful if publishing a library).
+  },
+
+  // =========================================
+  // Project Structure
+  // =========================================
+  
+  "include": ["src/**/*.ts"],
+  // Tells the compiler to include all TypeScript files in the `src` folder.
+
+  "exclude": ["node_modules", "dist"]
+  // Excludes node_modules and build output from compilation.
 }
