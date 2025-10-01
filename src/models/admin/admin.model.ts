@@ -10,6 +10,7 @@ export interface IAdmin extends Document {
   refreshToken?: string;
   status?: "pending" | "active" | "blocked";
   createdAt?: Date;
+  _id: mongoose.Types.ObjectId;
 }
 
 const adminSchema = new mongoose.Schema<IAdmin>(

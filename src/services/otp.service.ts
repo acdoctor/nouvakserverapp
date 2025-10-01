@@ -29,9 +29,9 @@ export const createOtp = async (
 
 export const verifyOtp = async (
   userId: string,
-  code: string,
+  otp: string,
 ): Promise<boolean> => {
-  const otpRecord = await Otp.findOne({ userId, code });
+  const otpRecord = await Otp.findOne({ userId, otp });
 
   if (!otpRecord) {
     throw new Error("Invalid or expired OTP");
