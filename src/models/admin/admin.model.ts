@@ -1,16 +1,28 @@
 import mongoose from "mongoose";
+import { Document } from "mongoose";
 
-const adminSchema = new mongoose.Schema(
+export interface IAdmin extends Document {
+  name: string;
+  email: string;
+  phone?: string;
+  type?: number;
+  role?: string;
+  refreshToken?: string;
+  status?: "pending" | "active" | "blocked";
+  createdAt?: Date;
+}
+
+const adminSchema = new mongoose.Schema<IAdmin>(
   {
     name: {
       type: String,
-      required: true,
+      required: false,
     },
     email: {
       type: String,
-      required: true,
+      required: false,
     },
-    otp: {
+    phone: {
       type: String,
       required: true,
     },
@@ -23,11 +35,16 @@ const adminSchema = new mongoose.Schema(
     refreshToken: {
       type: String,
     },
+    status: {
+      type: String,
+      enum: ["pending", "active", "blocked"],
+      default: "pending",
+    },
   },
   { timestamps: true },
 );
 
-const Admin = mongoose.model("Admin", adminSchema);
+const Admin = mongoose.model<IAdmin>("Admin", adminSchema);
 
 // module.exports = Admin;
 export default Admin;
