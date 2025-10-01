@@ -1,10 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
 import connectDB from "./config/db";
 import adminRoutes from "./routes/admin/admin.routes";
 import otpRoutes from "./routes/otp/otp.routes";
-
-dotenv.config();
 
 const app = express();
 
