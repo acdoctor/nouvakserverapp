@@ -10,6 +10,7 @@ export const createOtp = async (
   // Check user exists
   const user = await Admin.findById(userId);
   if (!user) throw new Error("User not found");
+  console.log("Creating OTP for user:", userId, "Phone:", phone);
 
   // remove any existing OTPs for this user (handles resend too)
   await Otp.deleteMany({ userId });
@@ -18,7 +19,7 @@ export const createOtp = async (
   const code = generateOTP();
 
   // save OTP in DB
-  await Otp.create({ userId, code });
+  await Otp.create({ adminId: userId, otp: code });
 
   // send via Twilio
   await sendOtpSms(phone, code);
