@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 
 connectDB();
-app.use("/api/v1/admin", adminRoutes);
-app.use("/api/v1/otp", otpRoutes);
+app.use("/api/v1", adminRoutes);
+app.use("/api/v1", otpRoutes);
 
 export default app;

@@ -1,7 +1,7 @@
-import Otp from "../models/otp/otp.model";
-import { generateOTP } from "../utils/generateotp";
-import { sendOtpSms } from "../utils/sendotp";
-import Admin from "../models/admin/admin.model";
+import Otp from "../../models/otp/otp.model";
+import { generateOTP } from "../../utils/generateotp";
+import { sendOtpSms } from "../../utils/sendotp";
+import Admin from "../../models/admin/admin.model";
 
 export const createOtp = async (
   userId: string,

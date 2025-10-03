@@ -1,5 +1,5 @@
 import Admin from "../../models/admin/admin.model";
-import * as otpService from "../otp.service";
+import * as otpService from "../otp/otp.service";
 
 export const registerAdmin = async (phone: string) => {
   // Check if already exists
