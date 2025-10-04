@@ -1,5 +1,12 @@
 import jwt from "jsonwebtoken";
 
+export interface JwtPayload {
+  id: string; // MongoDB _id
+  role: "admin" | "user" | "technician";
+  iat?: number; // issued at (optional, auto-added by JWT)
+  exp?: number; // expiry time (optional)
+}
+
 const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || "access_secret";
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "refresh_secret";
 
