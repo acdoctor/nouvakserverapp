@@ -7,7 +7,7 @@ export interface IAdmin extends Document {
   phone?: string;
   type?: number;
   role?: string;
-  refreshToken?: string | undefined;
+  refreshToken?: string;
   status?: "pending" | "active" | "blocked";
   createdAt?: Date;
   _id: mongoose.Types.ObjectId;
