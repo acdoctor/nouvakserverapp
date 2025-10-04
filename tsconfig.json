@@ -35,9 +35,10 @@
     "resolveJsonModule": true,
     // Enables importing .json files directly into TypeScript.
 
-    "types": ["node"],
+    "types": ["node", "express"],
     // Includes Node.js global type definitions (like `__dirname`, `process`, etc).
 
+    "typeRoots": ["./src/types", "./node_modules/@types"],
 
     // =========================================
     // Type Safety & Best Practices
