@@ -1,11 +1,11 @@
 {
   "name": "ac_doctor",
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon",
+    "dev": "nodemon --watch src --ext ts --exec ts-node ./src/server.ts",
     "start": "node dist/server.js",
     "build": "tsc",
     "lint": "eslint . --ext .ts,.js",
@@ -21,7 +21,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.18.3",
+    "mongoose": "^8.19.0",
     "twilio": "^5.10.2"
   },
   "devDependencies": {
