@@ -4,9 +4,10 @@ import * as authService from "../../services/auth/auth.service";
 export const refresh = async (req: Request, res: Response) => {
   try {
     const { refreshToken } = req.body;
-    const newAccessToken = await authService.refreshAccessToken(refreshToken);
 
-    res.json({ accessToken: newAccessToken });
+    const tokens = await authService.refreshAccessToken(refreshToken);
+
+    res.json(tokens);
   } catch (err: unknown) {
     if (err instanceof Error) {
       res
