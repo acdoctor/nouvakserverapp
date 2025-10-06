@@ -4,6 +4,7 @@ import { Document } from "mongoose";
 export interface IAdmin extends Document {
   name: string;
   email: string;
+  countryCode?: string;
   phone?: string;
   type?: number;
   role?: string;
@@ -22,6 +23,10 @@ const adminSchema = new mongoose.Schema<IAdmin>(
     email: {
       type: String,
       required: false,
+    },
+    countryCode: {
+      default: "+91",
+      type: String,
     },
     phone: {
       type: String,
