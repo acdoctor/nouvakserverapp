@@ -1,4 +1,4 @@
-import * as otpService from "../../services/otp/otp.service";
+import * as otpService from "../../services/admin/otp.service";
 import Admin from "../../models/admin/admin.model";
 import { Request, Response } from "express";
 import { generateAccessToken, generateRefreshToken } from "../../utils/jwt";
