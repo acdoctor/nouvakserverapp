@@ -3,12 +3,15 @@ import * as authService from "../../services/admin/auth.service";
 
 export const refresh = async (req: Request, res: Response) => {
   try {
-    const { refreshToken } = req.body;
+    // ✅ Read from cookies
+    const refreshToken = req.cookies?.refreshToken;
+    if (!refreshToken) {
+      return res.status(401).json({ message: "Refresh token missing" });
+    }
 
-    const tokens = await authService.refreshAccessToken(refreshToken);
-
-    res.json(tokens);
-  } catch (err: unknown) {
+    const newAccessToken = await authService.refreshAccessToken(refreshToken);
+    res.json({ accessToken: newAccessToken });
+  } catch (err) {
     if (err instanceof Error) {
       res
         .status(403)
