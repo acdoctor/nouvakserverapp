@@ -1,4 +1,4 @@
-import Otp from "../../models/otp/otp.model";
+import AdminOtp from "../../models/admin/otp.model";
 import { generateOTP } from "../../utils/generateotp";
 import { sendOtpSms } from "../../utils/sendotp";
 import Admin from "../../models/admin/admin.model";
@@ -13,13 +13,13 @@ export const createOtp = async (
   console.log("Creating OTP for admin:", adminId, "Phone:", phone);
 
   // remove any existing OTPs for this admin (handles resend too)
-  await Otp.deleteMany({ adminId });
+  await AdminOtp.deleteMany({ adminId });
 
   // generate new OTP
   const code = generateOTP();
 
   // save OTP in DB
-  await Otp.create({ adminId: adminId, otp: code });
+  await AdminOtp.create({ adminId: adminId, otp: code });
 
   // send via Twilio
   await sendOtpSms(phone, code);
@@ -36,7 +36,7 @@ export const verifyOtp = async (
   const admin = await Admin.findById(adminId);
   if (!admin) throw new Error("admin not found");
 
-  const otpRecord = await Otp.findOne({ adminId: adminId, otp });
+  const otpRecord = await AdminOtp.findOne({ adminId: adminId, otp });
 
   if (!otpRecord) {
     throw new Error("Invalid or expired OTP");
