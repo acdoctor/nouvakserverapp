@@ -9,7 +9,9 @@ export interface IOtp extends Document {
 const OtpSchema: Schema = new Schema({
   adminId: { type: Schema.Types.ObjectId, ref: "Admin", required: true },
   otp: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now, expires: 432000 }, // auto-delete after 5 days
+  // temporarily disable auto-delete
+  // createdAt: { type: Date, default: Date.now, expires: 432000 }, // auto-delete after 5 days
+  createdAt: { type: Date },
 });
 
 export default mongoose.model<IOtp>("Otp", OtpSchema);

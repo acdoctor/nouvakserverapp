@@ -11,7 +11,6 @@ export const registerAdmin = async (phone: string) => {
   await newAdmin.save();
 
   // Send OTP
-  //   const adminId = findOne({ phone });
   await otpService.createOtp(String(newAdmin._id), phone);
 
   return newAdmin;

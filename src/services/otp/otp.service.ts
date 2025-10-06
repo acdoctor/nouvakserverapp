@@ -42,8 +42,9 @@ export const verifyOtp = async (
     throw new Error("Invalid or expired OTP");
   }
 
+  // Temporarily disable delete OTP
   // once verified, delete OTP
-  await Otp.deleteOne({ _id: otpRecord._id });
+  // await Otp.deleteOne({ _id: otpRecord._id });
 
   return true;
 };
