@@ -41,6 +41,14 @@ export const verifyOtp = async (req: Request, res: Response) => {
     admin.status = "active";
     await admin.save();
 
+    // Send cookie
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: false, // ❗ set to true in production (HTTPS only)
+      sameSite: "strict",
+      maxAge: 30 * 60 * 1000, // 30 minutes
+    });
+
     res.json({
       message: "OTP verified, admin activated",
       accessToken,
