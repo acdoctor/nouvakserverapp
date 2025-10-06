@@ -1,12 +1,12 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 
-export interface IOtp extends Document {
+export interface IAdminOtp extends Document {
   adminId: Types.ObjectId;
   otp: string;
   createdAt: Date;
 }
 
-const OtpSchema: Schema = new Schema(
+const AdminOtpSchema: Schema = new Schema(
   {
     adminId: { type: Schema.Types.ObjectId, ref: "Admin", required: true },
     otp: { type: String, required: true },
@@ -17,4 +17,4 @@ const OtpSchema: Schema = new Schema(
   { timestamps: true },
 );
 
-export default mongoose.model<IOtp>("Otp", OtpSchema);
+export default mongoose.model<IAdminOtp>("AdminOtp", AdminOtpSchema);
