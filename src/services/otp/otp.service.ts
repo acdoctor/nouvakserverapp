@@ -4,39 +4,39 @@ import { sendOtpSms } from "../../utils/sendotp";
 import Admin from "../../models/admin/admin.model";
 
 export const createOtp = async (
-  userId: string,
+  adminId: string,
   phone: string,
 ): Promise<string> => {
-  // Check user exists
-  const user = await Admin.findById(userId);
-  if (!user) throw new Error("User not found");
-  console.log("Creating OTP for user:", userId, "Phone:", phone);
+  // Check admin exists
+  const admin = await Admin.findById(adminId);
+  if (!admin) throw new Error("admin not found");
+  console.log("Creating OTP for admin:", adminId, "Phone:", phone);
 
-  // remove any existing OTPs for this user (handles resend too)
-  await Otp.deleteMany({ userId });
+  // remove any existing OTPs for this admin (handles resend too)
+  await Otp.deleteMany({ adminId });
 
   // generate new OTP
   const code = generateOTP();
 
   // save OTP in DB
-  await Otp.create({ adminId: userId, otp: code });
+  await Otp.create({ adminId: adminId, otp: code });
 
   // send via Twilio
   await sendOtpSms(phone, code);
 
-  console.log(`OTP for userId ${userId}: ${code}`);
+  console.log(`OTP for adminId ${adminId}: ${code}`);
   return code;
 };
 
 export const verifyOtp = async (
-  userId: string,
+  adminId: string,
   otp: string,
 ): Promise<boolean> => {
-  // Check user exists
-  const admin = await Admin.findById(userId);
-  if (!admin) throw new Error("User not found");
+  // Check admin exists
+  const admin = await Admin.findById(adminId);
+  if (!admin) throw new Error("admin not found");
 
-  const otpRecord = await Otp.findOne({ adminId: userId, otp });
+  const otpRecord = await Otp.findOne({ adminId: adminId, otp });
 
   if (!otpRecord) {
     throw new Error("Invalid or expired OTP");
