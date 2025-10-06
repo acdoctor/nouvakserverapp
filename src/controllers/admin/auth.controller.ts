@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import * as authService from "../../services/auth/auth.service";
+import * as authService from "../../services/admin/auth.service";
 
 export const refresh = async (req: Request, res: Response) => {
   try {
