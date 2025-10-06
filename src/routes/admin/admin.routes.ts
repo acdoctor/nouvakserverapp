@@ -6,6 +6,8 @@ const router = Router();
 
 router.post("/admin/register", adminController.register);
 router.post("/admin/login", adminController.login);
-router.post("/admin/profile", authenticate);
+router.post("/admin/profile", authenticate, (req, res) => {
+  res.json({ message: "Admin profile accessed" });
+});
 
 export default router;
