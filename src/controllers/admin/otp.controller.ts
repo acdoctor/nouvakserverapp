@@ -5,11 +5,11 @@ import { generateAccessToken, generateRefreshToken } from "../../utils/jwt";
 
 export const resendOtp = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.body;
-    const user = await Admin.findById(userId);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    const { adminId } = req.body;
+    const admin = await Admin.findById(adminId);
+    if (!admin) return res.status(404).json({ message: "admin not found" });
 
-    await otpService.createOtp(String(user._id), user.phone ?? "");
+    await otpService.createOtp(String(admin._id), admin.phone ?? "");
     res.json({ message: "OTP resent successfully" });
   } catch (err: unknown) {
     res
@@ -20,10 +20,10 @@ export const resendOtp = async (req: Request, res: Response) => {
 
 export const verifyOtp = async (req: Request, res: Response) => {
   try {
-    const { userId, otp } = req.body;
-    await otpService.verifyOtp(userId, otp);
+    const { adminId, otp } = req.body;
+    await otpService.verifyOtp(adminId, otp);
 
-    const admin = await Admin.findById(userId);
+    const admin = await Admin.findById(adminId);
     if (!admin) return res.status(404).json({ message: "Admin not found" });
 
     //  Generate tokens
