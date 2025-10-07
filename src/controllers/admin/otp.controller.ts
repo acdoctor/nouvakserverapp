@@ -19,9 +19,9 @@ export const resendOtp = async (req: Request, res: Response) => {
 };
 
 const ADMIN_JWT_ACCESS_SECRET =
-  process.env.JWT_ACCESS_SECRET || "access_secret";
+  process.env.ADMIN_JWT_ACCESS_SECRET || "access_secret";
 const ADMIN_JWT_REFRESH_SECRET =
-  process.env.JWT_REFRESH_SECRET || "refresh_secret";
+  process.env.ADMIN_JWT_REFRESH_SECRET || "refresh_secret";
 
 export const verifyOtp = async (req: Request, res: Response) => {
   try {
