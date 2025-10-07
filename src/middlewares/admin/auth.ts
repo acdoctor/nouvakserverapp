@@ -14,7 +14,8 @@ declare module "express-serve-static-core" {
   }
 }
 
-const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || "access_secret";
+const ADMIN_JWT_ACCESS_SECRET =
+  process.env.ADMIN_JWT_ACCESS_SECRET || "access_secret";
 
 export const authenticate = (
   req: Request,
@@ -28,7 +29,7 @@ export const authenticate = (
     return res.status(401).json({ message: "Access token missing" });
   }
 
-  jwt.verify(token, JWT_ACCESS_SECRET, (err, decoded) => {
+  jwt.verify(token, ADMIN_JWT_ACCESS_SECRET, (err, decoded) => {
     if (err) {
       return res.status(401).json({ message: "Invalid or expired token" });
     }

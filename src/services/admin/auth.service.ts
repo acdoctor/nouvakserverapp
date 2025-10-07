@@ -13,9 +13,9 @@ export interface JwtPayload {
 }
 
 const ADMIN_JWT_ACCESS_SECRET =
-  process.env.JWT_ACCESS_SECRET || "access_secret";
+  process.env.ADMIN_JWT_ACCESS_SECRET || "access_secret";
 const ADMIN_JWT_REFRESH_SECRET =
-  process.env.JWT_REFRESH_SECRET || "refresh_secret";
+  process.env.ADMIN_JWT_REFRESH_SECRET || "refresh_secret";
 
 export const refreshAccessToken = async (refreshToken: string) => {
   if (!refreshToken) throw new Error("Refresh token required");
