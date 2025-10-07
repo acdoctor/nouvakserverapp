@@ -2,7 +2,7 @@ import { Router } from "express";
 import * as adminController from "../../controllers/admin/admin.controller";
 import * as otpController from "../../controllers/admin/otp.controller";
 import * as authController from "../../controllers/admin/auth.controller";
-import { authenticate } from "../../middlewares/auth";
+import { authenticate } from "../../middlewares/admin/auth";
 
 const router = Router();
 
