@@ -19,10 +19,10 @@ export const refreshAccessToken = async (refreshToken: string) => {
   let admin;
 
   try {
-    // Decode and verify token
+    // Decode and verify token throws error if invalid/expired
     payload = verifyRefreshToken(refreshToken) as JwtPayload;
   } catch {
-    // Try to find user by token and clear invalid one
+    // Try to find user by token and clear invalid one from DB
     admin = await Admin.findOne({ refreshToken });
     if (admin) {
       admin.refreshToken = undefined;
