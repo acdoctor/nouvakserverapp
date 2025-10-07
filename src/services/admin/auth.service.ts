@@ -1,5 +1,9 @@
 import Admin from "../../models/admin/admin.model";
-import { generateAccessToken, verifyRefreshToken } from "../../utils/jwt";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from "../../utils/jwt";
 
 export interface JwtPayload {
   id: string;
@@ -11,28 +15,47 @@ export interface JwtPayload {
 export const refreshAccessToken = async (refreshToken: string) => {
   if (!refreshToken) throw new Error("Refresh token required");
 
-  const payload = verifyRefreshToken(refreshToken) as JwtPayload;
+  let payload: JwtPayload | null = null;
+  let admin;
 
-  const admin = await Admin.findById(payload.id);
+  try {
+    // Decode and verify token
+    payload = verifyRefreshToken(refreshToken) as JwtPayload;
+  } catch {
+    // Try to find user by token and clear invalid one
+    admin = await Admin.findOne({ refreshToken });
+    if (admin) {
+      admin.refreshToken = undefined;
+      await admin.save();
+    }
+
+    // Rethrow error so controller clears cookie
+    throw new Error("Invalid or expired refresh token");
+  }
+
+  // Check if user exists and token matches
+  admin = await Admin.findById(payload.id);
   if (!admin) throw new Error("User not found");
 
-  // Check if token matches saved one
   if (admin.refreshToken !== refreshToken) {
+    admin.refreshToken = undefined;
+    await admin.save();
     throw new Error("Invalid refresh token");
   }
 
-  // Check if token is expired
-  const now = Math.floor(Date.now() / 1000);
-  if (payload.exp && payload.exp < now) {
-    admin.refreshToken = undefined;
-    await admin.save();
-    throw new Error("Refresh token expired");
-  }
-
+  // Rotate tokens (issue new ones)
   const newAccessToken = generateAccessToken({
     id: admin._id,
     role: admin.role,
   });
 
-  return newAccessToken;
+  const newRefreshToken = generateRefreshToken({
+    id: admin._id,
+    role: admin.role,
+  });
+
+  admin.refreshToken = newRefreshToken;
+  await admin.save();
+
+  return { accessToken: newAccessToken, refreshToken: newRefreshToken };
 };
