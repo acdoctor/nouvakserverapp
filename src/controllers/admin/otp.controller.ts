@@ -18,6 +18,11 @@ export const resendOtp = async (req: Request, res: Response) => {
   }
 };
 
+const ADMIN_JWT_ACCESS_SECRET =
+  process.env.JWT_ACCESS_SECRET || "access_secret";
+const ADMIN_JWT_REFRESH_SECRET =
+  process.env.JWT_REFRESH_SECRET || "refresh_secret";
+
 export const verifyOtp = async (req: Request, res: Response) => {
   try {
     const { adminId, otp } = req.body;
@@ -27,14 +32,20 @@ export const verifyOtp = async (req: Request, res: Response) => {
     if (!admin) return res.status(404).json({ message: "Admin not found" });
 
     //  Generate tokens
-    const accessToken = generateAccessToken({
-      id: admin._id,
-      role: admin.role,
-    });
-    const refreshToken = generateRefreshToken({
-      id: admin._id,
-      role: admin.role,
-    });
+    const accessToken = generateAccessToken(
+      {
+        id: admin._id,
+        role: admin.role,
+      },
+      ADMIN_JWT_ACCESS_SECRET,
+    );
+    const refreshToken = generateRefreshToken(
+      {
+        id: admin._id,
+        role: admin.role,
+      },
+      ADMIN_JWT_REFRESH_SECRET,
+    );
 
     //  Save refreshToken in DB
     admin.refreshToken = refreshToken;

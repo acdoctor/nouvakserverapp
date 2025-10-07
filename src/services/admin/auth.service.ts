@@ -12,6 +12,11 @@ export interface JwtPayload {
   exp?: number;
 }
 
+const ADMIN_JWT_ACCESS_SECRET =
+  process.env.JWT_ACCESS_SECRET || "access_secret";
+const ADMIN_JWT_REFRESH_SECRET =
+  process.env.JWT_REFRESH_SECRET || "refresh_secret";
+
 export const refreshAccessToken = async (refreshToken: string) => {
   if (!refreshToken) throw new Error("Refresh token required");
 
@@ -20,7 +25,10 @@ export const refreshAccessToken = async (refreshToken: string) => {
 
   try {
     // Decode and verify token throws error if invalid/expired
-    payload = verifyRefreshToken(refreshToken) as JwtPayload;
+    payload = verifyRefreshToken(
+      refreshToken,
+      ADMIN_JWT_REFRESH_SECRET,
+    ) as JwtPayload;
   } catch {
     // Try to find user by token and clear invalid one from DB
     admin = await Admin.findOne({ refreshToken });
@@ -44,15 +52,21 @@ export const refreshAccessToken = async (refreshToken: string) => {
   }
 
   // Rotate tokens (issue new ones)
-  const newAccessToken = generateAccessToken({
-    id: admin._id,
-    role: admin.role,
-  });
+  const newAccessToken = generateAccessToken(
+    {
+      id: admin._id,
+      role: admin.role,
+    },
+    ADMIN_JWT_ACCESS_SECRET,
+  );
 
-  const newRefreshToken = generateRefreshToken({
-    id: admin._id,
-    role: admin.role,
-  });
+  const newRefreshToken = generateRefreshToken(
+    {
+      id: admin._id,
+      role: admin.role,
+    },
+    ADMIN_JWT_REFRESH_SECRET,
+  );
 
   admin.refreshToken = newRefreshToken;
   await admin.save();
