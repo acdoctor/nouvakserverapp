@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import * as technicianService from "../../services/technician/technician.service";
 
-export const createTechnician = async (req: Request, res: Response) => {
+export const registerTechnician = async (req: Request, res: Response) => {
   try {
     await technicianService.createTechnician(req.body);
 
