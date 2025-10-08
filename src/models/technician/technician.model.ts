@@ -106,7 +106,7 @@ const technicianSchema = new Schema<ITechnician>(
       },
     ],
     profilePhoto: { type: String, default: "" },
-    countryCode: { type: String, default: "91", required: true },
+    countryCode: { type: String, default: "+91", required: true },
     phoneNumber: { type: String, unique: true, index: true, length: 10 },
     status: {
       type: String,
