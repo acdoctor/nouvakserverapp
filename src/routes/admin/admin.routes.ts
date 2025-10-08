@@ -18,5 +18,8 @@ router.post("/admin/profile", authenticate, (req, res) => {
 });
 
 // Technician Controllers Routes
-router.post("/technician/register", technicianController.registerTechnician);
+router.post(
+  "/admin/technician/register",
+  technicianController.registerTechnician,
+);
 export default router;
