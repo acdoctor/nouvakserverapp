@@ -5,12 +5,17 @@ import Technician from "../../models/technician/technician.model";
 
 export const createOtp = async (
   technicianId: string,
-  phone: string,
+  phoneNumber: string,
 ): Promise<string> => {
   // Check technician exists
   const technician = await Technician.findById(technicianId);
   if (!technician) throw new Error("technician not found");
-  console.log("Creating OTP for technician:", technicianId, "Phone:", phone);
+  console.log(
+    "Creating OTP for technician:",
+    technicianId,
+    "Phone:",
+    phoneNumber,
+  );
 
   // remove any existing OTPs for this technician (handles resend too)
   await TechnicianOtp.deleteMany({ technicianId });
@@ -22,7 +27,7 @@ export const createOtp = async (
   await TechnicianOtp.create({ technicianId: technicianId, otp: code });
 
   // send via Twilio
-  await sendOtpSms(phone, code);
+  await sendOtpSms(phoneNumber, code);
 
   console.log(`OTP for technicianId ${technicianId}: ${code}`);
   return code;
