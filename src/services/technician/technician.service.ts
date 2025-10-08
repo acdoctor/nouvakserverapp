@@ -52,3 +52,13 @@ export const createTechnician = async (data: TechnicianInput) => {
     email: email || null,
   });
 };
+
+export const loginTechnician = async (phoneNumber: string) => {
+  const technician = await Technician.findOne({ phoneNumber });
+  if (!technician) throw new Error("Technician not found");
+
+  if (!technician.phoneNumber)
+    throw new Error("Technician does not have a phone number");
+  //   await technicianotpService.createOtp(String(technician._id), technician.phoneNumber);
+  return technician;
+};
