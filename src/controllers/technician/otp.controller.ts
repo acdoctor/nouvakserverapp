@@ -22,10 +22,10 @@ export const resendOtp = async (req: Request, res: Response) => {
   }
 };
 
-const ADMIN_JWT_ACCESS_SECRET =
-  process.env.ADMIN_JWT_ACCESS_SECRET || "access_secret";
-const ADMIN_JWT_REFRESH_SECRET =
-  process.env.ADMIN_JWT_REFRESH_SECRET || "refresh_secret";
+const TECHNICIAN_JWT_ACCESS_SECRET =
+  process.env.TECHNICIAN_JWT_ACCESS_SECRET || "access_secret";
+const TECHNICIAN_JWT_REFRESH_SECRET =
+  process.env.TECHNICIAN_JWT_REFRESH_SECRET || "refresh_secret";
 
 export const verifyOtp = async (req: Request, res: Response) => {
   try {
@@ -40,16 +40,16 @@ export const verifyOtp = async (req: Request, res: Response) => {
     const accessToken = generateAccessToken(
       {
         id: technician._id,
-        role: technician.position,
+        position: technician.position,
       },
-      ADMIN_JWT_ACCESS_SECRET,
+      TECHNICIAN_JWT_ACCESS_SECRET,
     );
     const refreshToken = generateRefreshToken(
       {
         id: technician._id,
-        role: technician.position,
+        position: technician.position,
       },
-      ADMIN_JWT_REFRESH_SECRET,
+      TECHNICIAN_JWT_REFRESH_SECRET,
     );
 
     //  Save refreshToken in DB
@@ -66,7 +66,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
     });
 
     res.json({
-      message: "OTP verified, admin activated",
+      message: "OTP verified, technician activated",
       accessToken,
       refreshToken,
     });
