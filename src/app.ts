@@ -4,6 +4,7 @@ dotenv.config();
 import connectDB from "./config/db";
 import cookieParser from "cookie-parser";
 import adminRoutes from "./routes/admin/admin.routes";
+import technicianRoutes from "./routes/technician/technician.routes";
 
 const app = express();
 
@@ -11,6 +12,6 @@ app.use(express.json());
 app.use(cookieParser());
 
 connectDB();
-app.use("/api/v1", adminRoutes);
+app.use("/api/v1", adminRoutes, technicianRoutes);
 
 export default app;
