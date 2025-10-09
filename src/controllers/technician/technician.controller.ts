@@ -28,3 +28,19 @@ export const registerTechnician = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const login = async (req: Request, res: Response) => {
+  try {
+    const { phoneNumber } = req.body;
+    const technician = await technicianService.loginTechnician(phoneNumber);
+
+    res.json({
+      message: "OTP sent for login",
+      technicianId: Object(technician._id),
+    });
+  } catch (err: unknown) {
+    res
+      .status(400)
+      .json({ error: err instanceof Error ? err.message : String(err) });
+  }
+};

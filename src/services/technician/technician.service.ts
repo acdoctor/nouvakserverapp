@@ -1,4 +1,5 @@
 import Technician from "../../models/technician/technician.model";
+import * as technicianotpService from "../technician/otp.service";
 
 interface TechnicianInput {
   name: string;
@@ -59,6 +60,9 @@ export const loginTechnician = async (phoneNumber: string) => {
 
   if (!technician.phoneNumber)
     throw new Error("Technician does not have a phone number");
-  //   await technicianotpService.createOtp(String(technician._id), technician.phoneNumber);
+  await technicianotpService.createOtp(
+    String(technician._id),
+    technician.phoneNumber,
+  );
   return technician;
 };
