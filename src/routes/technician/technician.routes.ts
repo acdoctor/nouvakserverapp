@@ -17,9 +17,4 @@ router.post("/technician/profile", authenticate, (req, res) => {
   res.json({ message: "Technician profile accessed" });
 });
 
-// Technician Controllers Routes
-router.post(
-  "/admin/technician/register",
-  technicianController.registerTechnician,
-);
 export default router;
