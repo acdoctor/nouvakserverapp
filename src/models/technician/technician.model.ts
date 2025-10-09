@@ -53,6 +53,7 @@ export interface ITechnician extends Document {
   secondaryContactNumber?: string;
   registered?: boolean;
   totalLeaves?: number;
+  refreshToken?: string | undefined;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -132,6 +133,9 @@ const technicianSchema = new Schema<ITechnician>(
     secondaryContactNumber: { type: String, default: "" },
     registered: { type: Boolean, default: false },
     totalLeaves: { type: Number, default: 0 },
+    refreshToken: {
+      type: String,
+    },
   },
   { timestamps: true },
 );
