@@ -8,7 +8,7 @@ export interface IUser extends Document {
   countryCode: string;
   otp?: number;
   otpExpiryTime?: string;
-  refreshToken?: string;
+  refreshToken?: string | undefined;
   isOtpVerify?: number;
   loyaltyPoints?: number;
   deviceToken?: string;
