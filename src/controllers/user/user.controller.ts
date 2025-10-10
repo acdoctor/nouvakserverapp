@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { phone } = req.body;
-    const user = await userService.createUser(phone);
+    const { phoneNumber } = req.body;
+    const user = await userService.createUser(phoneNumber);
 
     res.status(201).json({
       message: "OTP sent for verification",
@@ -19,8 +19,8 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { phone } = req.body;
-    const user = await userService.loginUser(phone);
+    const { phoneNumber } = req.body;
+    const user = await userService.loginUser(phoneNumber);
 
     res.json({ message: "OTP sent for login", userId: Object(user._id) });
   } catch (err: unknown) {
