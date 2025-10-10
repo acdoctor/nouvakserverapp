@@ -7,8 +7,8 @@ import { authenticate } from "../../middlewares/user/auth";
 const router = Router();
 
 // User Controllers Routes
-router.post("/user/register", userController.register);
-router.post("/user/login", userController.login);
+router.post("/user/register", userController.registerUser);
+router.post("/user/login", userController.loginUser);
 router.post("/user/resend-otp", otpController.resendOtp);
 router.post("/user/verify-otp", otpController.verifyOtp);
 router.post("/user/refresh", authController.refresh);
