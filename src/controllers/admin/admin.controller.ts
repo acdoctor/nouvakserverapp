@@ -1,4 +1,3 @@
-// Update the import path if the file is located elsewhere, for example:
 import * as adminService from "../../services/admin/admin.service";
 import { Request, Response } from "express";
 
