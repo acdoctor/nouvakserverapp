@@ -19,8 +19,8 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { phone } = req.body;
-    const admin = await adminService.loginAdmin(phone);
+    const { phoneNumber } = req.body;
+    const admin = await adminService.loginAdmin(phoneNumber);
 
     res.json({ message: "OTP sent for login", userId: Object(admin._id) });
   } catch (err: unknown) {

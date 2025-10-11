@@ -5,7 +5,7 @@ export interface IAdmin extends Document {
   name: string;
   email: string;
   countryCode?: string;
-  phone?: string;
+  phoneNumber?: string;
   type?: number;
   role?: string;
   refreshToken?: string | undefined;
@@ -28,7 +28,7 @@ const adminSchema = new mongoose.Schema<IAdmin>(
       default: "+91",
       type: String,
     },
-    phone: {
+    phoneNumber: {
       type: String,
       required: true,
     },

@@ -5,12 +5,12 @@ import Admin from "../../models/admin/admin.model";
 
 export const createOtp = async (
   adminId: string,
-  phone: string,
+  phoneNumber: string,
 ): Promise<string> => {
   // Check admin exists
   const admin = await Admin.findById(adminId);
   if (!admin) throw new Error("admin not found");
-  console.log("Creating OTP for admin:", adminId, "Phone:", phone);
+  console.log("Creating OTP for admin:", adminId, "phone number:", phoneNumber);
 
   // remove any existing OTPs for this admin (handles resend too)
   await AdminOtp.deleteMany({ adminId });
@@ -22,7 +22,7 @@ export const createOtp = async (
   await AdminOtp.create({ adminId: adminId, otp: code });
 
   // send via Twilio
-  await sendOtpSms(phone, code);
+  await sendOtpSms(phoneNumber, code);
 
   console.log(`OTP for adminId ${adminId}: ${code}`);
   return code;
