@@ -13,7 +13,7 @@ router.post("/technician/login", technicianController.login);
 router.post("/technician/resend-otp", otpController.resendOtp);
 router.post("/technician/verify-otp", otpController.verifyOtp);
 router.post("/technician/refresh", authController.refresh);
-router.post("/technician/profile", authenticate, (req, res) => {
+router.get("/technician/profile", authenticate, (req, res) => {
   res.json({ message: "Technician profile accessed" });
 });
 

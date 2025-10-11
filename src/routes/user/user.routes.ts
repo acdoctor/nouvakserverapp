@@ -12,7 +12,7 @@ router.post("/user/login", userController.loginUser);
 router.post("/user/resend-otp", otpController.resendOtp);
 router.post("/user/verify-otp", otpController.verifyOtp);
 router.post("/user/refresh", authController.refresh);
-router.post("/user/profile", authenticate, (req, res) => {
+router.get("/user/profile", authenticate, (req, res) => {
   res.json({ message: "User profile accessed" });
 });
 
