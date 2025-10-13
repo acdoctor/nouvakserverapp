@@ -9,7 +9,7 @@ export const resendOtp = async (req: Request, res: Response) => {
     const admin = await Admin.findById(adminId);
     if (!admin) return res.status(404).json({ message: "admin not found" });
 
-    await otpService.createOtp(String(admin._id), admin.phone ?? "");
+    await otpService.createOtp(String(admin._id), admin.phoneNumber ?? "");
     res.json({ message: "OTP resent successfully" });
   } catch (err: unknown) {
     res
