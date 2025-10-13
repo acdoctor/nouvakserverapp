@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { phone } = req.body;
-    const admin = await adminService.createAdmin(phone);
+    const { phoneNumber } = req.body;
+    const admin = await adminService.createAdmin(phoneNumber);
 
     res.status(201).json({
       message: "OTP sent for verification",
