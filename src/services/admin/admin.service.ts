@@ -4,9 +4,9 @@ import * as otpService from "../admin/otp.service";
 export const createAdmin = async (phoneNumber: string) => {
   // Check if already exists
   const admin = await Admin.findOne({ phoneNumber });
-  if (admin) throw new Error("User already registered");
+  if (admin) throw new Error("Admin already registered");
 
-  // Create new user with "pending" status
+  // Create new admin with "pending" status
   const newAdmin = new Admin({ phoneNumber, status: "pending", role: "admin" });
   await newAdmin.save();
 
