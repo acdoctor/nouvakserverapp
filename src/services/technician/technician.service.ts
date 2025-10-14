@@ -32,7 +32,10 @@ export const createTechnician = async (data: TechnicianInput) => {
   } = data;
 
   // Check if technician already exists
-  const existingTechnician = await Technician.findOne({ phoneNumber });
+  const existingTechnician = await Technician.findOne({
+    countryCode,
+    phoneNumber,
+  });
   if (existingTechnician) {
     throw new Error("A technician with the given phone number already exists");
   }
@@ -54,15 +57,21 @@ export const createTechnician = async (data: TechnicianInput) => {
   });
 };
 
-export const loginTechnician = async (phoneNumber: string) => {
-  const technician = await Technician.findOne({ phoneNumber });
+export const loginTechnician = async (
+  countryCode: string,
+  phoneNumber: string,
+) => {
+  const technician = await Technician.findOne({ countryCode, phoneNumber });
   if (!technician) throw new Error("Technician not found");
 
   if (!technician.phoneNumber)
     throw new Error("Technician does not have a phone number");
-  await technicianotpService.createOtp(
-    String(technician._id),
-    technician.phoneNumber,
-  );
+
+  // Send OTP
+  const fullPhone = technician.countryCode?.startsWith("+")
+    ? `${technician.countryCode}${technician.phoneNumber}`
+    : `+${technician.countryCode}${technician.phoneNumber}`;
+
+  await technicianotpService.createOtp(String(technician._id), fullPhone);
   return technician;
 };
