@@ -1,26 +1,43 @@
 import User from "../../models/user/user.model";
-// import * as otpService from "../user/otp.service";
+import * as otpService from "../user/otp.service";
 
-export const createUser = async (phoneNumber: string) => {
+export const createUser = async (countryCode: string, phoneNumber: string) => {
+  phoneNumber = phoneNumber.trim();
+
   // Check if already exists
-  const user = await User.findOne({ phoneNumber });
+  const user = await User.findOne({ countryCode, phoneNumber });
   if (user) throw new Error("User already registered");
 
-  // Create new user with "pending" status
-  const newUser = new User({ phoneNumber, status: "pending", role: "user" });
+  const newUser = new User({
+    countryCode,
+    phoneNumber,
+    status: "pending",
+    role: "user",
+  });
   await newUser.save();
 
+  // Create new user with "pending" status
+  const fullPhone = countryCode.startsWith("+")
+    ? `${countryCode}${phoneNumber}`
+    : `+${countryCode}${phoneNumber}`;
+
   // Send OTP
-  //   await otpService.createOtp(String(newUser._id), phoneNumber);
+  await otpService.createOtp(String(newUser._id), fullPhone);
 
   return newUser;
 };
 
-export const loginUser = async (phoneNumber: string) => {
-  const user = await User.findOne({ phoneNumber });
-  if (!user) throw new Error("User not found");
+export const loginUser = async (countryCode: string, phoneNumber: string) => {
+  phoneNumber = phoneNumber.trim();
 
-  if (!user.phoneNumber) throw new Error("User does not have a phone number");
-  //   await otpService.createOtp(String(user._id), user.phoneNumber);
+  const user = await User.findOne({ countryCode, phoneNumber });
+  if (!user) throw new Error("user not found");
+
+  const fullPhone = user.countryCode?.startsWith("+")
+    ? `${user.countryCode}${user.phoneNumber}`
+    : `+${user.countryCode}${user.phoneNumber}`;
+
+  await otpService.createOtp(String(user._id), fullPhone);
+
   return user;
 };
