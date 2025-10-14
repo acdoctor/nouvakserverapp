@@ -35,8 +35,11 @@ export const registerTechnician = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { phoneNumber } = req.body;
-    const technician = await technicianService.loginTechnician(phoneNumber);
+    const { countryCode, phoneNumber } = req.body;
+    const technician = await technicianService.loginTechnician(
+      countryCode,
+      phoneNumber,
+    );
 
     res.json({
       success: true,
@@ -44,11 +47,9 @@ export const login = async (req: Request, res: Response) => {
       technicianId: Object(technician._id),
     });
   } catch (err: unknown) {
-    res
-      .status(400)
-      .json({
-        success: false,
-        error: err instanceof Error ? err.message : String(err),
-      });
+    res.status(400).json({
+      success: false,
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
 };
