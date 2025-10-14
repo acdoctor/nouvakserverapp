@@ -140,5 +140,7 @@ const technicianSchema = new Schema<ITechnician>(
   { timestamps: true },
 );
 
+// (compound unique index to prevent duplicates per country)
+technicianSchema.index({ countryCode: 1, phoneNumber: 1 }, { unique: true });
 const Technician = mongoose.model<ITechnician>("Technician", technicianSchema);
 export default Technician;
