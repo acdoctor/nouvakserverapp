@@ -50,6 +50,8 @@ const adminSchema = new mongoose.Schema<IAdmin>(
   { timestamps: true },
 );
 
+// (compound unique index to prevent duplicates per country)
+adminSchema.index({ countryCode: 1, phoneNumber: 1 }, { unique: true });
 const Admin = mongoose.model<IAdmin>("Admin", adminSchema);
 
 // module.exports = Admin;
