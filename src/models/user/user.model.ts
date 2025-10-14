@@ -74,5 +74,7 @@ const userSchema = new Schema<IUser>(
   },
 );
 
+// (compound unique index to prevent duplicates per country)
+userSchema.index({ countryCode: 1, phoneNumber: 1 }, { unique: true });
 const User = mongoose.model<IUser>("User", userSchema);
 export default User;
