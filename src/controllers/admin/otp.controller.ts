@@ -10,11 +10,14 @@ export const resendOtp = async (req: Request, res: Response) => {
     if (!admin) return res.status(404).json({ message: "admin not found" });
 
     await otpService.createOtp(String(admin._id), admin.phoneNumber ?? "");
-    res.json({ message: "OTP resent successfully" });
+    res.json({ success: true, message: "OTP resent successfully" });
   } catch (err: unknown) {
     res
       .status(400)
-      .json({ error: err instanceof Error ? err.message : String(err) });
+      .json({
+        success: false,
+        error: err instanceof Error ? err.message : String(err),
+      });
   }
 };
 
@@ -61,6 +64,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
     });
 
     res.json({
+      success: true,
       message: "OTP verified, admin activated",
       accessToken,
       refreshToken,
@@ -68,6 +72,9 @@ export const verifyOtp = async (req: Request, res: Response) => {
   } catch (err: unknown) {
     res
       .status(400)
-      .json({ error: err instanceof Error ? err.message : String(err) });
+      .json({
+        success: false,
+        error: err instanceof Error ? err.message : String(err),
+      });
   }
 };

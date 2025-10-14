@@ -7,13 +7,17 @@ export const register = async (req: Request, res: Response) => {
     const admin = await adminService.createAdmin(phoneNumber);
 
     res.status(201).json({
+      success: true,
       message: "OTP sent for verification",
       adminId: Object(admin._id),
     });
   } catch (err: unknown) {
     res
       .status(400)
-      .json({ error: err instanceof Error ? err.message : String(err) });
+      .json({
+        success: false,
+        error: err instanceof Error ? err.message : String(err),
+      });
   }
 };
 
@@ -22,10 +26,17 @@ export const login = async (req: Request, res: Response) => {
     const { phoneNumber } = req.body;
     const admin = await adminService.loginAdmin(phoneNumber);
 
-    res.json({ message: "OTP sent for login", adminId: Object(admin._id) });
+    res.json({
+      success: true,
+      message: "OTP sent for login",
+      adminId: Object(admin._id),
+    });
   } catch (err: unknown) {
     res
       .status(400)
-      .json({ error: err instanceof Error ? err.message : String(err) });
+      .json({
+        success: false,
+        error: err instanceof Error ? err.message : String(err),
+      });
   }
 };

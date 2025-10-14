@@ -8,17 +8,22 @@ export const resendOtp = async (req: Request, res: Response) => {
     const { technicianId } = req.body;
     const technician = await Technician.findById(technicianId);
     if (!technician)
-      return res.status(404).json({ message: "technician not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "technician not found" });
 
     await otpService.createOtp(
       String(technician._id),
       technician.phoneNumber ?? "",
     );
-    res.json({ message: "OTP resent successfully" });
+    res.json({ success: true, message: "OTP resent successfully" });
   } catch (err: unknown) {
     res
       .status(400)
-      .json({ error: err instanceof Error ? err.message : String(err) });
+      .json({
+        success: false,
+        error: err instanceof Error ? err.message : String(err),
+      });
   }
 };
 
@@ -34,7 +39,9 @@ export const verifyOtp = async (req: Request, res: Response) => {
 
     const technician = await Technician.findById(technicianId);
     if (!technician)
-      return res.status(404).json({ message: "Technician not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Technician not found" });
 
     //  Generate tokens
     const accessToken = generateAccessToken(
@@ -66,6 +73,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
     });
 
     res.json({
+      success: true,
       message: "OTP verified, technician activated",
       accessToken,
       refreshToken,
@@ -73,6 +81,9 @@ export const verifyOtp = async (req: Request, res: Response) => {
   } catch (err: unknown) {
     res
       .status(400)
-      .json({ error: err instanceof Error ? err.message : String(err) });
+      .json({
+        success: false,
+        error: err instanceof Error ? err.message : String(err),
+      });
   }
 };
