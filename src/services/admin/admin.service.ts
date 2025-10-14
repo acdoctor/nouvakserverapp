@@ -1,26 +1,43 @@
 import Admin from "../../models/admin/admin.model";
 import * as otpService from "../admin/otp.service";
 
-export const createAdmin = async (phoneNumber: string) => {
+export const createAdmin = async (countryCode: string, phoneNumber: string) => {
+  phoneNumber = phoneNumber.trim();
+
   // Check if already exists
-  const admin = await Admin.findOne({ phoneNumber });
+  const admin = await Admin.findOne({ countryCode, phoneNumber });
   if (admin) throw new Error("Admin already registered");
 
-  // Create new admin with "pending" status
-  const newAdmin = new Admin({ phoneNumber, status: "pending", role: "admin" });
+  const newAdmin = new Admin({
+    countryCode,
+    phoneNumber,
+    status: "pending",
+    role: "admin",
+  });
   await newAdmin.save();
 
+  // Create new admin with "pending" status
+  const fullPhone = countryCode.startsWith("+")
+    ? `${countryCode}${phoneNumber}`
+    : `+${countryCode}${phoneNumber}`;
+
   // Send OTP
-  await otpService.createOtp(String(newAdmin._id), phoneNumber);
+  await otpService.createOtp(String(newAdmin._id), fullPhone);
 
   return newAdmin;
 };
 
-export const loginAdmin = async (phoneNumber: string) => {
-  const admin = await Admin.findOne({ phoneNumber });
+export const loginAdmin = async (countryCode: string, phoneNumber: string) => {
+  phoneNumber = phoneNumber.trim();
+
+  const admin = await Admin.findOne({ countryCode, phoneNumber });
   if (!admin) throw new Error("Admin not found");
 
-  if (!admin.phoneNumber) throw new Error("Admin does not have a phone number");
-  await otpService.createOtp(String(admin._id), admin.phoneNumber);
+  const fullPhone = admin.countryCode?.startsWith("+")
+    ? `${admin.countryCode}${admin.phoneNumber}`
+    : `+${admin.countryCode}${admin.phoneNumber}`;
+
+  await otpService.createOtp(String(admin._id), fullPhone);
+
   return admin;
 };

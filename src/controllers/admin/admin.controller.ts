@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { phoneNumber } = req.body;
-    const admin = await adminService.createAdmin(phoneNumber);
+    const { countryCode, phoneNumber } = req.body;
+    const admin = await adminService.createAdmin(countryCode, phoneNumber);
 
     res.status(201).json({
       success: true,
@@ -12,19 +12,17 @@ export const register = async (req: Request, res: Response) => {
       adminId: Object(admin._id),
     });
   } catch (err: unknown) {
-    res
-      .status(400)
-      .json({
-        success: false,
-        error: err instanceof Error ? err.message : String(err),
-      });
+    res.status(400).json({
+      success: false,
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
 };
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { phoneNumber } = req.body;
-    const admin = await adminService.loginAdmin(phoneNumber);
+    const { countryCode, phoneNumber } = req.body;
+    const admin = await adminService.loginAdmin(countryCode, phoneNumber);
 
     res.json({
       success: true,
@@ -32,11 +30,9 @@ export const login = async (req: Request, res: Response) => {
       adminId: Object(admin._id),
     });
   } catch (err: unknown) {
-    res
-      .status(400)
-      .json({
-        success: false,
-        error: err instanceof Error ? err.message : String(err),
-      });
+    res.status(400).json({
+      success: false,
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
 };
