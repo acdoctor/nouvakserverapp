@@ -5,12 +5,22 @@ import * as authController from "../../controllers/admin/auth.controller";
 import * as technicianController from "../../controllers/technician/technician.controller";
 import * as userController from "../../controllers/user/user.controller";
 import { authenticate } from "../../middlewares/admin/auth";
+import { authSchema } from "../../validators/request/auth.validator";
+import { validateRequest } from "../../middlewares/request/validateRequest";
 
 const router = Router();
 
 // Admin Controllers Routes
-router.post("/admin/register", adminController.registerAdmin);
-router.post("/admin/login", adminController.loginAdmin);
+router.post(
+  "/admin/register",
+  validateRequest(authSchema),
+  adminController.registerAdmin,
+);
+router.post(
+  "/admin/login",
+  validateRequest(authSchema),
+  adminController.loginAdmin,
+);
 router.post("/admin/resend-otp", otpController.resendOtp);
 router.post("/admin/verify-otp", otpController.verifyOtp);
 router.post("/admin/refresh", authController.refresh);
