@@ -9,8 +9,8 @@ import { authenticate } from "../../middlewares/admin/auth";
 const router = Router();
 
 // Admin Controllers Routes
-router.post("/admin/register", adminController.register);
-router.post("/admin/login", adminController.login);
+router.post("/admin/register", adminController.registerAdmin);
+router.post("/admin/login", adminController.loginAdmin);
 router.post("/admin/resend-otp", otpController.resendOtp);
 router.post("/admin/verify-otp", otpController.verifyOtp);
 router.post("/admin/refresh", authController.refresh);

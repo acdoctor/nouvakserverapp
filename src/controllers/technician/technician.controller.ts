@@ -33,7 +33,7 @@ export const registerTechnician = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const loginTechnician = async (req: Request, res: Response) => {
   try {
     const { countryCode, phoneNumber } = req.body;
     const technician = await technicianService.loginTechnician(

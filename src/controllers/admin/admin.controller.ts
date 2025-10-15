@@ -1,7 +1,7 @@
 import * as adminService from "../../services/admin/admin.service";
 import { Request, Response } from "express";
 
-export const register = async (req: Request, res: Response) => {
+export const registerAdmin = async (req: Request, res: Response) => {
   try {
     const { countryCode, phoneNumber } = req.body;
     const admin = await adminService.createAdmin(countryCode, phoneNumber);
@@ -19,7 +19,7 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const loginAdmin = async (req: Request, res: Response) => {
   try {
     const { countryCode, phoneNumber } = req.body;
     const admin = await adminService.loginAdmin(countryCode, phoneNumber);
