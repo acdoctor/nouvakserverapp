@@ -39,14 +39,19 @@ export const loginAdmin = async (req: Request, res: Response) => {
 
 export const getAdminById = async (req: Request, res: Response) => {
   try {
-    const admin = await adminService.fetchAdminById(req.params.id);
-    res.json({ success: true, data: admin });
+    const { id } = req.params;
+    if (!id) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Admin ID is required" });
+    }
+
+    const admin = await adminService.fetchAdminById(id);
+    return res.json({ success: true, data: admin });
   } catch (err: unknown) {
-    res
-      .status(404)
-      .json({
-        success: false,
-        error: err instanceof Error ? err.message : String(err),
-      });
+    return res.status(404).json({
+      success: false,
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
 };
