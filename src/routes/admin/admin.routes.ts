@@ -29,8 +29,8 @@ router.get("/admin/profile/:id", authenticate, adminController.getAdminById);
 router.delete("/admin/delete/:id", authenticate, adminController.deleteAdmin);
 router.put(
   "/admin/update/:id",
-  validateRequest(adminUpdateSchema),
   authenticate,
+  validateRequest(adminUpdateSchema),
   adminController.updateAdmin,
 );
 
