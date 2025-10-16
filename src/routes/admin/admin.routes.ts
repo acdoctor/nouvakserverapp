@@ -7,6 +7,7 @@ import * as userController from "../../controllers/user/user.controller";
 import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/request/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
+import { adminUpdateSchema } from "../../validators/admin/admin.validator";
 
 const router = Router();
 
@@ -27,6 +28,7 @@ router.post("/admin/refresh", authController.refresh);
 router.get("/admin/profile/:id", authenticate, adminController.getAdminById);
 router.get(
   "/admin/profile/update/:id",
+  validateRequest(adminUpdateSchema),
   authenticate,
   adminController.updateAdmin,
 );
