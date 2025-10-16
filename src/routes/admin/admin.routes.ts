@@ -26,13 +26,9 @@ router.post("/admin/resend-otp", otpController.resendOtp);
 router.post("/admin/verify-otp", otpController.verifyOtp);
 router.post("/admin/refresh", authController.refresh);
 router.get("/admin/profile/:id", authenticate, adminController.getAdminById);
-router.get(
-  "/admin/profile/delete/:id",
-  authenticate,
-  adminController.deleteAdmin,
-);
-router.get(
-  "/admin/profile/update/:id",
+router.delete("/admin/delete/:id", authenticate, adminController.deleteAdmin);
+router.put(
+  "/admin/update/:id",
   validateRequest(adminUpdateSchema),
   authenticate,
   adminController.updateAdmin,
