@@ -24,9 +24,7 @@ router.post(
 router.post("/admin/resend-otp", otpController.resendOtp);
 router.post("/admin/verify-otp", otpController.verifyOtp);
 router.post("/admin/refresh", authController.refresh);
-router.get("/admin/profile", authenticate, (req, res) => {
-  res.json({ message: "Admin profile accessed" });
-});
+router.get("/admin/profile/:id", authenticate, adminController.getAdminById);
 
 // Technician Controllers Routes
 router.post(
