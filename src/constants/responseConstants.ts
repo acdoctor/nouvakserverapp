@@ -1,8 +1,9 @@
 // Boolean enum for response status
-export enum RESPONSE_STATUS {
-  SUCCESS = "true",
-  FAIL = "false",
-}
+
+export const RESPONSE_STATUS = {
+  SUCCESS: true,
+  FAIL: false,
+} as const;
 
 // Numeric enum for HTTP response codes
 export enum HTTP_CODE {
