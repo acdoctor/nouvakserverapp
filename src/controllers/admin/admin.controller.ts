@@ -55,3 +55,28 @@ export const getAdminById = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const updateAdmin = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Admin ID is required" });
+    }
+
+    const admin = await adminService.updateAdminById(id, req.body);
+    res.json({
+      success: true,
+      message: "Admin updated successfully",
+      data: admin,
+    });
+  } catch (err: unknown) {
+    res
+      .status(400)
+      .json({
+        success: false,
+        error: err instanceof Error ? err.message : String(err),
+      });
+  }
+};

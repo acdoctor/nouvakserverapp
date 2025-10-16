@@ -1,5 +1,6 @@
 import Admin from "../../models/admin/admin.model";
 import * as otpService from "../admin/otp.service";
+import { IAdmin } from "../../models/admin/admin.model";
 
 export const createAdmin = async (countryCode: string, phoneNumber: string) => {
   phoneNumber = phoneNumber.trim();
@@ -44,6 +45,15 @@ export const loginAdmin = async (countryCode: string, phoneNumber: string) => {
 
 export const fetchAdminById = async (id: string) => {
   const admin = await Admin.findById(id);
+  if (!admin) throw new Error("Admin not found");
+  return admin;
+};
+
+export const updateAdminById = async (
+  id: string,
+  updateData: Partial<IAdmin>,
+) => {
+  const admin = await Admin.findByIdAndUpdate(id, updateData, { new: true });
   if (!admin) throw new Error("Admin not found");
   return admin;
 };
