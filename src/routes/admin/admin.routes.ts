@@ -25,6 +25,11 @@ router.post("/admin/resend-otp", otpController.resendOtp);
 router.post("/admin/verify-otp", otpController.verifyOtp);
 router.post("/admin/refresh", authController.refresh);
 router.get("/admin/profile/:id", authenticate, adminController.getAdminById);
+router.get(
+  "/admin/profile/update/:id",
+  authenticate,
+  adminController.updateAdmin,
+);
 
 // Technician Controllers Routes
 router.post(
