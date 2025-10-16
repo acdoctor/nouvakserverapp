@@ -72,6 +72,25 @@ export const updateAdmin = async (req: Request, res: Response) => {
       data: admin,
     });
   } catch (err: unknown) {
+    res.status(400).json({
+      success: false,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+};
+
+export const deleteAdmin = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Admin ID is required" });
+    }
+
+    await adminService.deleteAdminById(id);
+    res.json({ success: true, message: "Admin deleted successfully" });
+  } catch (err: unknown) {
     res
       .status(400)
       .json({

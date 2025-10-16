@@ -57,3 +57,9 @@ export const updateAdminById = async (
   if (!admin) throw new Error("Admin not found");
   return admin;
 };
+
+export const deleteAdminById = async (id: string) => {
+  const admin = await Admin.findByIdAndDelete(id);
+  if (!admin) throw new Error("Admin not found");
+  return admin;
+};
