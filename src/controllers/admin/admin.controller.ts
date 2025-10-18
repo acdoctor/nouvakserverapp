@@ -37,6 +37,20 @@ export const loginAdmin = async (req: Request, res: Response) => {
   }
 };
 
+export const getAdmins = async (_req: Request, res: Response) => {
+  try {
+    const admins = await adminService.fetchAdmins();
+    res.json({ success: true, data: admins });
+  } catch (err: unknown) {
+    res
+      .status(500)
+      .json({
+        success: false,
+        error: err instanceof Error ? err.message : String(err),
+      });
+  }
+};
+
 export const getAdminById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -91,11 +105,9 @@ export const deleteAdmin = async (req: Request, res: Response) => {
     await adminService.deleteAdminById(id);
     res.json({ success: true, message: "Admin deleted successfully" });
   } catch (err: unknown) {
-    res
-      .status(400)
-      .json({
-        success: false,
-        error: err instanceof Error ? err.message : String(err),
-      });
+    res.status(400).json({
+      success: false,
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
 };

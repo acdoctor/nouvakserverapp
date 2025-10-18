@@ -43,6 +43,10 @@ export const loginAdmin = async (countryCode: string, phoneNumber: string) => {
   return admin;
 };
 
+export const fetchAdmins = async () => {
+  return await Admin.find();
+};
+
 export const fetchAdminById = async (id: string) => {
   const admin = await Admin.findById(id);
   if (!admin) throw new Error("Admin not found");
