@@ -1,5 +1,6 @@
 import User from "../../models/user/user.model";
 import * as otpService from "../user/otp.service";
+import { IUser } from "../../models/user/user.model";
 
 export const createUser = async (countryCode: string, phoneNumber: string) => {
   phoneNumber = phoneNumber.trim();
@@ -39,5 +40,31 @@ export const loginUser = async (countryCode: string, phoneNumber: string) => {
 
   await otpService.createOtp(String(user._id), fullPhone);
 
+  return user;
+};
+
+// GET USER BY ID
+export const getUserById = async (id: string) => {
+  const user = await User.findById(id);
+  if (!user) throw new Error("User not found");
+  return user;
+};
+
+// GET ALL USERS
+export const getAllUsers = async () => {
+  return await User.find().sort({ createdAt: -1 });
+};
+
+// UPDATE USER
+export const updateUser = async (id: string, updateData: IUser) => {
+  const user = await User.findByIdAndUpdate(id, updateData, { new: true });
+  if (!user) throw new Error("User not found or update failed");
+  return user;
+};
+
+// DELETE USER
+export const deleteUser = async (id: string) => {
+  const user = await User.findByIdAndDelete(id);
+  if (!user) throw new Error("User not found or already deleted");
   return user;
 };
