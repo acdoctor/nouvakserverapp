@@ -56,7 +56,7 @@ export const getAllUsers = async () => {
 };
 
 // UPDATE USER
-export const updateUser = async (id: string, updateData: IUser) => {
+export const updateUser = async (id: string, updateData: Partial<IUser>) => {
   const user = await User.findByIdAndUpdate(id, updateData, { new: true });
   if (!user) throw new Error("User not found or update failed");
   return user;
