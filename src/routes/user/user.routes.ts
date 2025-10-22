@@ -24,12 +24,12 @@ router.post("/user/resend-otp", otpController.resendOtp);
 router.post("/user/verify-otp", otpController.verifyOtp);
 router.post("/user/refresh", authController.refresh);
 router.get("/user/profile/:id", authenticate, userController.getUserById);
-router.get("/", userController.getAllUsers);
+router.get("/user/all", userController.getAllUsers);
 router.put(
-  "/:id",
+  "/user/:id",
   validateRequest(updateUserSchema),
   userController.updateUser,
 );
-router.delete("/:id", userController.deleteUser);
+router.delete("/user/:id", userController.deleteUser);
 
 export default router;
