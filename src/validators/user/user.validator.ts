@@ -6,4 +6,4 @@ export const updateUserSchema = Joi.object({
   isActive: Joi.number().valid(0, 1).optional(),
   type: Joi.string().valid("RETAIL", "HNI", "SME", "LARGE_SCALE").optional(),
   deviceToken: Joi.string().optional(),
-}).min(1); // ✅ Ensure at least one field is passed
+}).min(1); // Ensure at least one field is passed
