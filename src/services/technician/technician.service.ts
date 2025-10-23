@@ -75,3 +75,43 @@ export const loginTechnician = async (
   await technicianotpService.createOtp(String(technician._id), fullPhone);
   return technician;
 };
+
+/**
+ * Get technician by ID
+ */
+export const getTechnicianById = async (id: string) => {
+  const technician = await Technician.findById(id).lean();
+  if (!technician) throw new Error("Technician not found");
+  return technician;
+};
+
+/**
+ * Get all technicians
+ */
+export const getAllTechnicians = async () => {
+  const technicians = await Technician.find().lean();
+  return technicians;
+};
+
+/**
+ * Update technician by ID
+ */
+export const updateTechnicianById = async (
+  id: string,
+  updateData: Partial<TechnicianInput>,
+) => {
+  const technician = await Technician.findByIdAndUpdate(id, updateData, {
+    new: true,
+  });
+  if (!technician) throw new Error("Technician not found");
+  return technician;
+};
+
+/**
+ * Delete technician by ID
+ */
+export const deleteTechnicianById = async (id: string) => {
+  const technician = await Technician.findByIdAndDelete(id);
+  if (!technician) throw new Error("Technician not found or already deleted");
+  return technician;
+};

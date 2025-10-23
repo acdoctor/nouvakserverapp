@@ -5,6 +5,7 @@ import * as technicianController from "../../controllers/technician/technician.c
 import { authenticate } from "../../middlewares/technician/auth";
 import { authSchema } from "../../validators/request/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
+import { updateTechnicianSchema } from "../../validators/technician/technician.validator";
 
 const router = Router();
 
@@ -22,8 +23,17 @@ router.post(
 router.post("/technician/resend-otp", otpController.resendOtp);
 router.post("/technician/verify-otp", otpController.verifyOtp);
 router.post("/technician/refresh", authController.refresh);
-router.get("/technician/profile", authenticate, (req, res) => {
-  res.json({ message: "Technician profile accessed" });
-});
+router.get(
+  "/technician/profile/:id",
+  authenticate,
+  technicianController.getTechnicianById,
+);
+router.get("/technician/all", technicianController.getAllTechnicians);
+router.put(
+  "/technician/:id",
+  validateRequest(updateTechnicianSchema),
+  technicianController.updateTechnician,
+);
+router.delete("/technician/:id", technicianController.deleteTechnician);
 
 export default router;
