@@ -8,6 +8,7 @@ import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/request/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
 import { adminUpdateSchema } from "../../validators/admin/admin.validator";
+import { updateUserSchema } from "../../validators/user/user.validator";
 
 const router = Router();
 
@@ -43,4 +44,12 @@ router.post(
 
 // User Controllers Routes
 router.post("/admin/user/register", userController.registerUser);
+router.get("/admin/user/profile/:id", authenticate, userController.getUserById);
+router.get("/admin/user/all", userController.getAllUsers);
+router.put(
+  "/admin/user/update/:id",
+  validateRequest(updateUserSchema),
+  userController.updateUser,
+);
+router.delete("/admin/user/delete/:id", userController.deleteUser);
 export default router;
