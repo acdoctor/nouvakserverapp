@@ -76,26 +76,20 @@ export const loginTechnician = async (
   return technician;
 };
 
-/**
- * Get technician by ID
- */
+// Get technician by ID
 export const getTechnicianById = async (id: string) => {
   const technician = await Technician.findById(id).lean();
   if (!technician) throw new Error("Technician not found");
   return technician;
 };
 
-/**
- * Get all technicians
- */
+//  Get all technicians
 export const getAllTechnicians = async () => {
   const technicians = await Technician.find().lean();
   return technicians;
 };
 
-/**
- * Update technician by ID
- */
+//  Update technician by ID
 export const updateTechnicianById = async (
   id: string,
   updateData: Partial<TechnicianInput>,
@@ -107,9 +101,7 @@ export const updateTechnicianById = async (
   return technician;
 };
 
-/**
- * Delete technician by ID
- */
+//  Delete technician by ID
 export const deleteTechnicianById = async (id: string) => {
   const technician = await Technician.findByIdAndDelete(id);
   if (!technician) throw new Error("Technician not found or already deleted");

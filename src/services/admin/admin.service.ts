@@ -17,7 +17,7 @@ interface UserListParams {
 export const createAdmin = async (countryCode: string, phoneNumber: string) => {
   phoneNumber = phoneNumber.trim();
 
-  // Check if already exists
+  // Check if admin already exists
   const admin = await Admin.findOne({ countryCode, phoneNumber });
   if (admin) throw new Error("Admin already registered");
 
