@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from "mongoose";
 
 export interface IUser extends Document {
   name?: string;
-  isActive?: number;
+  isActive?: boolean;
   type: "RETAIL" | "HNI" | "SME" | "LARGE_SCALE";
   phoneNumber: string;
   countryCode: string;
@@ -25,8 +25,8 @@ const userSchema = new Schema<IUser>(
       default: "",
     },
     isActive: {
-      type: Number,
-      default: 1,
+      type: Boolean,
+      default: true,
     },
     type: {
       type: String,

@@ -1,6 +1,8 @@
 import Admin from "../../models/admin/admin.model";
 import * as otpService from "../admin/otp.service";
 import { IAdmin } from "../../models/admin/admin.model";
+import User from "../../models/user/user.model";
+import { Types } from "mongoose";
 
 export const createAdmin = async (countryCode: string, phoneNumber: string) => {
   phoneNumber = phoneNumber.trim();
@@ -66,4 +68,19 @@ export const deleteAdminById = async (id: string) => {
   const admin = await Admin.findByIdAndDelete(id);
   if (!admin) throw new Error("Admin not found");
   return admin;
+};
+
+export const toggleUserActiveStatus = async (userId: string) => {
+  if (!userId) throw new Error("User ID is required");
+
+  const user = await User.findById(userId);
+  if (!user) throw new Error("User not found");
+
+  const updatedUser = await User.findOneAndUpdate(
+    { _id: new Types.ObjectId(userId) },
+    { isActive: user.isActive === true ? false : true },
+    { new: true },
+  );
+
+  return updatedUser;
 };

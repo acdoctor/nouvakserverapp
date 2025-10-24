@@ -1,5 +1,6 @@
 import * as adminService from "../../services/admin/admin.service";
 import { Request, Response } from "express";
+import { IUser } from "../../models/user/user.model";
 
 export const registerAdmin = async (req: Request, res: Response) => {
   try {
@@ -42,12 +43,10 @@ export const getAdmins = async (_req: Request, res: Response) => {
     const admins = await adminService.fetchAdmins();
     res.json({ success: true, data: admins });
   } catch (err: unknown) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        error: err instanceof Error ? err.message : String(err),
-      });
+    res.status(500).json({
+      success: false,
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
 };
 
@@ -108,6 +107,50 @@ export const deleteAdmin = async (req: Request, res: Response) => {
     res.status(400).json({
       success: false,
       error: err instanceof Error ? err.message : String(err),
+    });
+  }
+};
+
+export const activeInactiveUser = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  try {
+    const { id: userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required",
+      });
+    }
+
+    const updatedUser: IUser | null =
+      await adminService.toggleUserActiveStatus(userId);
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message:
+        updatedUser.isActive === true
+          ? "User account activated successfully"
+          : "User account deactivated successfully",
+      data: updatedUser,
+    });
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Internal server error";
+    const status = message === "User not found" ? 404 : 500;
+
+    return res.status(status).json({
+      success: false,
+      message,
     });
   }
 };

@@ -36,6 +36,12 @@ router.put(
   adminController.updateAdmin,
 );
 
+router.post(
+  "/admin/user/toggle-active/:id",
+  authenticate,
+  adminController.activeInactiveUser,
+);
+
 // Technician Controllers Routes
 router.post(
   "/admin/technician/register",
