@@ -107,7 +107,7 @@ export const getUserList = async ({
   const skip = (page - 1) * limit;
   const sort = { [sortField]: sortOrder === "desc" ? -1 : 1 };
 
-  const matchConditions: Record<string, null> = {};
+  const matchConditions: Record<string, unknown> = {};
 
   // Search filter
   if (search) {
