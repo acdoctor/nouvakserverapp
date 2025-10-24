@@ -51,9 +51,9 @@ export const getUserById = async (id: string) => {
 };
 
 // GET ALL USERS
-export const getAllUsers = async () => {
-  return await User.find().sort({ createdAt: -1 });
-};
+// export const getAllUsers = async () => {
+//   return await User.find().sort({ createdAt: -1 });
+// };
 
 // UPDATE USER
 export const updateUser = async (id: string, updateData: Partial<IUser>) => {
