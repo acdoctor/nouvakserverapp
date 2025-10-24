@@ -42,6 +42,8 @@ router.post(
   adminController.activeInactiveUser,
 );
 
+router.get("/admin/user/list", authenticate, adminController.userList);
+
 // Technician Controllers Routes
 router.post(
   "/admin/technician/register",
