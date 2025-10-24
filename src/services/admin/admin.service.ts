@@ -4,6 +4,16 @@ import { IAdmin } from "../../models/admin/admin.model";
 import User from "../../models/user/user.model";
 import { Types } from "mongoose";
 
+interface UserListParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sortField?: string;
+  sortOrder?: "asc" | "desc";
+  startDate?: string;
+  endDate?: string;
+}
+
 export const createAdmin = async (countryCode: string, phoneNumber: string) => {
   phoneNumber = phoneNumber.trim();
 
@@ -83,4 +93,72 @@ export const toggleUserActiveStatus = async (userId: string) => {
   );
 
   return updatedUser;
+};
+
+export const getUserList = async ({
+  page = 1,
+  limit = 10,
+  search = "",
+  sortField = "createdAt",
+  sortOrder = "desc",
+  startDate,
+  endDate,
+}: UserListParams) => {
+  const skip = (page - 1) * limit;
+  const sort = { [sortField]: sortOrder === "desc" ? -1 : 1 };
+
+  const matchConditions: Record<string, null> = {};
+
+  // Search filter
+  if (search) {
+    matchConditions.$or = [
+      { phoneNumber: { $regex: search, $options: "i" } },
+      { name: { $regex: search, $options: "i" } },
+      { email: { $regex: search, $options: "i" } },
+    ];
+  }
+
+  // Date filters
+  if (startDate && endDate) {
+    matchConditions.createdAt = {
+      $gte: new Date(startDate),
+      $lte: new Date(endDate),
+    };
+  } else if (startDate) {
+    matchConditions.createdAt = { $gte: new Date(startDate) };
+  } else if (endDate) {
+    matchConditions.createdAt = { $lte: new Date(endDate) };
+  }
+
+  // Query aggregation
+  const users = await User.aggregate([
+    { $match: matchConditions },
+    {
+      $project: {
+        name: { $ifNull: ["$name", ""] },
+        phoneNumber: { $ifNull: ["$phoneNumber", ""] },
+        countryCode: { $ifNull: ["$countryCode", ""] },
+        isActive: { $ifNull: ["$isActive", false] },
+        isOtpVerify: { $ifNull: ["$isOtpVerify", false] },
+        createdAt: { $ifNull: ["$createdAt", ""] },
+        type: { $ifNull: ["$type", "NA"] },
+        email: { $ifNull: ["$email", ""] },
+      },
+    },
+    { $sort: sort as Record<string, 1 | -1> },
+    { $skip: skip },
+    { $limit: limit },
+  ]);
+
+  const total = await User.countDocuments(matchConditions);
+
+  return {
+    users,
+    total,
+    pagination: {
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
