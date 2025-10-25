@@ -43,6 +43,11 @@ router.post(
 );
 
 router.get("/admin/user/list", authenticate, adminController.userList);
+router.get(
+  "/admin/user/addresses-list/:userId",
+  authenticate,
+  adminController.userList,
+);
 
 // Technician Controllers Routes
 router.post(
