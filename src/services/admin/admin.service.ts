@@ -164,7 +164,7 @@ export const getUserList = async ({
   };
 };
 
-export const getUserAddress = async (userId: string) => {
+export const getUserAddresses = async (userId: string) => {
   if (!userId || !mongoose.Types.ObjectId.isValid(userId))
     throw new Error("Invalid or missing userId");
 
