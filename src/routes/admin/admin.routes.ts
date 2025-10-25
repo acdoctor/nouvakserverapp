@@ -58,7 +58,6 @@ router.get(
   authenticate,
   userController.userAddressesList,
 );
-// router.get("/admin/user/all", userController.getAllUsers);
 router.put(
   "/admin/user/update/:id",
   validateRequest(updateUserSchema),

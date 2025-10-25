@@ -57,16 +57,6 @@ export const getUserById = async (req: Request, res: Response) => {
   }
 };
 
-// GET ALL USERS
-// export const getAllUsers = async (_req: Request, res: Response) => {
-//   try {
-//     const users = await userService.getAllUsers();
-//     res.json({ success: true, count: users.length, data: users });
-//   } catch {
-//     res.status(500).json({ success: false, error: "Something went wrong" });
-//   }
-// };
-
 // UPDATE USER
 export const updateUser = async (req: Request, res: Response) => {
   try {
