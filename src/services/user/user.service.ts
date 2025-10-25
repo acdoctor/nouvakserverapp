@@ -1,6 +1,8 @@
 import User from "../../models/user/user.model";
 import * as otpService from "../user/otp.service";
 import { IUser } from "../../models/user/user.model";
+import mongoose from "mongoose";
+import Address from "../../models/user/address.model";
 
 export const createUser = async (countryCode: string, phoneNumber: string) => {
   phoneNumber = phoneNumber.trim();
@@ -67,4 +69,18 @@ export const deleteUser = async (id: string) => {
   const user = await User.findByIdAndDelete(id);
   if (!user) throw new Error("User not found or already deleted");
   return user;
+};
+
+export const getUserAddresses = async (userId: string) => {
+  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+    throw new Error("Invalid or missing userId");
+  }
+
+  const addresses = await Address.find({ userId }).lean();
+
+  if (!addresses || addresses.length === 0) {
+    throw new Error("No addresses found for this user");
+  }
+
+  return addresses;
 };

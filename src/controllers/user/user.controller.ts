@@ -106,3 +106,40 @@ export const deleteUser = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const userAddressesList = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    if (!userId || typeof userId !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required",
+      });
+    }
+
+    const addresses = await userService.getUserAddresses(userId);
+
+    if (!addresses.length) {
+      return res.status(404).json({
+        success: false,
+        message: "No addresses found for this user",
+        data: [],
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Addresses fetched successfully",
+      data: addresses,
+      count: addresses.length,
+    });
+  } catch (error: unknown) {
+    console.error("Error fetching user addresses:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+};

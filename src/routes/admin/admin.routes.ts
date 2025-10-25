@@ -46,7 +46,7 @@ router.get("/admin/user/list", authenticate, adminController.userList);
 router.get(
   "/admin/user/addresses-list/:userId",
   authenticate,
-  adminController.userList,
+  userController.userAddressesList,
 );
 
 // Technician Controllers Routes

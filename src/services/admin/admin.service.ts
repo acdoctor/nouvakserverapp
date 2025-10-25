@@ -2,8 +2,7 @@ import Admin from "../../models/admin/admin.model";
 import * as otpService from "../admin/otp.service";
 import { IAdmin } from "../../models/admin/admin.model";
 import User from "../../models/user/user.model";
-import mongoose, { Types } from "mongoose";
-import Address from "../../models/user/address.model";
+import { Types } from "mongoose";
 
 interface UserListParams {
   page?: number;
@@ -162,18 +161,4 @@ export const getUserList = async ({
       totalPages: Math.ceil(total / limit),
     },
   };
-};
-
-export const getUserAddresses = async (userId: string) => {
-  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-    throw new Error("Invalid or missing userId");
-  }
-
-  const addresses = await Address.find({ userId }).lean();
-
-  if (!addresses || addresses.length === 0) {
-    throw new Error("No addresses found for this user");
-  }
-
-  return addresses;
 };
