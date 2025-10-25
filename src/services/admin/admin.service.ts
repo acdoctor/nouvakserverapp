@@ -165,13 +165,15 @@ export const getUserList = async ({
 };
 
 export const getUserAddresses = async (userId: string) => {
-  if (!userId || !mongoose.Types.ObjectId.isValid(userId))
+  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
     throw new Error("Invalid or missing userId");
+  }
 
   const addresses = await Address.find({ userId }).lean();
 
-  if (!addresses || addresses.length === 0)
+  if (!addresses || addresses.length === 0) {
     throw new Error("No addresses found for this user");
+  }
 
   return addresses;
 };
