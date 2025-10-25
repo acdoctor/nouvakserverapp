@@ -202,7 +202,7 @@ export const userList = async (req: Request, res: Response) => {
   }
 };
 
-export const userAddressList = async (req: Request, res: Response) => {
+export const userAddressesList = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
 
