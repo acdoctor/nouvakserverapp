@@ -30,6 +30,6 @@ router.put(
   userController.updateUser,
 );
 router.delete("/user/delete/:id", userController.deleteUser);
-router.delete("/user/addresses/:userId", userController.userAddressesList);
+router.get("/user/addresses-list/:userId", userController.userAddressesList);
 
 export default router;
