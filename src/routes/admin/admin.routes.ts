@@ -43,11 +43,6 @@ router.post(
 );
 
 router.get("/admin/user/list", authenticate, adminController.userList);
-router.get(
-  "/admin/user/addresses-list/:userId",
-  authenticate,
-  userController.userAddressesList,
-);
 
 // Technician Controllers Routes
 router.post(
@@ -58,6 +53,11 @@ router.post(
 // User Controllers Routes
 router.post("/admin/user/register", userController.registerUser);
 router.get("/admin/user/profile/:id", authenticate, userController.getUserById);
+router.get(
+  "/admin/user/addresses-list/:userId",
+  authenticate,
+  userController.userAddressesList,
+);
 // router.get("/admin/user/all", userController.getAllUsers);
 router.put(
   "/admin/user/update/:id",
