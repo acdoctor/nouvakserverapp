@@ -3,18 +3,18 @@ import axios, { AxiosResponse } from "axios";
 /**
  * Textlocal API response type
  */
-interface TextlocalMessage {
+interface ITextlocalMessage {
   id: string;
   recipient: string;
 }
 
-interface TextlocalResponse {
+interface ITextlocalResponse {
   balance: number;
   batch_id: number;
   cost: number;
   num_messages: number;
   message: string;
-  messages: TextlocalMessage[];
+  messages: ITextlocalMessage[];
   status: "success" | "failure";
   errors?: { code: number; message: string }[];
 }
@@ -28,7 +28,7 @@ interface TextlocalResponse {
 export async function sendOtpSms(
   toPhone: string,
   code: string,
-): Promise<TextlocalResponse> {
+): Promise<ITextlocalResponse> {
   // Normalize phone number
   let formattedPhone = toPhone.trim();
   if (formattedPhone.startsWith("+")) formattedPhone = formattedPhone.slice(1);
