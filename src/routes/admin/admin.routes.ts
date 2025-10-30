@@ -65,8 +65,8 @@ router.put(
   userController.updateUser,
 );
 router.delete("/admin/user/delete/:id", userController.deleteUser);
-export default router;
 
 // service controller routes
-
 router.post("/admin/service/add", authenticate, serviceController.addService);
+
+export default router;
