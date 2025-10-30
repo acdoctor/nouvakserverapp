@@ -129,3 +129,40 @@ export const editService = async (
     });
   }
 };
+
+export const getServiceById = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  try {
+    const { serviceId } = req.params;
+
+    if (!serviceId || serviceId.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: "Service ID is required",
+      });
+    }
+
+    const service = await findServiceById(serviceId);
+
+    if (service) {
+      return res.status(200).json({
+        success: true,
+        data: service,
+      });
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: "Service not found",
+      });
+    }
+  } catch (error: unknown) {
+    console.error("Error fetching service by ID:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
