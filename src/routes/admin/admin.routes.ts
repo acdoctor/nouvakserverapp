@@ -4,6 +4,7 @@ import * as otpController from "../../controllers/admin/otp.controller";
 import * as authController from "../../controllers/admin/auth.controller";
 import * as technicianController from "../../controllers/technician/technician.controller";
 import * as userController from "../../controllers/user/user.controller";
+import * as serviceController from "../../controllers/service/service.controller";
 import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/request/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
@@ -65,3 +66,7 @@ router.put(
 );
 router.delete("/admin/user/delete/:id", userController.deleteUser);
 export default router;
+
+// service controller routes
+
+router.post("/admin/service/add", authenticate, serviceController.addService);
