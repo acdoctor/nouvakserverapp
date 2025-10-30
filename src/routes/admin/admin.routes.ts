@@ -75,4 +75,10 @@ router.post(
   serviceController.addService,
 );
 
+router.post(
+  "/admin/service/edit/:serviceId",
+  authenticate,
+  serviceController.editService,
+);
+
 export default router;
