@@ -10,6 +10,7 @@ import { authSchema } from "../../validators/request/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
 import { adminUpdateSchema } from "../../validators/admin/admin.validator";
 import { updateUserSchema } from "../../validators/user/user.validator";
+import { addServiceSchema } from "../../validators/service/service.validator";
 
 const router = Router();
 
@@ -67,6 +68,11 @@ router.put(
 router.delete("/admin/user/delete/:id", userController.deleteUser);
 
 // service controller routes
-router.post("/admin/service/add", authenticate, serviceController.addService);
+router.post(
+  "/admin/service/add",
+  authenticate,
+  validateRequest(addServiceSchema),
+  serviceController.addService,
+);
 
 export default router;
