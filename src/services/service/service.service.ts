@@ -40,3 +40,22 @@ export const updateServiceById = async (
 ): Promise<IService | null> => {
   return Service.findByIdAndUpdate(serviceId, updateData, { new: true });
 };
+
+// Toggle service active/inactive status
+
+export const toggleServiceStatus = async (
+  serviceId: string,
+): Promise<IService | null> => {
+  if (!Types.ObjectId.isValid(serviceId)) return null;
+
+  const service = await Service.findById(serviceId);
+  if (!service) return null;
+
+  const newStatus = !service.isActive;
+
+  return Service.findByIdAndUpdate(
+    serviceId,
+    { isActive: newStatus },
+    { new: true },
+  );
+};
