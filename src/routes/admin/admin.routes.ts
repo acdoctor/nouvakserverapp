@@ -87,4 +87,9 @@ router.get(
   serviceController.getServiceById,
 );
 
+router.get(
+  "/admin/service/active-inactive/:serviceId",
+  authenticate,
+  serviceController.serviceActiveInactive,
+);
 export default router;
