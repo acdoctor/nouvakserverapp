@@ -103,4 +103,10 @@ router.get(
   serviceController.serviceList,
 );
 
+router.get(
+  "/admin/service/mobile-list",
+  authenticate,
+  serviceController.mobileServiceList,
+);
+
 export default router;
