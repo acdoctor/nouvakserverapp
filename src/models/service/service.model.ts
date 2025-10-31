@@ -17,7 +17,7 @@ export interface IBannerImage {
 export interface IService extends Document {
   name: string;
   icon?: string;
-  isActive: number;
+  isActive: boolean;
   orderBy: number;
   description: Record<string, unknown>[];
   terms: Record<string, unknown>[];
@@ -33,7 +33,7 @@ const serviceSchema = new Schema<IService>(
   {
     name: { type: String, index: true, required: true },
     icon: { type: String },
-    isActive: { type: Number, default: 1 },
+    isActive: { type: Boolean, default: true },
     orderBy: { type: Number, default: 0 },
     description: { type: [Object], default: [] },
     terms: { type: [Object], default: [] },
