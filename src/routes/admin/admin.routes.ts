@@ -90,7 +90,7 @@ router.get(
   serviceController.getServiceById,
 );
 
-router.get(
+router.post(
   "/admin/service/active-inactive/:serviceId",
   authenticate,
   serviceController.serviceActiveInactive,
