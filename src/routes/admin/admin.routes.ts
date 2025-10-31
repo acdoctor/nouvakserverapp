@@ -10,7 +10,10 @@ import { authSchema } from "../../validators/request/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
 import { adminUpdateSchema } from "../../validators/admin/admin.validator";
 import { updateUserSchema } from "../../validators/user/user.validator";
-import { addServiceSchema } from "../../validators/service/service.validator";
+import {
+  addServiceSchema,
+  serviceListValidator,
+} from "../../validators/service/service.validator";
 
 const router = Router();
 
@@ -92,4 +95,12 @@ router.get(
   authenticate,
   serviceController.serviceActiveInactive,
 );
+
+router.get(
+  "/admin/service/list",
+  authenticate,
+  validateRequest(serviceListValidator),
+  serviceController.serviceList,
+);
+
 export default router;
