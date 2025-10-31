@@ -1,6 +1,14 @@
 import { Service, IService } from "../../models/service/service.model";
 import { Types } from "mongoose";
 
+interface IServiceListQuery {
+  page?: number | undefined;
+  limit?: number | undefined;
+  search?: string | undefined;
+  sortby?: string | undefined;
+  orderby?: "asc" | "desc" | undefined;
+}
+
 export const findServiceByNameAndCategory = async (
   name: string,
   category: string,
@@ -58,4 +66,41 @@ export const toggleServiceStatus = async (
     { isActive: newStatus },
     { new: true },
   );
+};
+
+// Get paginated, searchable, sortable list of services.
+
+export const getServiceList = async (query: IServiceListQuery) => {
+  const page = query.page ?? 1;
+  const limit = query.limit ?? 10;
+  const search = query.search ?? "";
+  const sortField = query.sortby ?? "createdAt";
+  const sortOrder = query.orderby === "asc" ? 1 : -1;
+
+  const offset = (page - 1) * limit;
+
+  const filter = search
+    ? { $or: [{ name: { $regex: search, $options: "i" } }] }
+    : {};
+
+  const [services, total] = await Promise.all([
+    Service.find(filter)
+      .select("-terms -description")
+      .sort({ [sortField]: sortOrder })
+      .skip(offset)
+      .limit(limit)
+      .lean<IService[]>(),
+    Service.countDocuments(filter),
+  ]);
+
+  return {
+    services,
+    total,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };

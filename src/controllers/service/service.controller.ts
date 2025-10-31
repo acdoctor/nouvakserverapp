@@ -4,6 +4,7 @@ import {
   findDuplicateService,
   findServiceById,
   findServiceByNameAndCategory,
+  getServiceList,
   toggleServiceStatus,
   updateServiceById,
 } from "../../services/service/service.service";
@@ -204,6 +205,50 @@ export const serviceActiveInactive = async (
     });
   } catch (error: unknown) {
     console.error("Error toggling service status:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An unexpected error occurred.",
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
+
+//  Fetch paginated and searchable service list
+
+export const serviceList = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  try {
+    const { page, limit, search, sortby, orderby } = req.query;
+
+    const parsedQuery = {
+      page: page ? parseInt(page as string, 10) : undefined,
+      limit: limit ? parseInt(limit as string, 10) : undefined,
+      search: search as string,
+      sortby: sortby as string,
+      orderby: orderby as "asc" | "desc",
+    };
+
+    const result = await getServiceList(parsedQuery);
+
+    if (result.services.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No services found.",
+        data: [],
+        count: 0,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: result.services,
+      count: result.total,
+      pagination: result.pagination,
+    });
+  } catch (error: unknown) {
+    console.error("Error fetching service list:", error);
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred.",
