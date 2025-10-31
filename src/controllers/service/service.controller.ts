@@ -4,6 +4,7 @@ import {
   findDuplicateService,
   findServiceById,
   findServiceByNameAndCategory,
+  getMobileServiceList,
   getServiceList,
   toggleServiceStatus,
   updateServiceById,
@@ -253,6 +254,33 @@ export const serviceList = async (
       success: false,
       message: "An unexpected error occurred.",
       error: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
+
+export const mobileServiceList = async (req: Request, res: Response) => {
+  try {
+    console.log("mobileServiceList called");
+
+    const services = await getMobileServiceList();
+
+    if (services.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No services found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: services,
+    });
+  } catch (error) {
+    console.error("Error fetching mobile services:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An unexpected error occurred.",
+      error: (error as Error).message,
     });
   }
 };
