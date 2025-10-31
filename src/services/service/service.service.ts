@@ -9,6 +9,23 @@ interface IServiceListQuery {
   orderby?: "asc" | "desc" | undefined;
 }
 
+interface IServiceWithImages {
+  _id?: string;
+  name?: string;
+  icon?: string;
+  isActive: boolean;
+  orderBy: number;
+  description: Record<string, unknown>[];
+  terms: Record<string, unknown>[];
+  key?: string;
+  category?: string;
+  images?: {
+    icon: string;
+    banner1: string;
+    banner2: string;
+  };
+}
+
 export const findServiceByNameAndCategory = async (
   name: string,
   category: string,
@@ -103,4 +120,40 @@ export const getServiceList = async (query: IServiceListQuery) => {
       totalPages: Math.ceil(total / limit),
     },
   };
+};
+
+export const getMobileServiceList = async (): Promise<IServiceWithImages[]> => {
+  const BASE_URL = "http://137.59.53.70:8080/public";
+
+  const services = await Service.find({ isActive: 1 })
+    .sort({ orderBy: 1 })
+    .lean<IServiceWithImages[]>();
+
+  const imageMap: Record<string, string> = {
+    STERILIZATION: "sterlization.png",
+    REPAIR: "repair.png",
+    INSTALLATION: "installation.png",
+    COMPRESSOR: "compressor.png",
+    GAS_CHARGING: "gasscharging.png",
+    COPPER_PIPING: "Cpiping.png",
+    AMC: "AMC.png",
+  };
+
+  const banner1 = `${BASE_URL}/banner1.png`;
+  const banner2 = `${BASE_URL}/banner2.png`;
+
+  // Attach appropriate images
+  return services.map((service) => {
+    const key = service.key || service.name?.toUpperCase() || "AMC";
+    const fileName = imageMap[key] || "AMC.png";
+
+    return {
+      ...service,
+      images: {
+        icon: `${BASE_URL}/${fileName}`,
+        banner1,
+        banner2,
+      },
+    };
+  });
 };
