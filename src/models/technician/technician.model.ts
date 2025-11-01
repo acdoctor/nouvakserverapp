@@ -62,7 +62,11 @@ const technicianSchema = new Schema<ITechnician>(
   {
     name: { type: String, required: true },
     joiningDate: { type: Date },
-    type: { type: String, enum: ["ACD", "FC"], required: true },
+    type: {
+      type: String,
+      enum: ["ACD", "FC"],
+      // required: true
+    },
     position: {
       type: String,
       enum: [
@@ -87,7 +91,7 @@ const technicianSchema = new Schema<ITechnician>(
         "REQUESTED",
       ],
       default: "PENDING",
-      required: true,
+      // required: true,
     },
     kycDocs: [
       {
@@ -108,7 +112,13 @@ const technicianSchema = new Schema<ITechnician>(
     ],
     profilePhoto: { type: String, default: "" },
     countryCode: { type: String, default: "+91", required: true },
-    phoneNumber: { type: String, unique: true, index: true, length: 10 },
+    phoneNumber: {
+      type: String,
+      unique: true,
+      index: true,
+      length: 10,
+      required: true,
+    },
     status: {
       type: String,
       enum: [
@@ -126,7 +136,7 @@ const technicianSchema = new Schema<ITechnician>(
         "RESIGNED",
       ],
       default: "AVAILABLE",
-      required: true,
+      // required: true,
     },
     email: { type: String, default: null },
     dob: { type: Date, default: null },
