@@ -20,4 +20,4 @@ export const authSchema = Joi.object({
         'Country code must start with a "+" followed by 1 to 4 digits',
       "any.required": "Country code is required",
     }),
-});
+}).unknown(true); // Allow additional unknown fields
