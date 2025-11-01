@@ -60,7 +60,13 @@ export const getAdminById = async (req: Request, res: Response) => {
     }
 
     const admin = await adminService.fetchAdminById(id);
-    return res.json({ success: true, data: admin });
+    return res
+      .status(200)
+      .json({
+        success: true,
+        data: admin,
+        message: "Admin fetched successfully",
+      });
   } catch (err: unknown) {
     return res.status(404).json({
       success: false,
