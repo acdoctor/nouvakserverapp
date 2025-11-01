@@ -32,7 +32,7 @@ const userSchema = new Schema<IUser>(
       type: String,
       enum: ["RETAIL", "HNI", "SME", "LARGE_SCALE"],
       default: "RETAIL",
-      required: true,
+      // required: true,
     },
     phoneNumber: {
       type: String,
