@@ -125,7 +125,7 @@ export const getServiceList = async (query: IServiceListQuery) => {
 export const getMobileServiceList = async (): Promise<IServiceWithImages[]> => {
   const BASE_URL = "http://137.59.53.70:8080/public";
 
-  const services = await Service.find({ isActive: 1 })
+  const services = await Service.find({ isActive: true })
     .sort({ orderBy: 1 })
     .lean<IServiceWithImages[]>();
 
