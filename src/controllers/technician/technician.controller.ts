@@ -64,7 +64,13 @@ export const getTechnicianById = async (req: Request, res: Response) => {
     }
 
     const technician = await technicianService.getTechnicianById(id);
-    res.json({ success: true, data: technician });
+    res
+      .status(200)
+      .json({
+        success: true,
+        data: technician,
+        message: "Technician fetched successfully",
+      });
   } catch (err: unknown) {
     res.status(404).json({
       success: false,
