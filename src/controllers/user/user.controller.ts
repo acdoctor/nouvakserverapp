@@ -1,3 +1,4 @@
+import { IUser } from "../../models/user/user.model";
 import * as userService from "../../services/user/user.service";
 import { Request, Response } from "express";
 
@@ -6,33 +7,64 @@ export const registerUser = async (req: Request, res: Response) => {
     const { countryCode, phoneNumber } = req.body;
     const user = await userService.createUser(countryCode, phoneNumber);
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "OTP sent for verification",
       userId: Object(user._id),
     });
   } catch (err: unknown) {
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
       error: err instanceof Error ? err.message : String(err),
     });
   }
 };
 
-export const loginUser = async (req: Request, res: Response) => {
+export const loginRegisterUser = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
   try {
     const { countryCode, phoneNumber } = req.body;
-    const user = await userService.loginUser(countryCode, phoneNumber);
 
-    res.json({
+    if (!countryCode || !phoneNumber) {
+      return res.status(400).json({
+        success: false,
+        message: "Country code and phone number are required.",
+      });
+    }
+
+    const user: IUser | null = await userService.loginUser(
+      countryCode,
+      phoneNumber,
+    );
+
+    if (!user) {
+      const newUser: IUser = await userService.createUser(
+        countryCode,
+        phoneNumber,
+      );
+
+      return res.status(201).json({
+        success: true,
+        message: "OTP sent for verification.",
+        userId: newUser._id,
+      });
+    }
+
+    return res.status(200).json({
       success: true,
-      message: "OTP sent for login",
-      userId: Object(user._id),
+      message: "OTP sent for login.",
+      userId: user._id,
     });
-  } catch (err: unknown) {
-    res.status(400).json({
+  } catch (err) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Unknown error occurred";
+
+    return res.status(500).json({
       success: false,
-      error: err instanceof Error ? err.message : String(err),
+      message: "Internal server error.",
+      error: errorMessage,
     });
   }
 };
