@@ -41,7 +41,16 @@ export const loginTechnician = async (req: Request, res: Response) => {
       phoneNumber,
     );
 
-    res.json({
+    if (!technician) {
+      await technicianService.createTechnician(req.body);
+
+      return res.status(201).json({
+        success: true,
+        message: "Technician created successfully",
+      });
+    }
+
+    return res.status(200).json({
       success: true,
       message: "OTP sent for login",
       technicianId: Object(technician._id),
