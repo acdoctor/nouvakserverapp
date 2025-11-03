@@ -31,18 +31,19 @@ export const loginRegisterAdmin = async (req: Request, res: Response) => {
       return res.status(201).json({
         success: true,
         message: "OTP sent for verification",
-        adminId: Object(newAdmin._id),
+        adminId: newAdmin._id,
       });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "OTP sent for login",
-      adminId: Object(admin._id),
+      adminId: admin._id,
     });
   } catch (err: unknown) {
-    res.status(400).json({
+    res.status(500).json({
       success: false,
+      message: "Something went wrong",
       error: err instanceof Error ? err.message : String(err),
     });
   }
