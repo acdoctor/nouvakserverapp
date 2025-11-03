@@ -10,29 +10,25 @@ export const registerTechnician = async (req: Request, res: Response) => {
       message: "Technician created successfully",
     });
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      if (
-        error.message.includes(
-          "A technician with the given phone number already exists",
-        )
-      ) {
-        return res.status(409).json({
-          success: false,
-          message: error.message,
-        });
-      }
+    const message = error instanceof Error ? error.message : String(error);
 
-      return res.status(500).json({
+    if (
+      message.includes(
+        "A technician with the given phone number already exists",
+      )
+    ) {
+      return res.status(409).json({
         success: false,
-        message: "Internal server error",
-        error: error.message,
+        message,
       });
     }
+
+    console.error("Error creating technician:", message);
 
     return res.status(500).json({
       success: false,
       message: "Internal server error",
-      error: String(error),
+      error: message,
     });
   }
 };
