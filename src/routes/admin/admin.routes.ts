@@ -44,10 +44,10 @@ router.put(
 router.post(
   "/admin/user/toggle-active/:id",
   authenticate,
-  adminController.activeInactiveUser,
+  userController.activeInactiveUser,
 );
 
-router.get("/admin/user/list", authenticate, adminController.userList);
+router.get("/admin/user/list", authenticate, userController.userList);
 
 // Technician Controllers Routes
 router.post(

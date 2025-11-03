@@ -165,3 +165,94 @@ export const userAddressesList = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const activeInactiveUser = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  try {
+    const { id: userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required",
+      });
+    }
+
+    const updatedUser: IUser | null =
+      await userService.toggleUserActiveStatus(userId);
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message:
+        updatedUser.isActive === true
+          ? "User account activated successfully"
+          : "User account deactivated successfully",
+      data: updatedUser,
+    });
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Internal server error";
+    const status = message === "User not found" ? 404 : 500;
+
+    return res.status(status).json({
+      success: false,
+      message,
+    });
+  }
+};
+
+export const userList = async (req: Request, res: Response) => {
+  try {
+    const {
+      page = "1",
+      limit = "10",
+      search = "",
+      sortby = "createdAt",
+      orderby = "desc",
+      startDate,
+      endDate,
+    } = req.query;
+
+    const { users, total, pagination } = await userService.getUserList({
+      page: parseInt(page as string, 10),
+      limit: parseInt(limit as string, 10),
+      search: search as string,
+      sortField: sortby as string,
+      sortOrder: (orderby as string) === "desc" ? "desc" : "asc",
+      startDate: startDate as string,
+      endDate: endDate as string,
+    });
+
+    if (!users.length) {
+      return res.status(404).json({
+        success: false,
+        message: "No users found",
+        data: [],
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Users fetched successfully",
+      data: users,
+      count: total,
+      pagination,
+    });
+  } catch (error: unknown) {
+    console.error("Error fetching users:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
