@@ -18,7 +18,7 @@ export const registerAdmin = async (req: Request, res: Response) => {
 
     return res.status(statusCode).json({
       success: false,
-      error: message,
+      error: statusCode === 409 ? message : "Something went wrong",
     });
   }
 };

@@ -11,8 +11,12 @@ export const registerTechnician = async (req: Request, res: Response) => {
     });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      if (error.message.includes("already exists")) {
-        return res.status(400).json({
+      if (
+        error.message.includes(
+          "A technician with the given phone number already exists",
+        )
+      ) {
+        return res.status(409).json({
           success: false,
           message: error.message,
         });
@@ -64,13 +68,11 @@ export const getTechnicianById = async (req: Request, res: Response) => {
     }
 
     const technician = await technicianService.getTechnicianById(id);
-    res
-      .status(200)
-      .json({
-        success: true,
-        data: technician,
-        message: "Technician fetched successfully",
-      });
+    res.status(200).json({
+      success: true,
+      data: technician,
+      message: "Technician fetched successfully",
+    });
   } catch (err: unknown) {
     res.status(404).json({
       success: false,
