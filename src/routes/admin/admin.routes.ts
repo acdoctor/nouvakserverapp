@@ -26,7 +26,7 @@ router.post(
 router.post(
   "/admin/login",
   validateRequest(authSchema),
-  adminController.loginAdmin,
+  adminController.loginRegisterAdmin,
 );
 router.post("/admin/resend-otp", otpController.resendOtp);
 router.post("/admin/verify-otp", otpController.verifyOtp);

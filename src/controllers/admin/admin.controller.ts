@@ -13,9 +13,12 @@ export const registerAdmin = async (req: Request, res: Response) => {
       adminId: Object(admin._id),
     });
   } catch (err: unknown) {
-    res.status(400).json({
+    const message = err instanceof Error ? err.message : String(err);
+    const statusCode = message.includes("Admin already registered") ? 409 : 500;
+
+    return res.status(statusCode).json({
       success: false,
-      error: err instanceof Error ? err.message : String(err),
+      error: message,
     });
   }
 };
