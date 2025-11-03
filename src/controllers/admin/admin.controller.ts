@@ -20,10 +20,20 @@ export const registerAdmin = async (req: Request, res: Response) => {
   }
 };
 
-export const loginAdmin = async (req: Request, res: Response) => {
+export const loginRegisterAdmin = async (req: Request, res: Response) => {
   try {
     const { countryCode, phoneNumber } = req.body;
     const admin = await adminService.loginAdmin(countryCode, phoneNumber);
+
+    if (!admin) {
+      const newAdmin = await adminService.createAdmin(countryCode, phoneNumber);
+
+      return res.status(201).json({
+        success: true,
+        message: "OTP sent for verification",
+        adminId: Object(newAdmin._id),
+      });
+    }
 
     res.json({
       success: true,
@@ -60,13 +70,11 @@ export const getAdminById = async (req: Request, res: Response) => {
     }
 
     const admin = await adminService.fetchAdminById(id);
-    return res
-      .status(200)
-      .json({
-        success: true,
-        data: admin,
-        message: "Admin fetched successfully",
-      });
+    return res.status(200).json({
+      success: true,
+      data: admin,
+      message: "Admin fetched successfully",
+    });
   } catch (err: unknown) {
     return res.status(404).json({
       success: false,
