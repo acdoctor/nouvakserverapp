@@ -7,7 +7,7 @@ export const registerAdmin = async (req: Request, res: Response) => {
     const { countryCode, phoneNumber } = req.body;
     const admin = await adminService.createAdmin(countryCode, phoneNumber);
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "OTP sent for verification",
       adminId: Object(admin._id),
@@ -38,13 +38,13 @@ export const loginRegisterAdmin = async (req: Request, res: Response) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "OTP sent for login",
       adminId: admin._id,
     });
   } catch (err: unknown) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Something went wrong",
       error: err instanceof Error ? err.message : String(err),
@@ -55,7 +55,7 @@ export const loginRegisterAdmin = async (req: Request, res: Response) => {
 export const getAdmins = async (_req: Request, res: Response) => {
   try {
     const admins = await adminService.fetchAdmins();
-    res.json({ success: true, data: admins });
+    res.status(200).json({ success: true, data: admins });
   } catch (err: unknown) {
     res.status(500).json({
       success: false,
@@ -97,13 +97,13 @@ export const updateAdmin = async (req: Request, res: Response) => {
     }
 
     const admin = await adminService.updateAdminById(id, req.body);
-    res.json({
+    return res.status(200).json({
       success: true,
       message: "Admin updated successfully",
       data: admin,
     });
   } catch (err: unknown) {
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
       error: err instanceof Error ? err.message : String(err),
     });
@@ -120,7 +120,9 @@ export const deleteAdmin = async (req: Request, res: Response) => {
     }
 
     await adminService.deleteAdminById(id);
-    res.json({ success: true, message: "Admin deleted successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Admin deleted successfully" });
   } catch (err: unknown) {
     res.status(400).json({
       success: false,
