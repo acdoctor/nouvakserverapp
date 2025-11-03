@@ -18,7 +18,7 @@ router.post(
 router.post(
   "/technician/login",
   validateRequest(authSchema),
-  technicianController.loginTechnician,
+  technicianController.loginRegisterTechnician,
 );
 router.post("/technician/resend-otp", otpController.resendOtp);
 router.post("/technician/verify-otp", otpController.verifyOtp);
