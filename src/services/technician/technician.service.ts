@@ -41,7 +41,7 @@ export const createTechnician = async (data: TechnicianInput) => {
   }
 
   // Create technician
-  await Technician.create({
+  const technician = await Technician.create({
     name,
     phoneNumber,
     joiningDate,
@@ -55,6 +55,8 @@ export const createTechnician = async (data: TechnicianInput) => {
     dob: dob || null,
     email: email || null,
   });
+
+  return technician;
 };
 
 export const loginTechnician = async (

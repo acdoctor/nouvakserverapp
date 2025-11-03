@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as technicianService from "../../services/technician/technician.service";
+import { ITechnician } from "../../models/technician/technician.model";
 
 export const registerTechnician = async (req: Request, res: Response) => {
   try {
@@ -36,28 +37,38 @@ export const registerTechnician = async (req: Request, res: Response) => {
 export const loginTechnician = async (req: Request, res: Response) => {
   try {
     const { countryCode, phoneNumber } = req.body;
-    const technician = await technicianService.loginTechnician(
-      countryCode,
-      phoneNumber,
-    );
+
+    if (!countryCode || !phoneNumber) {
+      return res.status(400).json({
+        success: false,
+        message: "Country code and phone number are required.",
+      });
+    }
+
+    const technician: ITechnician | null =
+      await technicianService.loginTechnician(countryCode, phoneNumber);
 
     if (!technician) {
-      await technicianService.createTechnician(req.body);
+      const newTechnician: ITechnician | null =
+        await technicianService.createTechnician(req.body);
 
       return res.status(201).json({
         success: true,
-        message: "Technician created successfully",
+        message:
+          "Technician registered successfully. OTP sent for verification.",
+        technicianId: newTechnician?._id,
       });
     }
 
     return res.status(200).json({
       success: true,
-      message: "OTP sent for login",
-      technicianId: Object(technician._id),
+      message: "OTP sent for login.",
+      technicianId: technician._id,
     });
   } catch (err: unknown) {
-    res.status(400).json({
+    return res.status(500).json({
       success: false,
+      message: "Internal server error.",
       error: err instanceof Error ? err.message : String(err),
     });
   }
