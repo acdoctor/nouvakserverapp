@@ -13,7 +13,7 @@ export const registerUser = async (req: Request, res: Response) => {
       userId: Object(user._id),
     });
   } catch (err: unknown) {
-    return res.status(400).json({
+    return res.status(409).json({
       success: false,
       error: err instanceof Error ? err.message : String(err),
     });
