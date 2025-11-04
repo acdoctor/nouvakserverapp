@@ -5,6 +5,14 @@ import { Request, Response } from "express";
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const { countryCode, phoneNumber } = req.body;
+
+    if (!countryCode || !phoneNumber) {
+      return res.status(400).json({
+        success: false,
+        message: "Country code and phone number are required.",
+      });
+    }
+
     const user = await userService.createUser(countryCode, phoneNumber);
 
     return res.status(201).json({
