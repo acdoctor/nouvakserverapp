@@ -9,7 +9,7 @@ import { updateTechnicianSchema } from "../../validators/technician/technician.v
 
 const router = Router();
 
-// Technician Controllers Routes
+// Technician controllers routes
 router.post(
   "/technician/register",
   validateRequest(authSchema),

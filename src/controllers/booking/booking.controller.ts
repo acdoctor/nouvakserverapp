@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { createBooking } from "../../services/booking/booking.service";
 
+// Controller to add a new booking
 export const addBookingController = async (req: Request, res: Response) => {
   try {
     const booking = await createBooking(req.body);

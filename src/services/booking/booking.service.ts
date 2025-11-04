@@ -40,6 +40,7 @@ interface IBookingResponse {
   date: Date;
 }
 
+// Service function to create a booking
 export const createBooking = async (
   data: ICreateBookingInput,
 ): Promise<IBookingResponse> => {

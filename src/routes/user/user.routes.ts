@@ -9,7 +9,7 @@ import { updateUserSchema } from "../../validators/user/user.validator";
 
 const router = Router();
 
-// User Controllers Routes
+// User controllers routes
 router.post(
   "/user/register",
   validateRequest(authSchema),
