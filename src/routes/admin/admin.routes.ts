@@ -18,7 +18,7 @@ import {
 
 const router = Router();
 
-// Admin Controllers Routes
+// Admin controllers routes
 router.post(
   "/admin/register",
   validateRequest(authSchema),
@@ -50,13 +50,13 @@ router.post(
 
 router.get("/admin/user/list", authenticate, userController.userList);
 
-// Technician Controllers Routes
+// Technician controllers routes
 router.post(
   "/admin/technician/register",
   technicianController.registerTechnician,
 );
 
-// User Controllers Routes
+// User controllers routes
 router.post("/admin/user/register", userController.registerUser);
 router.get("/admin/user/profile/:id", authenticate, userController.getUserById);
 router.get(
@@ -71,7 +71,7 @@ router.put(
 );
 router.delete("/admin/user/delete/:id", userController.deleteUser);
 
-// service controller routes
+// Service controller routes
 router.post(
   "/admin/service/add",
   authenticate,
@@ -110,6 +110,7 @@ router.get(
   serviceController.mobileServiceList,
 );
 
+// Booking controller routes
 router.post("/admin/booking/add", bookingController.addBookingController);
 
 export default router;
