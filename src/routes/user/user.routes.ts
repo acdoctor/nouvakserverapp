@@ -3,7 +3,7 @@ import * as userController from "../../controllers/user/user.controller";
 import * as otpController from "../../controllers/user/otp.controller";
 import * as authController from "../../controllers/user/auth.controller";
 import { authenticate } from "../../middlewares/user/auth";
-import { authSchema } from "../../validators/request/auth.validator";
+import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
 import { updateUserSchema } from "../../validators/user/user.validator";
 

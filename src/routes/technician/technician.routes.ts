@@ -3,7 +3,7 @@ import * as otpController from "../../controllers/technician/otp.controller";
 import * as authController from "../../controllers/technician/auth.controller";
 import * as technicianController from "../../controllers/technician/technician.controller";
 import { authenticate } from "../../middlewares/technician/auth";
-import { authSchema } from "../../validators/request/auth.validator";
+import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
 import { updateTechnicianSchema } from "../../validators/technician/technician.validator";
 

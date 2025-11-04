@@ -7,7 +7,7 @@ import * as userController from "../../controllers/user/user.controller";
 import * as serviceController from "../../controllers/service/service.controller";
 import * as bookingController from "../../controllers/booking/booking.controller";
 import { authenticate } from "../../middlewares/admin/auth";
-import { authSchema } from "../../validators/request/auth.validator";
+import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
 import { adminUpdateSchema } from "../../validators/admin/admin.validator";
 import { updateUserSchema } from "../../validators/user/user.validator";
