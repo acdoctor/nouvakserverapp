@@ -5,6 +5,7 @@ import * as authController from "../../controllers/admin/auth.controller";
 import * as technicianController from "../../controllers/technician/technician.controller";
 import * as userController from "../../controllers/user/user.controller";
 import * as serviceController from "../../controllers/service/service.controller";
+import * as bookingController from "../../controllers/booking/booking.controller";
 import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/request/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
@@ -108,5 +109,7 @@ router.get(
   authenticate,
   serviceController.mobileServiceList,
 );
+
+router.post("/admin/booking/add", bookingController.addBookingController);
 
 export default router;
