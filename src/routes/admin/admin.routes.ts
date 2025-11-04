@@ -15,6 +15,7 @@ import {
   addServiceSchema,
   serviceListValidator,
 } from "../../validators/service/service.validator";
+import { createBookingSchema } from "../../validators/booking/booking.validator";
 
 const router = Router();
 
@@ -111,6 +112,11 @@ router.get(
 );
 
 // Booking controller routes
-router.post("/admin/booking/add", bookingController.addBookingController);
+router.post(
+  "/admin/booking/add",
+  validateRequest(createBookingSchema),
+  authenticate,
+  bookingController.addBookingController,
+);
 
 export default router;
