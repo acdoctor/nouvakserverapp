@@ -80,9 +80,9 @@ export const getUserById = async (req: Request, res: Response) => {
     }
 
     const user = await userService.getUserById(id);
-    res.json({ success: true, data: user });
+    return res.json({ success: true, data: user });
   } catch (err) {
-    res.status(404).json({
+    return res.status(404).json({
       success: false,
       error: err instanceof Error ? err.message : String(err),
     });
@@ -100,9 +100,9 @@ export const updateUser = async (req: Request, res: Response) => {
     }
 
     const user = await userService.updateUser(id, req.body);
-    res.json({ success: true, message: "User updated", data: user });
+    return res.json({ success: true, message: "User updated", data: user });
   } catch (err) {
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
       error: err instanceof Error ? err.message : String(err),
     });
@@ -120,9 +120,9 @@ export const deleteUser = async (req: Request, res: Response) => {
     }
 
     await userService.deleteUser(id);
-    res.json({ success: true, message: "User deleted" });
+    return res.json({ success: true, message: "User deleted" });
   } catch (err) {
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
       error: err instanceof Error ? err.message : String(err),
     });
