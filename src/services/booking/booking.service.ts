@@ -250,6 +250,7 @@ export async function fetchBookingById(
   return bookingData[0] as IBookingResponse;
 }
 
+// Service function to update a booking
 export const updateBooking = async ({
   bookingId,
   serviceDetails,
