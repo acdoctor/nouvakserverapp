@@ -119,4 +119,10 @@ router.post(
   bookingController.addBookingController,
 );
 
+router.get(
+  "/admin/booking/:bookingId",
+  authenticate,
+  bookingController.addBookingController,
+);
+
 export default router;
