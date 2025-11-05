@@ -2,7 +2,7 @@ import moment from "moment";
 import { Booking } from "../../models/booking/booking.model";
 import Address from "../../models/user/address.model";
 import { Service } from "../../models/service/service.model";
-import User from "../../models/user/user.model";
+import User, { IUser } from "../../models/user/user.model";
 import { sendPushNotification } from "../../utils/notification";
 import { Notification } from "../../models/notification/notification.model";
 import { Types } from "mongoose";
@@ -43,7 +43,7 @@ interface IBookingResponse {
 export interface IBookingResponseById {
   _id: string;
   bookingId: string;
-  user: Record<string, undefined>;
+  user: IUser;
   technician?: Record<string, undefined>;
   addressDetails?: Record<string, undefined>;
   date: Date;
