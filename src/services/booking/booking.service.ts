@@ -150,7 +150,7 @@ export const createBooking = async (
     }
   }
 
-  //.eturn only the necessary booking details
+  // 7. return only the necessary booking details
   return {
     _id: savedBooking._id as Types.ObjectId,
     bookingId: savedBooking.bookingId,
@@ -160,7 +160,7 @@ export const createBooking = async (
   };
 };
 
-//  Get booking details by bookingId with aggregation.
+// Service function to get booking details by bookingId with aggregation.
 export async function fetchBookingById(
   bookingId: string,
 ): Promise<IBookingResponse | null> {
