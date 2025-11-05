@@ -1,12 +1,12 @@
 import admin from "firebase-admin";
 import type { ServiceAccount } from "firebase-admin";
+import { googleServiceAccount } from "../config/googleService";
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const serviceAccount: ServiceAccount = require("../../notification.json");
+// const serviceAccount: ServiceAccount = require("../../notification.json");
 
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential: admin.credential.cert(googleServiceAccount as ServiceAccount),
   });
 }
 
