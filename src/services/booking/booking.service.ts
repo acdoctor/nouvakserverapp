@@ -66,6 +66,15 @@ export interface IBookingResponseById {
   orderItems: IOrderItem[];
 }
 
+interface IEditBookingParams {
+  bookingId: string;
+  serviceDetails?: IServiceDetail[];
+  addressId: IAddress;
+  slot: "FIRST_HALF" | "SECOND_HALF";
+  date: string;
+  amount: number;
+}
+
 // Service function to create a booking
 export const createBooking = async (
   data: ICreateBookingInput,
@@ -240,3 +249,32 @@ export async function fetchBookingById(
   if (!bookingData.length) return null;
   return bookingData[0] as IBookingResponse;
 }
+
+export const editBookingService = async ({
+  bookingId,
+  serviceDetails,
+  addressId,
+  slot,
+  date,
+  amount,
+}: IEditBookingParams) => {
+  // Check if booking exists
+  const existingBooking = await Booking.findById(new Types.ObjectId(bookingId));
+  if (!existingBooking) return null;
+
+  // Check if address exists
+  const address = await Address.findById(addressId);
+  if (!address) throw new Error("Invalid address ID");
+
+  // Update booking fields
+  existingBooking.serviceDetails =
+    serviceDetails || existingBooking.serviceDetails;
+  existingBooking.addressDetails = [address];
+  existingBooking.slot = slot;
+  existingBooking.date = new Date(date);
+  existingBooking.amount = new Types.Decimal128(amount.toString());
+
+  await existingBooking.save();
+
+  return existingBooking;
+};

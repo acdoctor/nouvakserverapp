@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { IAddress } from "../user/address.model";
 
 export interface IServiceDetail {
   service_id: mongoose.Types.ObjectId;
@@ -21,8 +22,8 @@ export interface IBooking extends Document {
   user_id: mongoose.Types.ObjectId;
   bookingId: string;
   invoiceId?: string;
-  serviceDetails: IServiceDetail[];
-  addressDetails: object[];
+  serviceDetails: IServiceDetail[] | unknown[];
+  addressDetails: IAddress[];
   couponDetails?: object;
   slot: "FIRST_HALF" | "SECOND_HALF";
   date: Date;
