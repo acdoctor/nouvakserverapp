@@ -15,7 +15,10 @@ import {
   addServiceSchema,
   serviceListValidator,
 } from "../../validators/service/service.validator";
-import { createBookingSchema } from "../../validators/booking/booking.validator";
+import {
+  createBookingSchema,
+  editBookingValidator,
+} from "../../validators/booking/booking.validator";
 
 const router = Router();
 
@@ -128,6 +131,7 @@ router.get(
 router.get(
   "/admin/booking/edit/:bookingId",
   authenticate,
+  validateRequest(editBookingValidator),
   bookingController.editBooking,
 );
 
