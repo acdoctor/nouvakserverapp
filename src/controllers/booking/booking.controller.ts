@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { createBooking } from "../../services/booking/booking.service";
+import {
+  createBooking,
+  fetchBookingById,
+} from "../../services/booking/booking.service";
 
 // Controller to add a new booking
 export const addBookingController = async (req: Request, res: Response) => {
@@ -15,6 +18,40 @@ export const addBookingController = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       message: error instanceof Error ? error.message : "Internal server error",
+    });
+  }
+};
+
+export const getBookingById = async (req: Request, res: Response) => {
+  const { bookingId } = req.params;
+
+  if (!bookingId?.trim()) {
+    return res.status(400).json({
+      success: false,
+      message: "Booking ID is required",
+    });
+  }
+
+  try {
+    const booking = await fetchBookingById(bookingId);
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: booking,
+    });
+  } catch (err: unknown) {
+    console.error("Error fetching booking:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: err instanceof Error ? err.message : String(err),
     });
   }
 };
