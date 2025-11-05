@@ -1,11 +1,12 @@
 import moment from "moment";
 import { Booking } from "../../models/booking/booking.model";
-import Address from "../../models/user/address.model";
-import { Service } from "../../models/service/service.model";
+import Address, { IAddress } from "../../models/user/address.model";
+import { IService, Service } from "../../models/service/service.model";
 import User, { IUser } from "../../models/user/user.model";
 import { sendPushNotification } from "../../utils/notification";
 import { Notification } from "../../models/notification/notification.model";
 import { Types } from "mongoose";
+import { ITechnician } from "../../models/technician/technician.model";
 
 // Interface for Service Details
 interface IServiceDetail {
@@ -40,12 +41,19 @@ interface IBookingResponse {
   date: Date;
 }
 
+export interface IOrderItem {
+  _id: string;
+  item: string;
+  quantity: string;
+  price: number;
+}
+
 export interface IBookingResponseById {
   _id: string;
   bookingId: string;
   user: IUser;
-  technician?: Record<string, undefined>;
-  addressDetails?: Record<string, undefined>;
+  technician?: ITechnician;
+  addressDetails?: IAddress;
   date: Date;
   slot: string;
   amount: number;
@@ -54,8 +62,8 @@ export interface IBookingResponseById {
   invoiceUrl?: string;
   createdAt: Date;
   updatedAt: Date;
-  serviceDetails: Array<Record<string, undefined>>;
-  orderItems: Array<Record<string, undefined>>;
+  serviceDetails: IService[];
+  orderItems: IOrderItem[];
 }
 
 // Service function to create a booking
