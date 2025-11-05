@@ -40,6 +40,24 @@ interface IBookingResponse {
   date: Date;
 }
 
+export interface IBookingResponseById {
+  _id: string;
+  bookingId: string;
+  user: Record<string, undefined>;
+  technician?: Record<string, undefined>;
+  addressDetails?: Record<string, undefined>;
+  date: Date;
+  slot: string;
+  amount: number;
+  status: string;
+  order_id?: string;
+  invoiceUrl?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  serviceDetails: Array<Record<string, undefined>>;
+  orderItems: Array<Record<string, undefined>>;
+}
+
 // Service function to create a booking
 export const createBooking = async (
   data: ICreateBookingInput,
@@ -133,3 +151,86 @@ export const createBooking = async (
     date: savedBooking.date,
   };
 };
+
+/**
+ * Get booking details by bookingId with aggregation.
+ */
+export async function getBookingByIdService(
+  bookingId: string,
+): Promise<IBookingResponse | null> {
+  const bookingData = await Booking.aggregate([
+    {
+      $match: { _id: new Types.ObjectId(bookingId) },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user_id",
+        foreignField: "_id",
+        as: "user_info",
+      },
+    },
+    { $unwind: { path: "$user_info", preserveNullAndEmptyArrays: true } },
+    { $unwind: { path: "$serviceDetails", preserveNullAndEmptyArrays: true } },
+    {
+      $lookup: {
+        from: "services",
+        localField: "serviceDetails.service_id",
+        foreignField: "_id",
+        as: "serviceDetails.service_data",
+        pipeline: [
+          { $project: { _id: 1, name: 1, icon: 1, category: 1, key: 1 } },
+        ],
+      },
+    },
+    {
+      $unwind: {
+        path: "$serviceDetails.service_data",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "technicians",
+        localField: "assigned_to",
+        foreignField: "_id",
+        as: "technician_data",
+      },
+    },
+    { $unwind: { path: "$technician_data", preserveNullAndEmptyArrays: true } },
+    {
+      $group: {
+        _id: "$_id",
+        bookingId: { $first: "$bookingId" },
+        user: { $first: "$user_info" },
+        technician: { $first: "$technician_data" },
+        addressDetails: { $first: "$addressDetails" },
+        date: { $first: "$date" },
+        slot: { $first: "$slot" },
+        amount: { $first: { $toDouble: "$amount" } },
+        status: { $first: "$status" },
+        order_id: { $first: "$order_id" },
+        invoiceUrl: { $first: "$invoiceUrl" },
+        createdAt: { $first: "$createdAt" },
+        updatedAt: { $first: "$updatedAt" },
+        serviceDetails: {
+          $push: {
+            service_id: "$serviceDetails.service_id",
+            service_data: "$serviceDetails.service_data",
+            serviceType: "$serviceDetails.serviceType",
+            quantity: "$serviceDetails.quantity",
+            acType: "$serviceDetails.acType",
+            place: "$serviceDetails.place",
+            comment: "$serviceDetails.comment",
+            otherService: { $ifNull: ["$serviceDetails.otherService", ""] },
+            services: "$serviceDetails.services",
+          },
+        },
+        orderItems: { $first: "$orderItems" },
+      },
+    },
+  ]);
+
+  if (!bookingData.length) return null;
+  return bookingData[0] as IBookingResponse;
+}
