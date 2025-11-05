@@ -122,7 +122,13 @@ router.post(
 router.get(
   "/admin/booking/:bookingId",
   authenticate,
-  bookingController.addBookingController,
+  bookingController.getBookingById,
+);
+
+router.get(
+  "/admin/booking/edit/:bookingId",
+  authenticate,
+  bookingController.editBooking,
 );
 
 export default router;

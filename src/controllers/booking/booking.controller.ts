@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import {
   createBooking,
-  editBookingService,
+  updateBooking,
   fetchBookingById,
 } from "../../services/booking/booking.service";
 
@@ -85,7 +85,7 @@ export const editBooking = async (
       });
     }
 
-    const updatedBooking = await editBookingService({
+    const updatedBooking = await updateBooking({
       bookingId,
       serviceDetails,
       addressId,
