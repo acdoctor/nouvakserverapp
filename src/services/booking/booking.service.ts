@@ -160,9 +160,7 @@ export const createBooking = async (
   };
 };
 
-/**
- * Get booking details by bookingId with aggregation.
- */
+//  Get booking details by bookingId with aggregation.
 export async function fetchBookingById(
   bookingId: string,
 ): Promise<IBookingResponse | null> {
