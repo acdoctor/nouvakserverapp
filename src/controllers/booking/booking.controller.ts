@@ -48,7 +48,6 @@ export const getBookingById = async (req: Request, res: Response) => {
       data: booking,
     });
   } catch (err: unknown) {
-    console.error("Error fetching booking:", err);
     return res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -106,7 +105,6 @@ export const editBooking = async (
       message: "Booking updated successfully",
     });
   } catch (error: unknown) {
-    console.error("Error updating booking:", error);
     return res.status(500).json({
       success: false,
       message: error instanceof Error ? error.message : "Internal Server Error",
