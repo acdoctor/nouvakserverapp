@@ -16,6 +16,7 @@ import {
   serviceListValidator,
 } from "../../validators/service/service.validator";
 import {
+  addOrderItemValidator,
   bookingListValidator,
   createBookingSchema,
   editBookingValidator,
@@ -145,6 +146,7 @@ router.get(
 
 router.post(
   "/admin/booking/order-item/add-edit",
+  validateRequest(addOrderItemValidator),
   authenticate,
   bookingController.addOrderItem,
 );

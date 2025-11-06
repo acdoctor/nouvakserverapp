@@ -79,3 +79,37 @@ export const bookingListValidator = Joi.object({
     "date.format": "endDate must be in ISO date format",
   }),
 });
+
+export const addOrderItemValidator = Joi.object({
+  bookingId: Joi.string().trim().required().messages({
+    "any.required": "Booking ID is required",
+    "string.empty": "Booking ID cannot be empty",
+  }),
+
+  orderItem: Joi.array()
+    .items(
+      Joi.object({
+        item: Joi.string().trim().required().messages({
+          "any.required": "Item name is required",
+          "string.empty": "Item name cannot be empty",
+        }),
+        quantity: Joi.number().integer().min(1).required().messages({
+          "any.required": "Quantity is required",
+          "number.base": "Quantity must be a number",
+          "number.min": "Quantity must be at least 1",
+        }),
+        price: Joi.number().min(0).required().messages({
+          "any.required": "Price is required",
+          "number.base": "Price must be a valid number",
+          "number.min": "Price cannot be negative",
+        }),
+      }),
+    )
+    .min(1)
+    .required()
+    .messages({
+      "array.base": "Order items must be an array",
+      "array.min": "At least one order item is required",
+      "any.required": "Order items are required",
+    }),
+});
