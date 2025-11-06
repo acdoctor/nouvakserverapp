@@ -59,10 +59,14 @@ export function generateInvoice(
       <div class="header">
         <div class="company-info">
           <h1>AC Doctor</h1>
-          <p>Indore, Madhya Pradesh, 452001<br/>Phone: +91-8959898989<br/>Email: info@acdoctor.in</p>
+          <p>
+            Indore, Madhya Pradesh, 452001<br />
+            Phone: +91-8959898989<br />
+            Email: info@acdoctor.in
+          </p>
         </div>
         <div class="logo">
-          <img src="" alt="Company Logo" />
+          <img src="https://acdoctor-service-booking-system.s3.ap-south-1.amazonaws.com/logo/icon.png" alt="Company Logo" />
         </div>
       </div>
 
