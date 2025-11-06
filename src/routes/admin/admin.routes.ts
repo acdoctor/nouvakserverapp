@@ -135,10 +135,6 @@ router.post(
   bookingController.editBooking,
 );
 
-router.post(
-  "/admin/booking/list/",
-  authenticate,
-  bookingController.bookingList,
-);
+router.get("/admin/booking/list/", authenticate, bookingController.bookingList);
 
 export default router;
