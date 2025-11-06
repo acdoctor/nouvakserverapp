@@ -279,3 +279,146 @@ export const updateBooking = async ({
 
   return existingBooking;
 };
+
+// Service function to get list of bookings with filters, pagination, and sorting
+interface BookingQuery {
+  page?: string;
+  limit?: string;
+  status?: string;
+  search?: string;
+  sortby?: string;
+  orderby?: string;
+  startDate?: string;
+  endDate?: string;
+  filter?: string;
+}
+
+export const getBookingListService = async (query: BookingQuery) => {
+  const page = parseInt(query.page || "1", 10);
+  const limit = parseInt(query.limit || "10", 10);
+  const status = query.status ? query.status.split(",") : [];
+  const search = query.search || "";
+  const sortField = query.sortby || "createdAt";
+  const sortOrder = query.orderby === "asc" ? 1 : -1;
+  const startDate = query.startDate ? new Date(query.startDate) : null;
+  const endDate = query.endDate ? new Date(query.endDate) : null;
+
+  const matchConditions: Record<string, unkown> = {
+    $and: [
+      {
+        $or: [
+          { bookingId: { $regex: search, $options: "i" } },
+          { "user_info.phoneNumber": { $regex: search, $options: "i" } },
+          { "technician_data.phoneNumber": { $regex: search, $options: "i" } },
+          { "technician_data.name": { $regex: search, $options: "i" } },
+          { address: { $regex: search, $options: "i" } },
+          { "user_info.name": { $regex: search, $options: "i" } },
+          { "technician_data.status": { $regex: search, $options: "i" } },
+        ],
+      },
+      {
+        $or: [
+          { status: { $in: status } },
+          {
+            $and: [
+              { status: { $in: ["BOOKED", "IN_PROGRESS"] } },
+              { $expr: { $eq: [status.length, 0] } },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+
+  if (startDate && endDate) {
+    matchConditions.$and.push({ date: { $gte: startDate, $lte: endDate } });
+  } else if (startDate) {
+    matchConditions.$and.push({ date: { $gte: startDate } });
+  } else if (endDate) {
+    matchConditions.$and.push({ date: { $lte: endDate } });
+  }
+
+  const offset = (page - 1) * limit;
+
+  const basePipeline = [
+    {
+      $lookup: {
+        from: "users",
+        localField: "user_id",
+        foreignField: "_id",
+        as: "user_info",
+      },
+    },
+    { $unwind: { path: "$user_info", preserveNullAndEmptyArrays: true } },
+    {
+      $lookup: {
+        from: "services",
+        localField: "service_id",
+        foreignField: "_id",
+        as: "service_info",
+      },
+    },
+    { $unwind: { path: "$service_info", preserveNullAndEmptyArrays: true } },
+    {
+      $lookup: {
+        from: "technicians",
+        localField: "assigned_to",
+        foreignField: "_id",
+        as: "technician_data",
+      },
+    },
+    { $unwind: { path: "$technician_data", preserveNullAndEmptyArrays: true } },
+    { $match: matchConditions },
+  ];
+
+  // Fetch paginated data
+  const bookings = await Booking.aggregate([
+    ...basePipeline,
+    { $sort: { [sortField]: sortOrder } },
+    { $skip: offset },
+    { $limit: limit },
+    {
+      $project: {
+        address: 1,
+        status: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        user: {
+          id: { $ifNull: ["$user_info._id", ""] },
+          name: { $ifNull: ["$user_info.name", ""] },
+          phoneNumber: { $ifNull: ["$user_info.phoneNumber", ""] },
+          createdAt: { $ifNull: ["$user_info.createdAt", null] },
+        },
+        service: {
+          id: { $ifNull: ["$service_info._id", ""] },
+          name: { $ifNull: ["$service_info.name", ""] },
+        },
+        technicianName: { $ifNull: ["$technician_data", {}] },
+        date: 1,
+        amount: { $toDouble: "$amount" },
+        order_id: 1,
+        bookingId: 1,
+        slot: 1,
+      },
+    },
+  ]);
+
+  // Count total records
+  const totalBookings = await Booking.aggregate([
+    ...basePipeline,
+    { $count: "total" },
+  ]);
+
+  const totalCount = totalBookings.length ? totalBookings[0].total : 0;
+
+  return {
+    data: bookings || [],
+    count: totalCount,
+    pagination: {
+      totalCount,
+      page,
+      limit,
+      totalPages: Math.ceil(totalCount / limit),
+    },
+  };
+};

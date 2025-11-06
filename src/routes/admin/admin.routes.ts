@@ -128,7 +128,7 @@ router.get(
   bookingController.getBookingById,
 );
 
-router.get(
+router.post(
   "/admin/booking/edit/:bookingId",
   authenticate,
   validateRequest(editBookingValidator),
