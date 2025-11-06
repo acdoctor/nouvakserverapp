@@ -33,6 +33,8 @@ export function generateInvoice(
   const subtotal = calculateTotal(orderItems);
   const formattedDate = moment(bookingData?.date).format("DD-MMM-YYYY");
 
+  const s3_url = process.env.S3_BUCKET_NAME || "";
+
   return `
   <!doctype html>
   <html lang="en">
@@ -66,7 +68,7 @@ export function generateInvoice(
           </p>
         </div>
         <div class="logo">
-          <img src="https:///logo/icon.png" alt="Company Logo" />
+          <img src="https://${s3_url}/logo/icon.png" alt="Company Logo" />
         </div>
       </div>
 
