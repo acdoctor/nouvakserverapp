@@ -4,6 +4,7 @@ import {
   updateBooking,
   fetchBookingById,
   fetchBookingList,
+  createOrderItem,
 } from "../../services/booking/booking.service";
 
 // Controller to add a new booking
@@ -132,5 +133,37 @@ export const bookingList = async (req: Request, res: Response) => {
       message: "Internal server error",
       error: error instanceof Error ? error.message : String(error),
     });
+  }
+};
+
+export const addOrderItem = async (req: Request, res: Response) => {
+  try {
+    const { bookingId, orderItem } = req.body;
+
+    if (!bookingId?.trim()) {
+      return res.status(400).json({ message: "Booking ID is required" });
+    }
+
+    if (!Array.isArray(orderItem) || orderItem.length === 0) {
+      return res.status(400).json({ message: "Order items are required" });
+    }
+
+    await createOrderItem(bookingId, orderItem);
+
+    return res.status(200).json({ message: "Order items added successfully" });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (error.message === "Invalid booking ID") {
+        return res.status(400).json({ message: error.message });
+      }
+
+      if (error.message === "Booking not found") {
+        return res.status(404).json({ message: error.message });
+      }
+
+      return res.status(500).json({ message: error.message });
+    }
+
+    return res.status(500).json({ message: "Something went wrong" });
   }
 };
