@@ -66,7 +66,7 @@ export function generateInvoice(
           </p>
         </div>
         <div class="logo">
-          <img src="https://acdoctor-service-booking-system.s3.ap-south-1.amazonaws.com/logo/icon.png" alt="Company Logo" />
+          <img src="https:///logo/icon.png" alt="Company Logo" />
         </div>
       </div>
 
