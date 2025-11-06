@@ -3,6 +3,7 @@ import {
   createBooking,
   updateBooking,
   fetchBookingById,
+  fetchBookingList,
 } from "../../services/booking/booking.service";
 
 // Controller to add a new booking
@@ -108,6 +109,28 @@ export const editBooking = async (
     return res.status(500).json({
       success: false,
       message: error instanceof Error ? error.message : "Internal Server Error",
+    });
+  }
+};
+
+// Controller to get list of bookings with filters, pagination, and sorting
+export const bookingList = async (req: Request, res: Response) => {
+  try {
+    const result = await fetchBookingList(req.query);
+
+    return res.status(200).json({
+      success: true,
+      message: "Bookings fetched successfully",
+      data: result.data,
+      count: result.count,
+      pagination: result.pagination,
+    });
+  } catch (error: unknown) {
+    console.error("Error fetching booking list:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error instanceof Error ? error.message : String(error),
     });
   }
 };

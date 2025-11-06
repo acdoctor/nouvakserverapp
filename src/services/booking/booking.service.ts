@@ -295,7 +295,7 @@ export const updateBooking = async ({
 
 // Service function to get list of bookings with filters, pagination, and sorting
 
-export const getBookingListService = async (query: BookingQuery) => {
+export const fetchBookingList = async (query: BookingQuery) => {
   const page = parseInt(query.page || "1", 10);
   const limit = parseInt(query.limit || "10", 10);
   const status = query.status ? query.status.split(",") : [];
