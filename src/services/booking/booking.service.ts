@@ -7,6 +7,7 @@ import { sendPushNotification } from "../../utils/notification";
 import { Notification } from "../../models/notification/notification.model";
 import { Types } from "mongoose";
 import { ITechnician } from "../../models/technician/technician.model";
+import { PipelineStage } from "mongoose";
 
 // Interface for Service Details
 interface IServiceDetail {
@@ -73,6 +74,18 @@ interface IEditBookingParams {
   slot: "FIRST_HALF" | "SECOND_HALF";
   date: string;
   amount: number;
+}
+
+interface BookingQuery {
+  page?: string;
+  limit?: string;
+  status?: string;
+  search?: string;
+  sortby?: string;
+  orderby?: string;
+  startDate?: string;
+  endDate?: string;
+  filter?: string;
 }
 
 // Service function to create a booking
@@ -281,17 +294,6 @@ export const updateBooking = async ({
 };
 
 // Service function to get list of bookings with filters, pagination, and sorting
-interface BookingQuery {
-  page?: string;
-  limit?: string;
-  status?: string;
-  search?: string;
-  sortby?: string;
-  orderby?: string;
-  startDate?: string;
-  endDate?: string;
-  filter?: string;
-}
 
 export const getBookingListService = async (query: BookingQuery) => {
   const page = parseInt(query.page || "1", 10);
@@ -303,44 +305,47 @@ export const getBookingListService = async (query: BookingQuery) => {
   const startDate = query.startDate ? new Date(query.startDate) : null;
   const endDate = query.endDate ? new Date(query.endDate) : null;
 
-  const matchConditions: Record<string, unkown> = {
-    $and: [
-      {
-        $or: [
-          { bookingId: { $regex: search, $options: "i" } },
-          { "user_info.phoneNumber": { $regex: search, $options: "i" } },
-          { "technician_data.phoneNumber": { $regex: search, $options: "i" } },
-          { "technician_data.name": { $regex: search, $options: "i" } },
-          { address: { $regex: search, $options: "i" } },
-          { "user_info.name": { $regex: search, $options: "i" } },
-          { "technician_data.status": { $regex: search, $options: "i" } },
-        ],
-      },
-      {
-        $or: [
-          { status: { $in: status } },
-          {
-            $and: [
-              { status: { $in: ["BOOKED", "IN_PROGRESS"] } },
-              { $expr: { $eq: [status.length, 0] } },
-            ],
-          },
-        ],
-      },
-    ],
-  };
+  // Build $and conditions safely in a typed array
+  const andConditions: NonNullable<PipelineStage.Match["$match"]["$and"]> = [
+    {
+      $or: [
+        { bookingId: { $regex: search, $options: "i" } },
+        { "user_info.phoneNumber": { $regex: search, $options: "i" } },
+        { "technician_data.phoneNumber": { $regex: search, $options: "i" } },
+        { "technician_data.name": { $regex: search, $options: "i" } },
+        { address: { $regex: search, $options: "i" } },
+        { "user_info.name": { $regex: search, $options: "i" } },
+        { "technician_data.status": { $regex: search, $options: "i" } },
+      ],
+    },
+    {
+      $or: [
+        { status: { $in: status } },
+        {
+          $and: [
+            { status: { $in: ["BOOKED", "IN_PROGRESS"] } },
+            { $expr: { $eq: [status.length, 0] } },
+          ],
+        },
+      ],
+    },
+  ];
 
   if (startDate && endDate) {
-    matchConditions.$and.push({ date: { $gte: startDate, $lte: endDate } });
+    andConditions.push({ date: { $gte: startDate, $lte: endDate } });
   } else if (startDate) {
-    matchConditions.$and.push({ date: { $gte: startDate } });
+    andConditions.push({ date: { $gte: startDate } });
   } else if (endDate) {
-    matchConditions.$and.push({ date: { $lte: endDate } });
+    andConditions.push({ date: { $lte: endDate } });
   }
+
+  const matchConditions: PipelineStage.Match["$match"] = {
+    $and: andConditions,
+  };
 
   const offset = (page - 1) * limit;
 
-  const basePipeline = [
+  const basePipeline: PipelineStage[] = [
     {
       $lookup: {
         from: "users",
@@ -371,7 +376,6 @@ export const getBookingListService = async (query: BookingQuery) => {
     { $match: matchConditions },
   ];
 
-  // Fetch paginated data
   const bookings = await Booking.aggregate([
     ...basePipeline,
     { $sort: { [sortField]: sortOrder } },
@@ -403,7 +407,6 @@ export const getBookingListService = async (query: BookingQuery) => {
     },
   ]);
 
-  // Count total records
   const totalBookings = await Booking.aggregate([
     ...basePipeline,
     { $count: "total" },
@@ -412,7 +415,7 @@ export const getBookingListService = async (query: BookingQuery) => {
   const totalCount = totalBookings.length ? totalBookings[0].total : 0;
 
   return {
-    data: bookings || [],
+    data: bookings,
     count: totalCount,
     pagination: {
       totalCount,
