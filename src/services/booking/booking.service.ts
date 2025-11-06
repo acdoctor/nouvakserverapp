@@ -426,7 +426,7 @@ export const fetchBookingList = async (query: BookingQuery) => {
   };
 };
 
-export const addOrderItemService = async (
+export const createOrderItem = async (
   bookingId: string,
   orderItems: IOrderItem[],
 ) => {
