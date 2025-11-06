@@ -16,6 +16,7 @@ import {
   serviceListValidator,
 } from "../../validators/service/service.validator";
 import {
+  bookingListValidator,
   createBookingSchema,
   editBookingValidator,
 } from "../../validators/booking/booking.validator";
@@ -135,6 +136,11 @@ router.post(
   bookingController.editBooking,
 );
 
-router.get("/admin/booking/list/", authenticate, bookingController.bookingList);
+router.get(
+  "/admin/booking/list/",
+  validateRequest(bookingListValidator),
+  authenticate,
+  bookingController.bookingList,
+);
 
 export default router;
