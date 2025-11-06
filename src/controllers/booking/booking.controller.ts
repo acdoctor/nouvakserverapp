@@ -136,34 +136,43 @@ export const bookingList = async (req: Request, res: Response) => {
   }
 };
 
+// Controller to add order items to a booking
 export const addOrderItem = async (req: Request, res: Response) => {
   try {
     const { bookingId, orderItem } = req.body;
 
     if (!bookingId?.trim()) {
-      return res.status(400).json({ message: "Booking ID is required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Booking ID is required" });
     }
 
     if (!Array.isArray(orderItem) || orderItem.length === 0) {
-      return res.status(400).json({ message: "Order items are required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Order items are required" });
     }
 
     await createOrderItem(bookingId, orderItem);
 
-    return res.status(200).json({ message: "Order items added successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Order items added successfully" });
   } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message === "Invalid booking ID") {
-        return res.status(400).json({ message: error.message });
+        return res.status(400).json({ success: false, message: error.message });
       }
 
       if (error.message === "Booking not found") {
-        return res.status(404).json({ message: error.message });
+        return res.status(404).json({ success: false, message: error.message });
       }
 
-      return res.status(500).json({ message: error.message });
+      return res.status(500).json({ success: false, message: error.message });
     }
 
-    return res.status(500).json({ message: "Something went wrong" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong" });
   }
 };
