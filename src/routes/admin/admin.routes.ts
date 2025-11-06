@@ -143,4 +143,10 @@ router.get(
   bookingController.bookingList,
 );
 
+router.post(
+  "/admin/booking/order-item/add-edit",
+  authenticate,
+  bookingController.addOrderItem,
+);
+
 export default router;
