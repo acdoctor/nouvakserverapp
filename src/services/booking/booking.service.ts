@@ -425,3 +425,36 @@ export const fetchBookingList = async (query: BookingQuery) => {
     },
   };
 };
+
+export const addOrderItemService = async (
+  bookingId: string,
+  orderItems: IOrderItem[],
+) => {
+  if (!Types.ObjectId.isValid(bookingId)) {
+    throw new Error("Invalid booking ID");
+  }
+
+  const booking = await Booking.findById(bookingId);
+  if (!booking) {
+    throw new Error("Booking not found");
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const cleanedOrderItems = orderItems.map(({ _id, ...rest }) => rest);
+
+  const totalAmount = cleanedOrderItems.reduce((total, item) => {
+    const price = Number(item.price);
+    const quantity = parseInt(item.quantity, 10);
+    return total + price * quantity;
+  }, 0);
+
+  await Booking.updateOne(
+    { _id: bookingId },
+    {
+      orderItems: cleanedOrderItems,
+      amount: totalAmount,
+    },
+  );
+
+  return { success: true };
+};
