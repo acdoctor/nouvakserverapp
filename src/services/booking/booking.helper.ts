@@ -1,30 +1,13 @@
 import { Types } from "mongoose";
 import { Booking } from "../../models/booking/booking.model";
-// import { Technician } from "../../models/technician/technician.model";
-// import { STATUS } from "../../Config/responseConstants";
 import { generateInvoiceId } from "../../utils/invoiceUtils";
-// import { uploadToS3 } from "../../Utils/s3";
 import { calculateTotal } from "../../utils/calculateTotal";
-// import moment from "moment";
 import User from "../../models/user/user.model";
-// import IUser from "../../models/user/user.model";
 
-// const bucketName = process.env.BUCKET_NAME || "";
-
-// Interfaces for clarity
 interface OrderItem {
   item: string;
   quantity: number | string;
   price: number;
-}
-
-interface BookingData {
-  _id: Types.ObjectId;
-  user_id: string;
-  bookingId: string;
-  date: Date | string;
-  addressDetails: string[];
-  [key: string]: string | Types.ObjectId | Date | string[] | undefined;
 }
 
 /**
@@ -43,7 +26,7 @@ export const createOrderItemRequest = async (
     });
 
     if (!findUser) {
-      console.warn("⚠️ User not found for booking:", bookingId);
+      console.warn("User not found for booking:", bookingId);
       return;
     }
 
@@ -86,7 +69,7 @@ export const createOrderItemRequest = async (
 
     // TODO: Send notification or SMS to user and technician
   } catch (error) {
-    console.error("❌ Error creating order item request:", error);
+    console.error("Error creating order item request:", error);
     throw error;
   }
 };
