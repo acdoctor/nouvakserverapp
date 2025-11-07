@@ -157,10 +157,10 @@ router.get(
   bookingController.generateInvoice,
 );
 
-router.post(
-  "/admin/booking/assign-technician",
+router.get(
+  "/admin/booking/manage/status",
   authenticate,
-  bookingController.assignTechnician,
+  bookingController.manageBookingStatus,
 );
 
 export default router;
