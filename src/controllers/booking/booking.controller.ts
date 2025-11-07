@@ -206,6 +206,7 @@ export const generateInvoice = async (
   }
 };
 
+// Controller to assign technician to a booking
 export const assignTechnician = async (
   req: Request,
   res: Response,

@@ -515,6 +515,7 @@ export const createInvoice = async (bookingId: string): Promise<void> => {
   }
 };
 
+// Service function to assign technician to a booking
 export const technicianAssign = async (
   bookingId: string,
   technicianId: string,
