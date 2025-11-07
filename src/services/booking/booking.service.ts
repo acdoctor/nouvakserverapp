@@ -514,3 +514,43 @@ export const createInvoice = async (bookingId: string): Promise<void> => {
     });
   }
 };
+
+export const technicianAssign = async (
+  bookingId: string,
+  technicianId: string,
+): Promise<void> => {
+  if (!bookingId || !technicianId) {
+    throw new Error("Booking ID and Technician ID are required");
+  }
+
+  const booking = await Booking.findOne({ _id: new Types.ObjectId(bookingId) });
+
+  if (!booking) {
+    throw new Error("Booking not found");
+  }
+
+  // Update assigned technician and status
+  await Booking.updateOne(
+    { _id: booking._id },
+    {
+      assigned_to: new Types.ObjectId(technicianId),
+      status: "TECHNICIAN_ASSIGNED",
+    },
+  );
+
+  // Send push notification to user
+  const user = await User.findById(booking.user_id).select("deviceToken");
+
+  if (user?.deviceToken && user.deviceToken.trim() !== "") {
+    const registrationToken = user.deviceToken;
+    const title = "Technician Assigned";
+    const body = "A technician has been assigned to your booking.";
+
+    await sendPushNotification(registrationToken, title, body);
+
+    await Notification.create({
+      userId: booking.user_id,
+      text: "A technician has been assigned to your booking.",
+    });
+  }
+};

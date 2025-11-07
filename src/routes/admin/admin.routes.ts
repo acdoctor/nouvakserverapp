@@ -151,7 +151,7 @@ router.post(
   bookingController.addOrderItem,
 );
 
-router.post(
+router.get(
   "/admin/booking/generate-invoice/:bookingId",
   authenticate,
   bookingController.generateInvoice,
