@@ -254,7 +254,10 @@ export const manageBookingStatus = async (
 
     return res.status(statusCode).json({
       success: false,
-      message: error.message || "Failed to update booking status",
+      message:
+        error instanceof Error
+          ? error.message
+          : "Failed to update booking status",
     });
   }
 };
