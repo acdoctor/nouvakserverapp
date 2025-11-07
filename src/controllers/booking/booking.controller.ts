@@ -230,6 +230,7 @@ export const assignTechnician = async (
   }
 };
 
+// Controller to manage booking status
 export const manageBookingStatus = async (
   req: Request,
   res: Response,
