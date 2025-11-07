@@ -571,7 +571,7 @@ const ALLOWED_STATUSES = [
 
 export type BookingStatus = (typeof ALLOWED_STATUSES)[number];
 
-export const bookingStatusManageService = async (
+export const manageBookingStatus = async (
   bookingId: string,
   status: BookingStatus,
 ): Promise<void> => {
