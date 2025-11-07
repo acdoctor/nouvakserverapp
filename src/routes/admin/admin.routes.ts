@@ -157,7 +157,7 @@ router.get(
   bookingController.generateInvoice,
 );
 
-router.get(
+router.post(
   "/admin/booking/manage/status",
   authenticate,
   bookingController.manageBookingStatus,
