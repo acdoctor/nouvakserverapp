@@ -7,6 +7,7 @@ import {
   createOrderItem,
   createInvoice,
   technicianAssign,
+  updateBookingStatus,
 } from "../../services/booking/booking.service";
 // import { Booking } from "../../models/booking/booking.model";
 
@@ -225,6 +226,35 @@ export const assignTechnician = async (
       success: false,
       message:
         error instanceof Error ? error.message : "Failed to assign technician",
+    });
+  }
+};
+
+export const manageBookingStatus = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  try {
+    const { bookingId, status } = req.body;
+
+    await updateBookingStatus(bookingId, status);
+
+    return res.status(200).json({
+      success: true,
+      message: "Booking status updated successfully",
+    });
+  } catch (error: unknown) {
+    const statusCode =
+      error instanceof Error &&
+      (error.message === "Booking not found" ||
+        error.message.includes("Invalid") ||
+        error.message.includes("required"))
+        ? 400
+        : 500;
+
+    return res.status(statusCode).json({
+      success: false,
+      message: error.message || "Failed to update booking status",
     });
   }
 };
