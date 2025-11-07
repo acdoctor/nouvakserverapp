@@ -5,7 +5,9 @@ import {
   fetchBookingById,
   fetchBookingList,
   createOrderItem,
+  createInvoice,
 } from "../../services/booking/booking.service";
+// import { Booking } from "../../models/booking/booking.model";
 
 // Controller to add a new booking
 export const addBookingController = async (req: Request, res: Response) => {
@@ -174,5 +176,31 @@ export const addOrderItem = async (req: Request, res: Response) => {
     return res
       .status(500)
       .json({ success: false, message: "Something went wrong" });
+  }
+};
+
+// Controller to generate invoice for a booking invoice
+export const generateInvoice = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  try {
+    const { bookingId } = req.params;
+
+    if (bookingId) await createInvoice(bookingId);
+    // await createInvoice(bookingId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Invoice generated successfully",
+    });
+  } catch (error: unknown) {
+    return res.status(400).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong while generating the invoice",
+    });
   }
 };

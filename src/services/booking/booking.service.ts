@@ -461,7 +461,8 @@ export const createOrderItem = async (
   return { success: true };
 };
 
-export const generateInvoice = async (bookingId: string): Promise<void> => {
+// Service function to generate invoice for a booking
+export const createInvoice = async (bookingId: string): Promise<void> => {
   if (!bookingId || bookingId.trim() === "") {
     throw new Error("Booking ID is required");
   }
