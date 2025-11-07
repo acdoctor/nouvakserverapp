@@ -3,6 +3,7 @@ import { Booking } from "../../models/booking/booking.model";
 import { generateInvoiceId } from "../../utils/invoiceUtils";
 import { calculateTotal } from "../../utils/calculateTotal";
 import User from "../../models/user/user.model";
+import { IBooking } from "../../models/booking/booking.model";
 
 interface OrderItem {
   item: string;
@@ -16,7 +17,7 @@ interface OrderItem {
 export const createOrderItemRequest = async (
   bookingId: string,
   orderItems: OrderItem[],
-  findBooking: BookingData,
+  findBooking: IBooking,
 ): Promise<void> => {
   try {
     const invoiceId = await generateInvoiceId();
