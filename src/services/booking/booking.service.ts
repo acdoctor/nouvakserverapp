@@ -492,7 +492,7 @@ export const generateInvoice = async (bookingId: string): Promise<void> => {
       $set: {
         status: "PAYMENT_PENDING",
         orderItems: normalizedOrderItems,
-        invoiceUrl: `https://${process.env.S3_BUCKET_NAME}/prod/sample.pdf`,
+        invoiceUrl: `https://${process.env.S3_BUCKET_URL}/prod/sample.pdf`,
         amount: subtotal.toFixed(2),
       },
     },

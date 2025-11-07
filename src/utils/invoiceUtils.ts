@@ -33,7 +33,7 @@ export function generateInvoice(
   const subtotal = calculateTotal(orderItems);
   const formattedDate = moment(bookingData?.date).format("DD-MMM-YYYY");
 
-  const s3_url = process.env.S3_BUCKET_NAME || "";
+  const s3_url = process.env.S3_BUCKET_URL || "";
 
   return `
   <!doctype html>
