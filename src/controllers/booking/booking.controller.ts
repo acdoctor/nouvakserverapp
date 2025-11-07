@@ -6,6 +6,7 @@ import {
   fetchBookingList,
   createOrderItem,
   createInvoice,
+  technicianAssign,
 } from "../../services/booking/booking.service";
 // import { Booking } from "../../models/booking/booking.model";
 
@@ -205,7 +206,7 @@ export const generateInvoice = async (
   }
 };
 
-export const technicianAssign = async (
+export const assignTechnician = async (
   req: Request,
   res: Response,
 ): Promise<Response> => {
