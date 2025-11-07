@@ -158,6 +158,12 @@ router.get(
 );
 
 router.post(
+  "/admin/booking/assign-technician",
+  authenticate,
+  bookingController.assignTechnician,
+);
+
+router.post(
   "/admin/booking/manage/status",
   authenticate,
   bookingController.manageBookingStatus,
