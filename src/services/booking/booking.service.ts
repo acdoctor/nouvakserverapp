@@ -8,6 +8,7 @@ import { Notification } from "../../models/notification/notification.model";
 import { Types } from "mongoose";
 import { ITechnician } from "../../models/technician/technician.model";
 import { PipelineStage } from "mongoose";
+import { calculateTotal } from "../../utils/calculateTotal";
 
 // Interface for Service Details
 interface IServiceDetail {
@@ -458,4 +459,57 @@ export const createOrderItem = async (
   );
 
   return { success: true };
+};
+
+export const generateInvoice = async (bookingId: string): Promise<void> => {
+  if (!bookingId || bookingId.trim() === "") {
+    throw new Error("Booking ID is required");
+  }
+
+  const booking = await Booking.findOne({ _id: new Types.ObjectId(bookingId) });
+  if (!booking) {
+    throw new Error("Booking not found");
+  }
+
+  // Normalize order items (convert price to float)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const normalizedOrderItems = (booking?.orderItems ?? []).map((item: any) => ({
+    ...item.toObject(),
+    price: Number(item.price.toString()),
+  }));
+
+  if (normalizedOrderItems.length === 0) {
+    throw new Error("At least one order item is required");
+  }
+
+  // Calculate total amount
+  const subtotal = calculateTotal(normalizedOrderItems);
+
+  // Update booking with invoice details (mock invoice URL for now)
+  await Booking.updateOne(
+    { _id: bookingId },
+    {
+      $set: {
+        status: "PAYMENT_PENDING",
+        orderItems: normalizedOrderItems,
+        invoiceUrl: `https://${process.env.S3_BUCKET_NAME}/prod/sample.pdf`,
+        amount: subtotal.toFixed(2),
+      },
+    },
+  );
+
+  // Send push notification to user
+  const user = await User.findById(booking.user_id).select("deviceToken");
+  if (user?.deviceToken && user.deviceToken.trim() !== "") {
+    const registrationToken = user.deviceToken;
+    const title = "Invoice Generated";
+    const body = "Your invoice has been generated successfully.";
+
+    await sendPushNotification(registrationToken, title, body);
+
+    await Notification.create({
+      userId: booking.user_id,
+      text: "Your invoice has been generated successfully.",
+    });
+  }
 };
