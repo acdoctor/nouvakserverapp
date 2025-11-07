@@ -204,3 +204,25 @@ export const generateInvoice = async (
     });
   }
 };
+
+export const technicianAssign = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  try {
+    const { bookingId, technicianId } = req.body;
+
+    await technicianAssign(bookingId, technicianId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Technician assigned successfully",
+    });
+  } catch (error: unknown) {
+    return res.status(400).json({
+      success: false,
+      message:
+        error instanceof Error ? error.message : "Failed to assign technician",
+    });
+  }
+};
