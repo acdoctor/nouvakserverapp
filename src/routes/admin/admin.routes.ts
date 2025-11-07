@@ -151,4 +151,10 @@ router.post(
   bookingController.addOrderItem,
 );
 
+router.post(
+  "/admin/booking/generate-invoice/:bookingId",
+  authenticate,
+  bookingController.generateInvoice,
+);
+
 export default router;
