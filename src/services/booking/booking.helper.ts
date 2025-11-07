@@ -74,8 +74,7 @@ export const createOrderItemRequest = async (
           status: "PAYMENT_PENDING",
           orderItems,
           // invoiceUrl: data.Location,
-          invoiceUrl:
-            "https://acdoctor-service-booking-system.s3.ap-south-1.amazonaws.com/prod/sample.pdf",
+          invoiceUrl: `https://${process.env.BUCKET_NAME}/prod/sample.pdf`,
           amount: subtotal.toFixed(2),
         },
         $setOnInsert: {
