@@ -6,7 +6,9 @@ import User, { IUser } from "../../models/user/user.model";
 import { sendPushNotification } from "../../utils/notification";
 import { Notification } from "../../models/notification/notification.model";
 import { Types } from "mongoose";
-import { ITechnician } from "../../models/technician/technician.model";
+import Technician, {
+  ITechnician,
+} from "../../models/technician/technician.model";
 import { PipelineStage } from "mongoose";
 import { calculateTotal } from "../../utils/calculateTotal";
 
@@ -553,5 +555,61 @@ export const technicianAssign = async (
       userId: booking.user_id,
       text: "A technician has been assigned to your booking.",
     });
+  }
+};
+
+// Service function to manage booking status
+const ALLOWED_STATUSES = [
+  "ASSIGNMENT_PENDING",
+  "TECHNICIAN_ASSIGNED",
+  "PAYMENT_PENDING",
+  "PAID",
+  "IN_PROGRESS",
+  "COMPLETE",
+  "CANCELLED",
+] as const;
+
+export type BookingStatus = (typeof ALLOWED_STATUSES)[number];
+
+export const bookingStatusManageService = async (
+  bookingId: string,
+  status: BookingStatus,
+): Promise<void> => {
+  if (!bookingId || !status) {
+    throw new Error("Booking ID and status are required");
+  }
+
+  if (!ALLOWED_STATUSES.includes(status)) {
+    throw new Error(`Invalid status: ${status}`);
+  }
+
+  const booking = await Booking.findOne({ _id: new Types.ObjectId(bookingId) });
+  if (!booking) {
+    throw new Error("Booking not found");
+  }
+
+  // Update booking status
+  await Booking.updateOne({ _id: bookingId }, { status });
+
+  // If booking is completed, free technician and notify user
+  if (status === "COMPLETE" && booking.assigned_to) {
+    await Technician.updateOne(
+      { _id: new Types.ObjectId(booking.assigned_to) },
+      { status: "AVAILABLE" },
+    );
+
+    const user = await User.findById(booking.user_id).select("deviceToken");
+
+    if (user?.deviceToken && user.deviceToken.trim() !== "") {
+      const title = "Booking Completed";
+      const body = "Your booking has been completed successfully.";
+
+      await sendPushNotification(user.deviceToken, title, body);
+
+      await Notification.create({
+        userId: booking.user_id,
+        text: body,
+      });
+    }
   }
 };
