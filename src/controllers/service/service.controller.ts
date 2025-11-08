@@ -260,8 +260,6 @@ export const serviceList = async (
 
 export const mobileServiceList = async (req: Request, res: Response) => {
   try {
-    console.log("mobileServiceList called");
-
     const services = await getMobileServiceList();
 
     if (services.length === 0) {
