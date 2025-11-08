@@ -139,7 +139,7 @@ router.put(
 );
 
 router.get(
-  "/admin/booking/list/",
+  "/admin/booking/list",
   validateRequest(bookingListValidator),
   authenticate,
   bookingController.bookingList,
