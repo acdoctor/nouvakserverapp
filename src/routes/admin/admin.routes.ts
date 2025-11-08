@@ -48,6 +48,7 @@ router.put(
   adminController.updateAdmin,
 );
 
+// User controllers routes
 router.post(
   "/admin/user/toggle-active/:id",
   authenticate,
