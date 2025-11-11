@@ -71,17 +71,36 @@ export const editBookingValidator = Joi.object({
     .items(
       Joi.object({
         service_id: Joi.string().required(),
-        quantity: Joi.string().required(),
-        acType: Joi.string().optional().allow(""),
-        place: Joi.string().optional().allow(""),
-        comment: Joi.string().optional().allow(""),
+
+        service_data: Joi.object({
+          _id: Joi.string().required(),
+          name: Joi.string().required(),
+          icon: Joi.string().uri().optional(),
+          category: Joi.string().optional(),
+          key: Joi.string().optional(),
+        }).optional(),
+
+        services: Joi.array().items(Joi.string()).optional().default([]),
+
+        serviceType: Joi.string().allow("").optional(),
+        quantity: Joi.alternatives()
+          .try(Joi.string(), Joi.number().integer().min(1))
+          .required(),
+        acType: Joi.string().allow("").optional(),
+        place: Joi.string().allow("").optional(),
+        comment: Joi.string().allow("").optional(),
+        otherService: Joi.string().allow("").optional(),
       }),
     )
     .optional(),
+
   addressId: Joi.string().required(),
+
   slot: Joi.string().valid("FIRST_HALF", "SECOND_HALF").required(),
-  date: Joi.date().required(),
-  amount: Joi.number().required(),
+
+  date: Joi.date().iso().required(),
+
+  amount: Joi.number().min(0).required(),
 });
 
 export const bookingListValidator = Joi.object({
