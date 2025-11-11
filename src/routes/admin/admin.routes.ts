@@ -145,6 +145,12 @@ router.get(
   bookingController.bookingList,
 );
 
+router.get(
+  "/admin/booking-list",
+  validateRequest(bookingListValidator),
+  bookingController.ListOfBooking,
+);
+
 router.post(
   "/admin/booking/order-item/add-edit",
   validateRequest(addOrderItemValidator),

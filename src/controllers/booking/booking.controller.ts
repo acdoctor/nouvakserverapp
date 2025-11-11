@@ -119,10 +119,47 @@ export const editBooking = async (
 };
 
 // Controller to get list of bookings with filters, pagination, and sorting
+// This controller not working as of now gives this error
+// {
+//     "success": false,
+//     "message": "Internal server error",
+//     "error": "input must be a 24 character hex string, 12 byte Uint8Array, or an integer"
+// }
+
 export const bookingList = async (req: Request, res: Response) => {
+  console.log("booking list req.query:", req.query);
+  console.log("typeof status:", typeof req.query.status, req.query.status);
+
+  // console.log("entered into the booking list controller", req.query)
   try {
     const result = await fetchBookingList(req.query);
 
+    return res.status(200).json({
+      success: true,
+      message: "Bookings fetched successfully",
+      data: result.data,
+      count: result.count,
+      pagination: result.pagination,
+    });
+  } catch (error: unknown) {
+    console.error("Error fetching booking list:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
+
+// Controller to get list of bookings with filters, pagination, and sorting
+export const ListOfBooking = async (req: Request, res: Response) => {
+  console.log("booking req.query:", req.query);
+  console.log("typeof status:", typeof req.query.status, req.query.status);
+
+  // console.log("entered into the booking controller", req.query)
+  try {
+    const result = await fetchBookingList(req.query);
+    // console.log(result.data);
     return res.status(200).json({
       success: true,
       message: "Bookings fetched successfully",
