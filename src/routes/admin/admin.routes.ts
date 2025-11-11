@@ -81,39 +81,39 @@ router.delete("/admin/user/delete/:id", userController.deleteUser);
 // Service controller routes
 router.post(
   "/admin/service/add",
-  // authenticate,
+  authenticate,
   validateRequest(addServiceSchema),
   serviceController.addService,
 );
 
 router.put(
   "/admin/service/edit/:serviceId",
-  // authenticate,
+  authenticate,
   serviceController.editService,
 );
 
 router.get(
   "/admin/service/get/:serviceId",
-  // authenticate,
+  authenticate,
   serviceController.getServiceById,
 );
 
 router.post(
   "/admin/service/active-inactive/:serviceId",
-  // authenticate,
+  authenticate,
   serviceController.serviceActiveInactive,
 );
 
 router.get(
   "/admin/service/list",
-  // authenticate,
+  authenticate,
   validateRequest(serviceListValidator),
   serviceController.serviceList,
 );
 
 router.get(
   "/admin/service/mobile-list",
-  // authenticate,
+  authenticate,
   serviceController.mobileServiceList,
 );
 
@@ -121,19 +121,19 @@ router.get(
 router.post(
   "/admin/booking/add",
   validateRequest(createBookingSchema),
-  // authenticate,
+  authenticate,
   bookingController.addBookingController,
 );
 
 router.get(
   "/admin/booking/:bookingId",
-  // authenticate,
+  authenticate,
   bookingController.getBookingById,
 );
 
 router.put(
   "/admin/booking/edit/:bookingId",
-  // authenticate,
+  authenticate,
   validateRequest(editBookingValidator),
   bookingController.editBooking,
 );
@@ -141,12 +141,13 @@ router.put(
 router.get(
   "/admin/booking/list",
   validateRequest(bookingListValidator),
-  // authenticate,
+  authenticate,
   bookingController.bookingList,
 );
 
 router.get(
   "/admin/booking-list",
+  authenticate,
   validateRequest(bookingListValidator),
   bookingController.ListOfBooking,
 );
