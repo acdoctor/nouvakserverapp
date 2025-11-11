@@ -1,23 +1,69 @@
 import Joi from "joi";
 
 export const createBookingSchema = Joi.object({
-  user_id: Joi.string().required(),
-  name: Joi.string().required(),
-  addressId: Joi.string().required(),
-  slot: Joi.string().required(),
-  date: Joi.date().iso().required(),
-  amount: Joi.number().positive().required(),
-  order_id: Joi.string().optional(),
+  user_id: Joi.string().trim().required().messages({
+    "any.required": "User ID is required",
+    "string.empty": "User ID cannot be empty",
+  }),
+
+  name: Joi.string().trim().required().messages({
+    "any.required": "Name is required",
+    "string.empty": "Name cannot be empty",
+  }),
+
+  addressId: Joi.string().trim().required().messages({
+    "any.required": "Address ID is required",
+    "string.empty": "Address ID cannot be empty",
+  }),
+
   serviceDetails: Joi.array()
     .items(
       Joi.object({
-        service_id: Joi.string().required(),
-        acType: Joi.string().optional(),
-        quantity: Joi.number().integer().min(1).required(),
+        service_id: Joi.string().trim().required().messages({
+          "any.required": "Service ID is required",
+          "string.empty": "Service ID cannot be empty",
+        }),
+        serviceType: Joi.string().optional().allow("").messages({
+          "string.base": "Service Type must be a string",
+        }),
+        quantity: Joi.string().pattern(/^\d+$/).required().messages({
+          "any.required": "Quantity is required",
+          "string.pattern.base": "Quantity must be a numeric string",
+        }),
+        acType: Joi.string().optional().allow(""),
+        place: Joi.string().optional().allow(""),
+        otherService: Joi.string().optional().allow(""),
+        comment: Joi.string().optional().allow(""),
+        services: Joi.array().items(Joi.string()).optional(),
       }),
     )
     .min(1)
-    .required(),
+    .required()
+    .messages({
+      "array.base": "Service details must be an array",
+      "array.min": "At least one service must be provided",
+      "any.required": "Service details are required",
+    }),
+
+  slot: Joi.string().valid("FIRST_HALF", "SECOND_HALF").required().messages({
+    "any.only": "Slot must be either FIRST_HALF or SECOND_HALF",
+    "any.required": "Slot is required",
+  }),
+
+  date: Joi.date().iso().required().messages({
+    "date.base": "Date must be a valid date",
+    "any.required": "Date is required",
+  }),
+
+  amount: Joi.number().positive().required().messages({
+    "number.base": "Amount must be a number",
+    "number.positive": "Amount must be greater than zero",
+    "any.required": "Amount is required",
+  }),
+
+  order_id: Joi.string().optional().allow("").messages({
+    "string.base": "Order ID must be a string",
+  }),
 });
 
 export const editBookingValidator = Joi.object({
