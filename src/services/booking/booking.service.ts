@@ -242,6 +242,7 @@ export async function fetchBookingById(
         status: { $first: "$status" },
         order_id: { $first: "$order_id" },
         invoiceUrl: { $first: "$invoiceUrl" },
+        invoiceId: { $first: "$invoiceId" },
         createdAt: { $first: "$createdAt" },
         updatedAt: { $first: "$updatedAt" },
         serviceDetails: {
