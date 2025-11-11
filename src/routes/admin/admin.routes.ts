@@ -155,13 +155,13 @@ router.get(
 router.post(
   "/admin/booking/order-item/add-edit",
   validateRequest(addOrderItemValidator),
-  // authenticate,
+  authenticate,
   bookingController.addOrderItem,
 );
 
 router.get(
   "/admin/booking/generate-invoice/:bookingId",
-  // authenticate,
+  authenticate,
   bookingController.generateInvoice,
 );
 
