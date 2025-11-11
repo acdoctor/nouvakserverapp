@@ -156,10 +156,8 @@ export const ListOfBooking = async (req: Request, res: Response) => {
   console.log("booking req.query:", req.query);
   console.log("typeof status:", typeof req.query.status, req.query.status);
 
-  // console.log("entered into the booking controller", req.query)
   try {
     const result = await fetchBookingList(req.query);
-    // console.log(result.data);
     return res.status(200).json({
       success: true,
       message: "Bookings fetched successfully",
