@@ -151,7 +151,7 @@ export const addOrderItemValidator = Joi.object({
     "string.empty": "Booking ID cannot be empty",
   }),
 
-  orderItem: Joi.array()
+  orderItems: Joi.array()
     .items(
       Joi.object({
         item: Joi.string().trim().required().messages({

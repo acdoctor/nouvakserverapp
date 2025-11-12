@@ -178,7 +178,7 @@ export const ListOfBooking = async (req: Request, res: Response) => {
 // Controller to add order items to a booking
 export const addOrderItem = async (req: Request, res: Response) => {
   try {
-    const { bookingId, orderItem } = req.body;
+    const { bookingId, orderItems } = req.body;
 
     if (!bookingId?.trim()) {
       return res
@@ -186,13 +186,13 @@ export const addOrderItem = async (req: Request, res: Response) => {
         .json({ success: false, message: "Booking ID is required" });
     }
 
-    if (!Array.isArray(orderItem) || orderItem.length === 0) {
+    if (!Array.isArray(orderItems) || orderItems.length === 0) {
       return res
         .status(400)
         .json({ success: false, message: "Order items are required" });
     }
 
-    await createOrderItem(bookingId, orderItem);
+    await createOrderItem(bookingId, orderItems);
 
     return res
       .status(200)
