@@ -48,13 +48,6 @@ router.put(
   adminController.updateAdmin,
 );
 
-// User controllers routes
-router.post(
-  "/admin/user/toggle-active/:id",
-  authenticate,
-  userController.activeInactiveUser,
-);
-
 router.get("/admin/user/list", authenticate, userController.userList);
 
 // Technician controllers routes
@@ -77,6 +70,11 @@ router.put(
   userController.updateUser,
 );
 router.delete("/admin/user/delete/:id", userController.deleteUser);
+router.post(
+  "/admin/user/toggle-active/:id",
+  authenticate,
+  userController.activeInactiveUser,
+);
 
 // Service controller routes
 router.post(
