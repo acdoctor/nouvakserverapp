@@ -30,7 +30,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Sterlization\",\r\n    \"category\": \"BASIC\"\r\n}",
+									"raw": "// {\r\n//     \"name\": \"Sterlization\",\r\n//     \"category\": \"BASIC\"\r\n// }\r\n\r\n{\r\n  \"name\": \"Repair\",\r\n  \"description\": [\r\n    \"Expert repair services to restore your AC to peak performance.\",\r\n    \"Fast and efficient AC repair solutions for all major brands.\",\r\n    \"Thorough diagnostics and repairs for consistent cooling\",\r\n    \"Specialized AC repair services with a focus on quality.\"\r\n  ],\r\n  \"terms\": [\r\n    \"Service warranty is valid for 30 days from the date of repair.\",\r\n    \"All parts replaced are covered under manufacturer warranty only.\",\r\n    \"Payment must be made in full upon completion of the repair\",\r\n    \"Cancellations must be made 24 hours in advance to avoid charges\"\r\n  ],\r\n  \"icon\": \"https://acdoctor-service-booking-system.new.com/prod/service/banner/Repair.png\",\r\n  \"category\": \"BASIC\",\r\n  \"key\": \"REPAIR\",\r\n  \"banner_images\": [\r\n    {\r\n      \"type\": \"banner-0\",\r\n      \"url\": \"https://acdoctor-service-booking-system.new.com/prod/service/banner/2T%20Repair.jpeg\"\r\n    },\r\n    {\r\n      \"type\": \"banner-1\",\r\n      \"url\": \"https://acdoctor-service-booking-system.new.com/prod/service/banner/2B%20Repair.jpeg\"\r\n    }\r\n  ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -72,7 +72,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Sterlization\",\r\n    \"category\": \"BASIC\"\r\n}",
+									"raw": "// {\r\n//     \"name\": \"Sterlization\",\r\n//     \"category\": \"BASIC\"\r\n// }\r\n\r\n{\r\n  \"name\": \"Sterilization\",\r\n  \"description\": [\r\n    \"Comprehensive AC servicing to ensure optimal cooling efficiency\",\r\n    \"Quick and reliable AC repair services by certified technicians.\",\r\n    \"Annual maintenance contracts for hassle-free AC performance.\",\r\n    \"Test data\"\r\n  ],\r\n  \"terms\": [\r\n    \"Service warranty is valid for 30 days from the date of service.\",\r\n    \"All parts replaced are covered under manufacturer warranty only.\",\r\n    \"Payment must be made in full upon completion of the service\"\r\n  ],\r\n  \"icon\": \"https://acdoctor-service-booking-system.s3.ap-south-1.amazonaws.com/prod/service/banner/Strerilization.png\",\r\n  \"category\": \"AMC\",\r\n  \"key\": \"STERILIZATION\",\r\n  \"banner_images\": [\r\n    {\r\n      \"type\": \"banner-0\",\r\n      \"url\": \"https://acdoctor-service-booking-system.s3.ap-south-1.amazonaws.com/prod/service/banner/1T%20Sterilization.jpeg\",\r\n      \"_id\": \"6770d32e2958ed962280107d\"\r\n    },\r\n    {\r\n      \"type\": \"banner-1\",\r\n      \"url\": \"https://acdoctor-service-booking-system.new.com/prod/service/banner/1B%20Sterilization.jpeg\",\r\n      \"_id\": \"6770d32e2958ed962280107e\"\r\n    }\r\n  ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -143,6 +143,149 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Service Status Toggle",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWNjNzJlOTYwYzEyOGY3ZTJiMTY3MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2MjU5MzI2MywiZXhwIjoxNzYyNTk0MTYzfQ.oH57qJBQmK-J7UvI2N9Yw2w63a6BQl4Yp-nqJleyz2c",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// {\r\n//     \"name\": \"Sterlization\",\r\n//     \"category\": \"BASIC\"\r\n// }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/service/active-inactive/690f06f790309073bc0bf1dd",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"service",
+										"active-inactive",
+										"690f06f790309073bc0bf1dd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Service List",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWNjNzJlOTYwYzEyOGY3ZTJiMTY3MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2MjU5NDM2NSwiZXhwIjoxNzYyNTk1MjY1fQ.lwXDsvkpOl-ciP3lXFoX_2t8BnH1oeimCrffTBFHzwc",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/service/list?limit=10&page=1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"service",
+										"list"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "10"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Service Mobile List",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWNjNzJlOTYwYzEyOGY3ZTJiMTY3MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2MjU5NDM2NSwiZXhwIjoxNzYyNTk1MjY1fQ.lwXDsvkpOl-ciP3lXFoX_2t8BnH1oeimCrffTBFHzwc",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/service/mobile-list",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"service",
+										"mobile-list"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -166,7 +309,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"user_id\": \"69060611edbd136d77646b35\",\r\n    \"serviceDetails\": [\r\n  {\r\n    \"service_id\": \"690f06f790309073bc0bf1dd\",\r\n    \"quantity\": \"1\",\r\n    \"acType\": \"Split AC\"\r\n  }\r\n],\r\n    \"addressId\": \"690f1f48bf4ad511b8877c6c\",\r\n    \"slot\": \"FIRST_HALF\",\r\n    \"date\": \"2025-11-08T09:30:00.000Z\",\r\n    \"amount\": \"1000\",\r\n    \"order_id\": \"690f1f48bf4ad511b8877c6c\",\r\n    \"name\": \"sterlization\"\r\n}",
+									"raw": "{\r\n  \"user_id\": \"69060611edbd136d77646b35\",\r\n  \"serviceDetails\": [\r\n    {\r\n      \"service_id\": \"690f06f790309073bc0bf1dd\",\r\n      \"serviceType\": \"AC Repair\",\r\n      \"quantity\": \"1\",\r\n      \"comment\": \"Please check cooling issue\"\r\n    }\r\n  ],\r\n  \"addressId\": \"690f1f48bf4ad511b8877c6c\", \r\n  \"slot\": \"FIRST_HALF\",\r\n  \"date\": \"2023-12-05\",\r\n  \"amount\": 1200,\r\n  \"order_id\": \"ord_98765\",\r\n  \"name\": \"sterlization\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -186,6 +329,326 @@
 										"admin",
 										"booking",
 										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Booking Assign Technician",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWNjNzJlOTYwYzEyOGY3ZTJiMTY3MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2MjYwMTEyMSwiZXhwIjoxNzYyNjAyMDIxfQ.y9dwAnQRyZvQiya50XZhcraMALWMkKylhAlcQAgyo70",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"bookingId\": \"690f28bf3f171f43da2abed7\",\r\n    \"technicianId\": \"6905e13769152d9c37863e54\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/booking/assign-technician",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"booking",
+										"assign-technician"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Booking Manage Status",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWNjNzJlOTYwYzEyOGY3ZTJiMTY3MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2MjYwMTEyMSwiZXhwIjoxNzYyNjAyMDIxfQ.y9dwAnQRyZvQiya50XZhcraMALWMkKylhAlcQAgyo70",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"bookingId\": \"690f28bf3f171f43da2abed7\",\r\n    \"status\": \"IN_PROGRESS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/booking/manage/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"booking",
+										"manage",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Booking Generate Invoice",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWNjNzJlOTYwYzEyOGY3ZTJiMTY3MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2MjYwMTEyMSwiZXhwIjoxNzYyNjAyMDIxfQ.y9dwAnQRyZvQiya50XZhcraMALWMkKylhAlcQAgyo70",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/booking/generate-invoice/690f28bf3f171f43da2abed7",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"booking",
+										"generate-invoice",
+										"690f28bf3f171f43da2abed7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Booking Add Edit Order Items",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWNjNzJlOTYwYzEyOGY3ZTJiMTY3MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2MjYwMTEyMSwiZXhwIjoxNzYyNjAyMDIxfQ.y9dwAnQRyZvQiya50XZhcraMALWMkKylhAlcQAgyo70",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"bookingId\": \"690f28bf3f171f43da2abed7\",\r\n  \"orderItems\": [\r\n    {\r\n      \"item\": \"Split AC Installation\",\r\n      \"quantity\": \"1\",\r\n      \"price\": 1200\r\n    },\r\n    {\r\n      \"item\": \"Window AC Dismantle\",\r\n      \"quantity\": \"1\",\r\n      \"price\": 500\r\n    }\r\n  ]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/booking/order-item/add-edit",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"booking",
+										"order-item",
+										"add-edit"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Booking Edit",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWNjNzJlOTYwYzEyOGY3ZTJiMTY3MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2MjYwMjYyOSwiZXhwIjoxNzYyNjAzNTI5fQ.4Rt6sKsbCr91EsCcuch4dxesVl4I0eu11ZozvNY2r1Q",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"serviceDetails\": [\r\n    {\r\n      \"service_id\": \"690f06f790309073bc0bf1dd\",\r\n      \"service_data\": {\r\n        \"_id\": \"690f06f790309073bc0bf1dd\",\r\n        \"name\": \"Sterilization\",\r\n        \"icon\": \"https://acdoctor-service-booking-system.s3.ap-south-1.amazonaws.com/prod/service/banner/Strerilization.png\",\r\n        \"category\": \"AMC\",\r\n        \"key\": \"STERILIZATION\"\r\n      },\r\n      \"services\": [],\r\n      \"serviceType\": \"AC Repair\",\r\n      \"quantity\": \"1\",\r\n      \"acType\": \"SPLIT\",\r\n      \"place\": \"\",\r\n      \"comment\": \"Please check cooling issue\",\r\n      \"otherService\": \"\"\r\n    }\r\n  ],\r\n  \"addressId\": \"690f1f48bf4ad511b8877c6c\",\r\n  \"slot\": \"FIRST_HALF\",\r\n  \"date\": \"2025-11-10\",\r\n  \"amount\": 1200\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/booking/edit/690f28bf3f171f43da2abed7",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"booking",
+										"edit",
+										"690f28bf3f171f43da2abed7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Booking By Id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/booking/690f28bf3f171f43da2abed7",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"booking",
+										"690f28bf3f171f43da2abed7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Booking List",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/booking-list?limit=10&page=1&status=BOOKED",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"booking-list"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "10"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "status",
+											"value": "BOOKED"
+										}
 									]
 								}
 							},
