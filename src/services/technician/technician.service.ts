@@ -1,5 +1,6 @@
 import Technician from "../../models/technician/technician.model";
 import * as technicianotpService from "../technician/otp.service";
+import { Types } from "mongoose";
 
 interface TechnicianInput {
   name: string;
