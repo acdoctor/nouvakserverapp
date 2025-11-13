@@ -153,3 +153,53 @@ export const deleteTechnician = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const updateKyc = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  try {
+    const technicianId =
+      (req as { technicianId?: string }).technicianId ||
+      req.params.technicianId;
+    const { type, docUrl } = req.body;
+
+    if (!technicianId) {
+      return res.status(400).json({
+        success: false,
+        message: "Technician ID is required",
+      });
+    }
+
+    const uploadedBy = (req as { technicianId?: string }).technicianId
+      ? "technician"
+      : "admin";
+
+    await technicianService.updateKycService(
+      technicianId,
+      type,
+      docUrl,
+      uploadedBy,
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Technician KYC updated successfully",
+    });
+  } catch (err: unknown) {
+    if (err instanceof Error && err.message === "Technician not found") {
+      return res.status(404).json({
+        success: false,
+        message: "Technician not found",
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message:
+        (err instanceof Error && err.message) ||
+        "Failed to update technician KYC",
+    });
+  }
+};
