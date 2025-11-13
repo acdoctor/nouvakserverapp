@@ -109,3 +109,48 @@ export const deleteTechnicianById = async (id: string) => {
   if (!technician) throw new Error("Technician not found or already deleted");
   return technician;
 };
+
+export const updateKycService = async (
+  technicianId: string,
+  type: string,
+  docUrl: string,
+  uploadedBy: "admin" | "technician",
+): Promise<void> => {
+  const comment =
+    uploadedBy === "technician"
+      ? "Uploaded by technician"
+      : "Uploaded by admin";
+
+  const technician = await Technician.findById(
+    new Types.ObjectId(technicianId),
+  );
+  if (!technician) {
+    throw new Error("Technician not found");
+  }
+
+  // Try updating existing KYC doc
+  const updateResult = await Technician.updateOne(
+    {
+      _id: technicianId,
+      "kycDocs.type": type.toUpperCase(),
+    },
+    {
+      $set: {
+        "kycDocs.$.url": docUrl,
+        "kycDocs.$.comment": comment,
+      },
+    },
+  );
+
+  // If document type does not exist, push a new one
+  if (updateResult.matchedCount === 0) {
+    await Technician.updateOne(
+      { _id: technicianId },
+      {
+        $push: {
+          kycDocs: { type: type.toUpperCase(), url: docUrl, comment },
+        },
+      },
+    );
+  }
+};
