@@ -218,7 +218,7 @@ export const updateKyc = async (
 
 export const technicianList = async (req: Request, res: Response) => {
   try {
-    const result = await getTechnicianListService(req.query);
+    const result = await technicianService.getTechnicianListService(req.query);
 
     if (result.technicians.length > 0) {
       return res.status(200).json({
