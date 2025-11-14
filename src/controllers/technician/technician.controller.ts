@@ -215,3 +215,38 @@ export const updateKyc = async (
     });
   }
 };
+
+export const technicianList = async (req: Request, res: Response) => {
+  try {
+    const result = await getTechnicianListService(req.query);
+
+    if (result.technicians.length > 0) {
+      return res.status(200).json({
+        status: "success",
+        data: result.technicians,
+        count: result.totalTechnicians,
+        pagination: {
+          total: result.totalTechnicians,
+          page: result.page,
+          limit: result.limit,
+          totalPages: result.totalPages,
+        },
+      });
+    }
+
+    return res.status(200).json({
+      status: "fail",
+      message: "No technicians found",
+      data: [],
+      count: 0,
+    });
+  } catch (error) {
+    const err = error as Error;
+
+    return res.status(500).json({
+      status: "fail",
+      message: "Internal server error",
+      error: err.message,
+    });
+  }
+};
