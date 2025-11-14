@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export const updateKycValidator = Joi.object({
+export const updateKycSchema = Joi.object({
   type: Joi.string()
     .valid(
       "PAN",
