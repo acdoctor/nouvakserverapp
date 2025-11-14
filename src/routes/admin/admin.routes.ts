@@ -22,6 +22,7 @@ import {
   editBookingValidator,
 } from "../../validators/booking/booking.validator";
 import { updateKycSchema } from "../../validators/technician/KYCDoc.valitator";
+import { technicianListValidator } from "../../validators/technician/technician.validator";
 
 const router = Router();
 
@@ -65,6 +66,7 @@ router.post(
 router.post(
   "/admin/technician/list",
   authenticate,
+  validateRequest(technicianListValidator),
   technicianController.getAllTechnicians,
 );
 
