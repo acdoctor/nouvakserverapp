@@ -7,3 +7,27 @@ export const updateTechnicianSchema = Joi.object({
   email: Joi.string().email().optional(),
   profilePhoto: Joi.string().uri().optional(),
 }).min(1);
+
+export const technicianListValidator = Joi.object({
+  search: Joi.string().allow("", null).optional(),
+
+  page: Joi.number().integer().min(1).optional().messages({
+    "number.base": "Page must be a number",
+    "number.min": "Page must be at least 1",
+  }),
+
+  limit: Joi.number().integer().min(1).max(100).optional().messages({
+    "number.base": "Limit must be a number",
+    "number.min": "Limit must be at least 1",
+    "number.max": "Limit cannot exceed 100",
+  }),
+
+  active: Joi.boolean().optional(),
+
+  status: Joi.string()
+    .valid("PENDING", "APPROVED", "REJECTED")
+    .optional()
+    .messages({
+      "any.only": "Status must be PENDING, APPROVED or REJECTED",
+    }),
+});
