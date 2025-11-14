@@ -1,3 +1,4 @@
+import { PipelineStage } from "mongoose";
 import Technician from "../../models/technician/technician.model";
 import * as technicianotpService from "../technician/otp.service";
 import { Types } from "mongoose";
@@ -13,6 +14,31 @@ interface TechnicianInput {
   type: string;
   email?: string;
   dob?: Date;
+}
+
+export interface TechnicianQuery {
+  page?: string;
+  limit?: string;
+  sortby?: string;
+  orderby?: "asc" | "desc";
+  search?: string;
+  type?: string;
+  position?: string;
+  status?: string;
+  kycStatus?: string;
+}
+
+interface TechnicianListResult {
+  technicians: unknown[];
+  totalTechnicians: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+/** Match filter structure */
+interface MatchConditions {
+  $and?: Record<string, unknown>[];
 }
 
 const KYC_PENDING = "KYC_PENDING";
@@ -154,4 +180,78 @@ export const updateKycService = async (
       },
     );
   }
+};
+
+export const getTechnicianListService = async (
+  query: TechnicianQuery,
+): Promise<TechnicianListResult> => {
+  const page = parseInt(query.page || "1", 10);
+  const limit = parseInt(query.limit || "10", 10);
+  const offset = (page - 1) * limit;
+
+  const sortField = query.sortby || "createdAt";
+  const sortOrder = query.orderby === "asc" ? 1 : -1;
+
+  const search = query.search || "";
+  const type = query.type || "";
+  const position = query.position || "";
+  const status = query.status || "";
+  const kycStatus = query.kycStatus || "";
+
+  const matchConditions: MatchConditions = { $and: [] };
+
+  if (search) {
+    matchConditions.$and!.push({
+      $or: [
+        { phoneNumber: { $regex: search, $options: "i" } },
+        { name: { $regex: search, $options: "i" } },
+      ],
+    });
+  }
+
+  if (type) matchConditions.$and!.push({ type });
+  if (position) matchConditions.$and!.push({ position });
+  if (status) matchConditions.$and!.push({ status });
+  if (kycStatus) matchConditions.$and!.push({ kycStatus });
+
+  if (matchConditions.$and!.length === 0) delete matchConditions.$and;
+
+  const pipeline: PipelineStage[] = [
+    { $match: matchConditions },
+    {
+      $project: {
+        _id: 1,
+        name: { $ifNull: ["$name", ""] },
+        position: { $ifNull: ["$position", ""] },
+        kycStatus: { $ifNull: ["$kycStatus", ""] },
+        active: { $ifNull: ["$active", 0] },
+        profilePhoto: { $ifNull: ["$profilePhoto", ""] },
+        joiningDate: { $ifNull: ["$joiningDate", ""] },
+        countryCode: { $ifNull: ["$countryCode", ""] },
+        phoneNumber: { $ifNull: ["$phoneNumber", ""] },
+        status: { $ifNull: ["$status", ""] },
+        type: { $ifNull: ["$type", ""] },
+        secondaryContactNumber: { $ifNull: ["$secondaryContactNumber", ""] },
+        email: { $ifNull: ["$email", ""] },
+        dob: { $ifNull: ["$dob", ""] },
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    },
+    { $sort: { [sortField]: sortOrder } },
+    { $skip: offset },
+    { $limit: limit },
+  ];
+
+  const technicians = await Technician.aggregate(pipeline);
+
+  const totalTechnicians = await Technician.countDocuments(matchConditions);
+
+  return {
+    technicians,
+    totalTechnicians,
+    page,
+    limit,
+    totalPages: Math.ceil(totalTechnicians / limit),
+  };
 };
