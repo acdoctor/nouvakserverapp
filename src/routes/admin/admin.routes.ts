@@ -21,6 +21,7 @@ import {
   createBookingSchema,
   editBookingValidator,
 } from "../../validators/booking/booking.validator";
+import { updateKycSchema } from "../../validators/technician/KYCDoc.valitator";
 
 const router = Router();
 
@@ -57,6 +58,7 @@ router.post(
 router.post(
   "/admin/technician/kyc/manage/:technicianId",
   authenticate,
+  validateRequest(updateKycSchema),
   technicianController.updateKyc,
 );
 
