@@ -2,6 +2,18 @@ import { Request, Response } from "express";
 import * as technicianService from "../../services/technician/technician.service";
 import { ITechnician } from "../../models/technician/technician.model";
 
+export interface UpdateKycDTO {
+  type:
+    | "PAN"
+    | "AADHAR_FRONT"
+    | "AADHAR_BACK"
+    | "DRIVING_LICENSE"
+    | "VOTER_ID"
+    | "PASSPORT";
+  comment?: string;
+  docUrl: string;
+}
+
 export const registerTechnician = async (req: Request, res: Response) => {
   try {
     await technicianService.createTechnician(req.body);
@@ -162,7 +174,7 @@ export const updateKyc = async (
     const technicianId =
       (req as { technicianId?: string }).technicianId ||
       req.params.technicianId;
-    const { type, docUrl } = req.body;
+    const { type, docUrl } = req.body as UpdateKycDTO;
 
     if (!technicianId) {
       return res.status(400).json({
