@@ -55,7 +55,7 @@ router.post(
 );
 
 router.post(
-  "/admin/technician/kyc/manage/",
+  "/admin/technician/kyc/manage/:technicianId",
   authenticate,
   technicianController.updateKyc,
 );
