@@ -54,6 +54,7 @@ export interface ITechnician extends Document {
   registered?: boolean;
   totalLeaves?: number;
   refreshToken?: string | undefined;
+  active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -146,6 +147,7 @@ const technicianSchema = new Schema<ITechnician>(
     refreshToken: {
       type: String,
     },
+    active: { type: Boolean, default: true },
   },
   { timestamps: true },
 );
