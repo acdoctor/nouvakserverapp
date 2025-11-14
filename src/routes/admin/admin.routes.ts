@@ -62,6 +62,12 @@ router.post(
   technicianController.updateKyc,
 );
 
+router.post(
+  "/admin/technician/list",
+  authenticate,
+  technicianController.getAllTechnicians,
+);
+
 // User controllers routes
 router.post("/admin/user/register", userController.registerUser);
 router.get("/admin/user/profile/:id", authenticate, userController.getUserById);
