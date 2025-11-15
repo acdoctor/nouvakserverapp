@@ -23,6 +23,7 @@ import {
 } from "../../validators/booking/booking.validator";
 import { updateKycSchema } from "../../validators/technician/KYCDoc.valitator";
 import {
+  technicianIdParamValidator,
   technicianListValidator,
   updateKycStatusValidator,
 } from "../../validators/technician/technician.validator";
@@ -71,6 +72,13 @@ router.post(
   authenticate,
   validateRequest(updateKycStatusValidator),
   technicianController.updateKycStatus,
+);
+
+router.post(
+  "/admin/technician/status",
+  authenticate,
+  validateRequest(technicianIdParamValidator),
+  technicianController.toggleTechnicianStatus,
 );
 
 router.post(
