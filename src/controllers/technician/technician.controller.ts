@@ -211,7 +211,7 @@ export const updateKyc = async (
       success: false,
       message:
         (err instanceof Error && err.message) ||
-        "Failed to update technician KYC",
+        "falseed to update technician KYC",
     });
   }
 };
@@ -257,14 +257,14 @@ export const toggleTechnicianStatus = async (req: Request, res: Response) => {
 
     if (!updatedTechnician) {
       return res.status(404).json({
-        status: "FAIL",
+        success: "false",
         message: "Technician not found",
         data: null,
       });
     }
 
     return res.status(200).json({
-      status: "SUCCESS",
+      success: true,
       message: `Technician status updated to ${updatedTechnician.status}`,
       data: updatedTechnician,
     });
@@ -272,7 +272,7 @@ export const toggleTechnicianStatus = async (req: Request, res: Response) => {
     const errMsg = error instanceof Error ? error.message : "Unknown error";
 
     return res.status(500).json({
-      status: "FAIL",
+      success: "false",
       message: "Internal server error",
       error: errMsg,
       data: null,
@@ -286,7 +286,7 @@ export const technicianList = async (req: Request, res: Response) => {
 
     if (result.technicians.length > 0) {
       return res.status(200).json({
-        status: "success",
+        success: true,
         data: result.technicians,
         count: result.totalTechnicians,
         pagination: {
@@ -299,7 +299,7 @@ export const technicianList = async (req: Request, res: Response) => {
     }
 
     return res.status(200).json({
-      status: "fail",
+      success: "false",
       message: "No technicians found",
       data: [],
       count: 0,
@@ -308,7 +308,7 @@ export const technicianList = async (req: Request, res: Response) => {
     const err = error as Error;
 
     return res.status(500).json({
-      status: "fail",
+      success: "false",
       message: "Internal server error",
       error: err.message,
     });
