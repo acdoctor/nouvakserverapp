@@ -22,7 +22,10 @@ import {
   editBookingValidator,
 } from "../../validators/booking/booking.validator";
 import { updateKycSchema } from "../../validators/technician/KYCDoc.valitator";
-import { technicianListValidator } from "../../validators/technician/technician.validator";
+import {
+  technicianListValidator,
+  updateKycStatusValidator,
+} from "../../validators/technician/technician.validator";
 
 const router = Router();
 
@@ -61,6 +64,13 @@ router.post(
   authenticate,
   validateRequest(updateKycSchema),
   technicianController.updateKyc,
+);
+
+router.post(
+  "/admin/technician/kyc-status",
+  authenticate,
+  validateRequest(updateKycStatusValidator),
+  technicianController.updateKycStatus,
 );
 
 router.post(
