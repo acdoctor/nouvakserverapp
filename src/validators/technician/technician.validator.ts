@@ -31,3 +31,17 @@ export const technicianListValidator = Joi.object({
       "any.only": "Status must be PENDING, APPROVED or REJECTED",
     }),
 });
+
+export const updateKycStatusValidator = Joi.object({
+  technicianId: Joi.string().required().messages({
+    "string.empty": "Technician ID is required",
+  }),
+
+  action: Joi.string()
+    .valid("APPROVE", "REJECT", "REQUEST")
+    .required()
+    .messages({
+      "any.only": "Invalid action. Allowed actions: APPROVE, REJECT, REQUEST",
+      "string.empty": "Action is required",
+    }),
+});
