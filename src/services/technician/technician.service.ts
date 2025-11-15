@@ -50,6 +50,12 @@ interface MatchConditions {
 
 const KYC_PENDING = "KYC_PENDING";
 const REQUESTED = "REQUESTED";
+const VERIFIED = "VERIFIED";
+const REJECTED = "REJECTED";
+const AVAILABLE = "AVAILABLE";
+const TBU = "TBU"; // To be uploaded
+const SIGNED_UP = "SIGNED_UP";
+const TBA = "TBA";
 
 export const createTechnician = async (data: TechnicianInput) => {
   const {
@@ -76,18 +82,19 @@ export const createTechnician = async (data: TechnicianInput) => {
 
   // Create technician
   const technician = await Technician.create({
-    name,
-    phoneNumber,
-    joiningDate,
-    position,
-    type,
-    countryCode,
+    name: name,
+    phoneNumber: phoneNumber,
+    joiningDate: joiningDate || new Date(),
+    position: position || TBA,
+    type: type,
+    countryCode: countryCode,
     profilePhoto: profilePhoto || "",
-    status: KYC_PENDING,
-    kycStatus: REQUESTED,
+    status: SIGNED_UP,
+    kycStatus: TBU,
     secondaryContactNumber: secondaryContactNumber || "",
     dob: dob || null,
     email: email || null,
+    registred: false,
   });
 
   return technician;
@@ -211,18 +218,18 @@ export const updateKycStatusService = async ({
 
   switch (action) {
     case "REQUEST":
-      updateData.kycStatus = "REQUESTED";
-      updateData.status = "KYC_PENDING";
+      updateData.kycStatus = REQUESTED;
+      updateData.status = KYC_PENDING;
       break;
 
     case "APPROVE":
-      updateData.kycStatus = "VERIFIED";
-      updateData.status = "AVAILABLE";
+      updateData.kycStatus = VERIFIED;
+      updateData.status = AVAILABLE;
       break;
 
     case "REJECT":
-      updateData.kycStatus = "REJECTED";
-      updateData.status = "KYC_PENDING";
+      updateData.kycStatus = REJECTED;
+      updateData.status = KYC_PENDING;
       break;
   }
 
