@@ -216,6 +216,38 @@ export const updateKyc = async (
   }
 };
 
+export const updateKycStatus = async (req: Request, res: Response) => {
+  const { technicianId, action } = req.body;
+
+  try {
+    const result = await technicianService.updateKycStatusService({
+      technicianId,
+      action: action.toUpperCase(),
+    });
+
+    return res.status(result.statusCode).json({
+      success: result.success,
+      message: result.message,
+      data: result.data || null,
+    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error",
+        error: error.message,
+      });
+    }
+
+    // fallback if error is not instance of Error
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: String(error),
+    });
+  }
+};
+
 export const technicianList = async (req: Request, res: Response) => {
   try {
     const result = await technicianService.getTechnicianListService(req.query);
