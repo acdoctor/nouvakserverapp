@@ -45,3 +45,7 @@ export const updateKycStatusValidator = Joi.object({
       "string.empty": "Action is required",
     }),
 });
+
+export const technicianIdParamValidator = Joi.object({
+  technicianId: Joi.string().length(24).required(),
+});
