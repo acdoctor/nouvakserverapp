@@ -75,7 +75,7 @@ router.post(
 );
 
 router.post(
-  "/admin/technician/status",
+  "/admin/technician/status/:technicianId",
   authenticate,
   validateRequest(technicianIdParamValidator),
   technicianController.toggleTechnicianStatus,
