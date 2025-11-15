@@ -248,6 +248,38 @@ export const updateKycStatus = async (req: Request, res: Response) => {
   }
 };
 
+export const toggleTechnicianStatus = async (req: Request, res: Response) => {
+  const { technicianId } = req.params as { technicianId: string };
+
+  try {
+    const updatedTechnician =
+      await technicianService.toggleTechnicianStatusService(technicianId);
+
+    if (!updatedTechnician) {
+      return res.status(404).json({
+        status: "FAIL",
+        message: "Technician not found",
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      status: "SUCCESS",
+      message: `Technician status updated to ${updatedTechnician.status}`,
+      data: updatedTechnician,
+    });
+  } catch (error: unknown) {
+    const errMsg = error instanceof Error ? error.message : "Unknown error";
+
+    return res.status(500).json({
+      status: "FAIL",
+      message: "Internal server error",
+      error: errMsg,
+      data: null,
+    });
+  }
+};
+
 export const technicianList = async (req: Request, res: Response) => {
   try {
     const result = await technicianService.getTechnicianListService(req.query);
