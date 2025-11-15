@@ -62,7 +62,7 @@ export interface ITechnician extends Document {
 const technicianSchema = new Schema<ITechnician>(
   {
     name: { type: String, required: true },
-    joiningDate: { type: Date },
+    joiningDate: { type: Date, default: Date.now },
     type: {
       type: String,
       enum: ["ACD", "FC"],
