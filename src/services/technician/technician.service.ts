@@ -36,6 +36,13 @@ interface TechnicianListResult {
   totalPages: number;
 }
 
+export type KycAction = "REQUEST" | "APPROVE" | "REJECT";
+
+interface UpdateKycStatusInput {
+  technicianId: string;
+  action: KycAction;
+}
+
 /** Match filter structure */
 interface MatchConditions {
   $and?: Record<string, unknown>[];
@@ -180,6 +187,53 @@ export const updateKycService = async (
       },
     );
   }
+};
+
+export const updateKycStatusService = async ({
+  technicianId,
+  action,
+}: UpdateKycStatusInput) => {
+  const technician = await Technician.findById(technicianId);
+
+  if (!technician) {
+    return {
+      success: false,
+      statusCode: 404,
+      message: "Technician not found",
+    };
+  }
+
+  // Prepare status update object
+  const updateData = {
+    kycStatus: technician.kycStatus,
+    status: technician.status,
+  };
+
+  switch (action) {
+    case "REQUEST":
+      updateData.kycStatus = "REQUESTED";
+      updateData.status = "KYC_PENDING";
+      break;
+
+    case "APPROVE":
+      updateData.kycStatus = "VERIFIED";
+      updateData.status = "AVAILABLE";
+      break;
+
+    case "REJECT":
+      updateData.kycStatus = "REJECTED";
+      updateData.status = "KYC_PENDING";
+      break;
+  }
+
+  await Technician.findByIdAndUpdate(technicianId, updateData, { new: true });
+
+  return {
+    success: true,
+    statusCode: 200,
+    message: `Technician KYC ${action}ED successfully`,
+    data: updateData,
+  };
 };
 
 export const getTechnicianListService = async (
