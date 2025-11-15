@@ -56,6 +56,7 @@ const AVAILABLE = "AVAILABLE";
 const TBU = "TBU"; // To be uploaded
 const SIGNED_UP = "SIGNED_UP";
 const TBA = "TBA";
+const DISABLED = "DISABLED";
 
 export const createTechnician = async (data: TechnicianInput) => {
   const {
@@ -241,6 +242,28 @@ export const updateKycStatusService = async ({
     message: `Technician KYC ${action}ED successfully`,
     data: updateData,
   };
+};
+
+export const toggleTechnicianStatusService = async (technicianId: string) => {
+  const technician = await Technician.findById(technicianId);
+
+  if (!technician) return null;
+
+  let newStatus: string;
+
+  if (technician.status === DISABLED) {
+    newStatus = technician.kycStatus === VERIFIED ? AVAILABLE : KYC_PENDING;
+  } else {
+    newStatus = DISABLED;
+  }
+
+  const updatedTechnician = await Technician.findByIdAndUpdate(
+    technicianId,
+    { status: newStatus },
+    { new: true },
+  );
+
+  return updatedTechnician;
 };
 
 export const getTechnicianListService = async (
