@@ -88,6 +88,12 @@ router.post(
   technicianController.getAllTechnicians,
 );
 
+router.post(
+  "/admin/technician/list/available",
+  authenticate,
+  technicianController.getAvailableTechnicians,
+);
+
 // User controllers routes
 router.post("/admin/user/register", userController.registerUser);
 router.get("/admin/user/profile/:id", authenticate, userController.getUserById);
