@@ -339,3 +339,29 @@ export const getTechnicianListService = async (
     totalPages: Math.ceil(totalTechnicians / limit),
   };
 };
+
+export const getAvailableTechniciansService = async (
+  page: number,
+  limit: number,
+) => {
+  const offset = (page - 1) * limit;
+
+  const matchConditions = {
+    position: { $ne: "HELPER" },
+    status: "AVAILABLE",
+    kycStatus: "VERIFIED",
+  };
+
+  const technicians = await Technician.find(matchConditions)
+    .select("name phoneNumber _id status kycStatus position")
+    .skip(offset)
+    .limit(limit)
+    .exec();
+
+  const totalTechnicians = await Technician.countDocuments(matchConditions);
+
+  return {
+    technicians,
+    totalTechnicians,
+  };
+};
