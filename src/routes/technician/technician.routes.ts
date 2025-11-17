@@ -28,7 +28,7 @@ router.get(
   authenticate,
   technicianController.getTechnicianById,
 );
-router.get("/technician/all", technicianController.getAllTechnicians);
+// router.get("/technician/all", technicianController.getAllTechnicians);
 router.put(
   "/technician/:id",
   validateRequest(updateTechnicianSchema),
