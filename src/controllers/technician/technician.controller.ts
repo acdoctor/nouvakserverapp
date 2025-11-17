@@ -257,7 +257,7 @@ export const toggleTechnicianStatus = async (req: Request, res: Response) => {
 
     if (!updatedTechnician) {
       return res.status(404).json({
-        success: "false",
+        success: false,
         message: "Technician not found",
         data: null,
       });
@@ -272,7 +272,7 @@ export const toggleTechnicianStatus = async (req: Request, res: Response) => {
     const errMsg = error instanceof Error ? error.message : "Unknown error";
 
     return res.status(500).json({
-      success: "false",
+      success: false,
       message: "Internal server error",
       error: errMsg,
       data: null,
