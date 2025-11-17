@@ -50,7 +50,7 @@ export const technicianIdParamValidator = Joi.object({
   technicianId: Joi.string().length(24).required(),
 });
 
-export const technicianBookingListSchema = Joi.object({
+export const technicianAssignedBookingListSchema = Joi.object({
   page: Joi.number().integer().min(1).optional().messages({
     "number.base": "Page must be a number",
     "number.integer": "Page must be an integer",
