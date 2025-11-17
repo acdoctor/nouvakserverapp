@@ -109,17 +109,17 @@ export const getTechnicianById = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllTechnicians = async (_req: Request, res: Response) => {
-  try {
-    const technicians = await technicianService.getAllTechnicians();
-    res.json({ success: true, data: technicians });
-  } catch (err: unknown) {
-    res.status(500).json({
-      success: false,
-      error: err instanceof Error ? err.message : String(err),
-    });
-  }
-};
+// export const getAllTechnicians = async (_req: Request, res: Response) => {
+//   try {
+//     const technicians = await technicianService.getAllTechnicians();
+//     res.json({ success: true, data: technicians });
+//   } catch (err: unknown) {
+//     res.status(500).json({
+//       success: false,
+//       error: err instanceof Error ? err.message : String(err),
+//     });
+//   }
+// };
 
 export const updateTechnician = async (req: Request, res: Response) => {
   try {

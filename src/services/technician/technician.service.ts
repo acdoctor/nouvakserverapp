@@ -128,10 +128,10 @@ export const getTechnicianById = async (id: string) => {
 };
 
 // Get all technicians
-export const getAllTechnicians = async () => {
-  const technicians = await Technician.find().lean();
-  return technicians;
-};
+// export const getAllTechnicians = async () => {
+//   const technicians = await Technician.find().lean();
+//   return technicians;
+// };
 
 // Update technician by ID
 export const updateTechnicianById = async (
