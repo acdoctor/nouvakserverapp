@@ -2,6 +2,7 @@ import { PipelineStage } from "mongoose";
 import Technician from "../../models/technician/technician.model";
 import * as technicianotpService from "../technician/otp.service";
 import { Types } from "mongoose";
+import { Booking } from "../../models/booking/booking.model";
 
 interface TechnicianInput {
   name: string;
@@ -28,12 +29,41 @@ export interface TechnicianQuery {
   kycStatus?: string;
 }
 
+export interface TechnicianBookingQuery extends TechnicianQuery {
+  startDate?: string;
+  endDate?: string;
+}
+
 interface TechnicianListResult {
   technicians: unknown[];
   totalTechnicians: number;
   page: number;
   limit: number;
   totalPages: number;
+}
+
+export interface BookingListItem {
+  _id: string;
+  date: Date;
+  status: string;
+  slot: string;
+  order_id: string;
+  bookingId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface TechnicianBookingListResult {
+  bookings: BookingListItem[];
+  total: number;
+}
+
+export interface BookingMatchCondition {
+  assigned_to?: ObjectId;
+  date?: {
+    $gte?: Date;
+    $lte?: Date;
+  };
 }
 
 export type KycAction = "REQUEST" | "APPROVE" | "REJECT";
@@ -364,4 +394,61 @@ export const getAvailableTechniciansService = async (
     technicians,
     totalTechnicians,
   };
+};
+
+export const technicianBookingListService = async (
+  technicianId: string,
+  query: TechnicianBookingQuery,
+): Promise<TechnicianBookingListResult> => {
+  const page = parseInt(query.page || "1", 10);
+  const limit = parseInt(query.limit || "10", 10);
+  const offset = (page - 1) * limit;
+
+  const sortField = query.sortby || "createdAt";
+  const sortOrder = query.orderby === "asc" ? 1 : -1;
+
+  const startDate = query.startDate ? new Date(query.startDate) : null;
+  const endDate = query.endDate ? new Date(query.endDate) : null;
+
+  const matchConditions: BookingMatchCondition[] = [
+    { assigned_to: new Types.ObjectId(technicianId) },
+  ];
+
+  if (startDate && endDate) {
+    matchConditions.push({ date: { $gte: startDate, $lte: endDate } });
+  } else if (startDate) {
+    matchConditions.push({ date: { $gte: startDate } });
+  } else if (endDate) {
+    matchConditions.push({ date: { $lte: endDate } });
+  }
+
+  const pipeline: PipelineStage[] = [
+    { $match: { $and: matchConditions } },
+    {
+      $project: {
+        _id: 1,
+        date: 1,
+        status: 1,
+        slot: 1,
+        order_id: 1,
+        bookingId: 1,
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    },
+    { $sort: { [sortField]: sortOrder } },
+    { $skip: offset },
+    { $limit: limit },
+  ];
+
+  const bookings = await Booking.aggregate(pipeline);
+
+  const countResult = await Booking.aggregate([
+    { $match: { assigned_to: new Types.ObjectId(technicianId) } },
+    { $count: "total" },
+  ]);
+
+  const total = countResult.length ? countResult[0].total : 0;
+
+  return { bookings, total };
 };
