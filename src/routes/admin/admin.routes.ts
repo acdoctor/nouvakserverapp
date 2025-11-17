@@ -83,9 +83,9 @@ router.post(
 
 router.post(
   "/admin/technician/list",
-  authenticate,
+  // authenticate,
   validateRequest(technicianListValidator),
-  technicianController.getAllTechnicians,
+  technicianController.technicianList,
 );
 
 router.post(
