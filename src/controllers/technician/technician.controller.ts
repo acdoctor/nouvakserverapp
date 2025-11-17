@@ -299,7 +299,7 @@ export const technicianList = async (req: Request, res: Response) => {
     }
 
     return res.status(200).json({
-      success: "false",
+      success: false,
       message: "No technicians found",
       data: [],
       count: 0,
@@ -308,7 +308,7 @@ export const technicianList = async (req: Request, res: Response) => {
     const err = error as Error;
 
     return res.status(500).json({
-      success: "false",
+      success: false,
       message: "Internal server error",
       error: err.message,
     });
