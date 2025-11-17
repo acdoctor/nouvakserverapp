@@ -367,7 +367,10 @@ export const technicianBookingList = async (req: Request, res: Response) => {
   }
 
   try {
-    const result = await technicianBookingListService(technicianId, req.query);
+    const result = await technicianService.technicianBookingListService(
+      technicianId,
+      req.query,
+    );
 
     return res.status(200).json({
       success: true,
