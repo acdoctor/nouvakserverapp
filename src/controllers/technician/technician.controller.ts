@@ -314,3 +314,36 @@ export const technicianList = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const getAvailableTechnicians = async (req: Request, res: Response) => {
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    const { technicians, totalTechnicians } =
+      await getAvailableTechniciansService(page, limit);
+
+    return res.status(200).json({
+      status: "SUCCESS",
+      message: "Available technicians fetched successfully",
+      data: technicians,
+      count: totalTechnicians,
+      pagination: {
+        totalTechnicians,
+        page,
+        limit,
+        totalPages: Math.ceil(totalTechnicians / limit),
+      },
+    });
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+
+    return res.status(500).json({
+      status: "FAIL",
+      message: "Internal server error",
+      error: errorMessage,
+      data: null,
+    });
+  }
+};
