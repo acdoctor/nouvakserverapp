@@ -347,3 +347,40 @@ export const getAvailableTechnicians = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const technicianBookingList = async (req: Request, res: Response) => {
+  const { technicianId } = req.params;
+
+  if (!technicianId || !mongoose.Types.ObjectId.isValid(technicianId)) {
+    return res.status(400).json({
+      success: false,
+      message: "Valid technician ID is required",
+    });
+  }
+
+  const { error } = technicianBookingListSchema.validate(req.query);
+  if (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message,
+    });
+  }
+
+  try {
+    const result = await technicianBookingListService(technicianId, req.query);
+
+    return res.status(200).json({
+      success: true,
+      data: result.bookings,
+      total: result.total,
+    });
+  } catch (err) {
+    const errorMessage = (err as Error).message;
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: errorMessage,
+    });
+  }
+};
