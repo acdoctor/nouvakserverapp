@@ -349,7 +349,10 @@ export const getAvailableTechnicians = async (req: Request, res: Response) => {
   }
 };
 
-export const technicianBookingList = async (req: Request, res: Response) => {
+export const technicianAssignedBookingList = async (
+  req: Request,
+  res: Response,
+) => {
   const { technicianId } = req.params;
 
   if (!technicianId || !mongoose.Types.ObjectId.isValid(technicianId)) {

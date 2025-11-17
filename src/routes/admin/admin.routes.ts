@@ -94,6 +94,12 @@ router.post(
   technicianController.getAvailableTechnicians,
 );
 
+router.get(
+  "/admin/technician/assigned/booking/list/:technicianId",
+  authenticate,
+  technicianController.technicianAssignedBookingList,
+);
+
 // User controllers routes
 router.post("/admin/user/register", userController.registerUser);
 router.get("/admin/user/profile/:id", authenticate, userController.getUserById);
