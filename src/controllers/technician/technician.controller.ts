@@ -321,10 +321,10 @@ export const getAvailableTechnicians = async (req: Request, res: Response) => {
     const limit = Number(req.query.limit) || 10;
 
     const { technicians, totalTechnicians } =
-      await getAvailableTechniciansService(page, limit);
+      await technicianService.getAvailableTechniciansService(page, limit);
 
     return res.status(200).json({
-      status: "SUCCESS",
+      success: true,
       message: "Available technicians fetched successfully",
       data: technicians,
       count: totalTechnicians,
@@ -340,7 +340,7 @@ export const getAvailableTechnicians = async (req: Request, res: Response) => {
       error instanceof Error ? error.message : "Unknown error";
 
     return res.status(500).json({
-      status: "FAIL",
+      success: false,
       message: "Internal server error",
       error: errorMessage,
       data: null,
