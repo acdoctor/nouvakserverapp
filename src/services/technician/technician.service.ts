@@ -59,7 +59,7 @@ export interface TechnicianBookingListResult {
 }
 
 export interface BookingMatchCondition {
-  assigned_to?: ObjectId;
+  assigned_to?: Types.ObjectId;
   date?: {
     $gte?: Date;
     $lte?: Date;
