@@ -363,7 +363,7 @@ export const technicianAssignedBookingList = async (
   }
 
   try {
-    const result = await technicianService.technicianBookingListService(
+    const result = await technicianService.technicianAssignedBookingListService(
       technicianId,
       req.query,
     );

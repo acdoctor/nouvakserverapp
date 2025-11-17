@@ -396,7 +396,7 @@ export const getAvailableTechniciansService = async (
   };
 };
 
-export const technicianBookingListService = async (
+export const technicianAssignedBookingListService = async (
   technicianId: string,
   query: TechnicianBookingQuery,
 ): Promise<TechnicianBookingListResult> => {
