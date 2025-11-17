@@ -23,6 +23,7 @@ import {
 } from "../../validators/booking/booking.validator";
 import { updateKycSchema } from "../../validators/technician/KYCDoc.valitator";
 import {
+  technicianAssignedBookingListSchema,
   technicianIdParamValidator,
   technicianListValidator,
   updateKycStatusValidator,
