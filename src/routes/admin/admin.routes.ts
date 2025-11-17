@@ -97,6 +97,7 @@ router.post(
 router.get(
   "/admin/technician/assigned/booking/list/:technicianId",
   authenticate,
+  validateRequest(technicianAssignedBookingListSchema),
   technicianController.technicianAssignedBookingList,
 );
 

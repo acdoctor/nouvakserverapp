@@ -49,3 +49,38 @@ export const updateKycStatusValidator = Joi.object({
 export const technicianIdParamValidator = Joi.object({
   technicianId: Joi.string().length(24).required(),
 });
+
+export const technicianBookingListSchema = Joi.object({
+  page: Joi.number().integer().min(1).optional().messages({
+    "number.base": "Page must be a number",
+    "number.integer": "Page must be an integer",
+    "number.min": "Page must be at least 1",
+  }),
+
+  limit: Joi.number().integer().min(1).optional().messages({
+    "number.base": "Limit must be a number",
+    "number.integer": "Limit must be an integer",
+    "number.min": "Limit must be at least 1",
+  }),
+
+  search: Joi.string().allow("").optional().messages({
+    "string.base": "Search keyword must be a string",
+  }),
+
+  sortby: Joi.string().optional().messages({
+    "string.base": "Sortby must be a string",
+  }),
+
+  orderby: Joi.string().valid("asc", "desc").optional().messages({
+    "string.base": "Orderby must be a string",
+    "any.only": "Orderby must be either 'asc' or 'desc'",
+  }),
+
+  startDate: Joi.date().optional().messages({
+    "date.base": "Start date must be a valid date",
+  }),
+
+  endDate: Joi.date().optional().messages({
+    "date.base": "End date must be a valid date",
+  }),
+});
