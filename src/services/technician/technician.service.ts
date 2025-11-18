@@ -153,8 +153,9 @@ export const loginTechnician = async (
 };
 
 // Get technician by ID
-export const getTechnicianById = async (id: string) => {
-  const technician = await Technician.findById(id).lean();
+export const getTechnicianByIdService = async (technicianId: string) => {
+  const technician = await Technician.findById(technicianId);
+
   if (!technician) throw new Error("Technician not found");
   return technician;
 };

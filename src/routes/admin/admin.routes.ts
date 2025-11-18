@@ -83,6 +83,12 @@ router.post(
   technicianController.toggleTechnicianStatus,
 );
 
+router.post(
+  "/admin/technician/:technicianId",
+  authenticate,
+  technicianController.getTechnicianById,
+);
+
 router.put(
   "/admin/technician/edit/:technicianId",
   authenticate,

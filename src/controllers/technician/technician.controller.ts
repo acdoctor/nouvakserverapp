@@ -87,25 +87,71 @@ export const loginRegisterTechnician = async (req: Request, res: Response) => {
   }
 };
 
-export const getTechnicianById = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    if (!id) {
-      return res
-        .status(400)
-        .json({ success: false, error: "Technician ID is required" });
-    }
+// Not required will remove later
+// export const getTechnicianById = async (req: Request, res: Response) => {
+//   try {
+//     const { id } = req.params;
+//     if (!id) {
+//       return res
+//         .status(400)
+//         .json({ success: false, error: "Technician ID is required" });
+//     }
 
-    const technician = await technicianService.getTechnicianById(id);
-    res.status(200).json({
+//     const technician = await technicianService.getTechnicianById(id);
+//     res.status(200).json({
+//       success: true,
+//       data: technician,
+//       message: "Technician fetched successfully",
+//     });
+//   } catch (err: unknown) {
+//     res.status(404).json({
+//       success: false,
+//       error: err instanceof Error ? err.message : String(err),
+//     });
+//   }
+// };
+
+export const getTechnicianById = async (req: Request, res: Response) => {
+  const { technicianId } = req.params;
+
+  // Validate ID
+  if (!technicianId || technicianId.trim() === "") {
+    return res.status(400).json({
+      success: false,
+      message: "Technician ID is required",
+    });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(technicianId)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid technician ID format",
+    });
+  }
+
+  try {
+    const technician =
+      await technicianService.getTechnicianByIdService(technicianId);
+
+    return res.status(200).json({
       success: true,
       data: technician,
-      message: "Technician fetched successfully",
     });
-  } catch (err: unknown) {
-    res.status(404).json({
+  } catch (err) {
+    const message = (err as Error).message;
+
+    if (message === "Technician not found") {
+      return res.status(404).json({
+        success: false,
+        message,
+      });
+    }
+
+    // fallback
+    return res.status(500).json({
       success: false,
-      error: err instanceof Error ? err.message : String(err),
+      message: "Internal server error",
+      error: message,
     });
   }
 };
@@ -170,14 +216,6 @@ export const editTechnician = async (req: Request, res: Response) => {
     });
   } catch (err) {
     const message = (err as Error).message;
-
-    // custom handling based on known errors // Not required will be remove later
-    // if (message === "Technician ID is required") {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message,
-    //   });
-    // }
 
     if (message === "Technician not found") {
       return res.status(404).json({
