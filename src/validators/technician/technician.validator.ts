@@ -1,12 +1,61 @@
 import Joi from "joi";
 
-export const updateTechnicianSchema = Joi.object({
-  name: Joi.string().optional(),
-  position: Joi.string().optional(),
-  status: Joi.string().optional(),
-  email: Joi.string().email().optional(),
-  profilePhoto: Joi.string().uri().optional(),
-}).min(1);
+// will be remove later
+// export const updateTechnicianSchema = Joi.object({
+//   name: Joi.string().optional(),
+//   position: Joi.string().optional(),
+//   status: Joi.string().optional(),
+//   email: Joi.string().email().optional(),
+//   profilePhoto: Joi.string().uri().optional(),
+// }).min(1);
+
+export const TechnicianSchema = Joi.object({
+  name: Joi.string().optional().messages({
+    "string.base": "Name must be a string",
+  }),
+
+  joiningDate: Joi.date().optional().messages({
+    "date.base": "Joining date must be a valid date",
+  }),
+
+  profilePhoto: Joi.string().allow("", null).optional().messages({
+    "string.base": "Profile photo must be a string",
+  }),
+
+  type: Joi.string().valid("ACD", "FC").optional().messages({
+    "any.only": "Type must be either ACD or FC",
+  }),
+
+  position: Joi.string()
+    .valid(
+      "TBA",
+      "HELPER",
+      "TECHNICIAN",
+      "SENIOR TECHNICIAN",
+      "SUPERVISOR",
+      "MANAGER",
+    )
+    .optional()
+    .messages({
+      "any.only": "Position is not valid",
+    }),
+
+  email: Joi.string().email().allow("", null).optional().messages({
+    "string.email": "Email must be valid",
+  }),
+
+  secondaryContactNumber: Joi.string()
+    .pattern(/^[0-9]{10}$/)
+    .allow("", null)
+    .optional()
+    .messages({
+      "string.pattern.base": "Secondary contact number must be 10 digits",
+    }),
+
+  dob: Joi.date().allow(null).optional().messages({
+    "date.base": "Date of birth must be a valid date",
+  }),
+});
 
 export const technicianListValidator = Joi.object({
   search: Joi.string().allow("", null).optional(),
