@@ -171,13 +171,13 @@ export const editTechnician = async (req: Request, res: Response) => {
   } catch (err) {
     const message = (err as Error).message;
 
-    // custom handling based on known errors
-    if (message === "Technician ID is required") {
-      return res.status(400).json({
-        success: false,
-        message,
-      });
-    }
+    // custom handling based on known errors // Not required will be remove later
+    // if (message === "Technician ID is required") {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message,
+    //   });
+    // }
 
     if (message === "Technician not found") {
       return res.status(404).json({
