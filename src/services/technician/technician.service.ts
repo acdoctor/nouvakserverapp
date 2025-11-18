@@ -181,10 +181,10 @@ export const updateTechnicianService = async (
   technicianId: string,
   data: Partial<ITechnician>,
 ) => {
-  // Validate ID inside service
-  if (!technicianId) {
-    return { success: false, code: 400, message: "Technician ID is required" };
-  }
+  // Validate ID inside service // Implemented in controller will be deleted later
+  // if (!technicianId) {
+  //   return { success: false, code: 400, message: "Technician ID is required" };
+  // }
 
   // Check if technician exists
   const existingTechnician = await Technician.findById(technicianId);

@@ -150,7 +150,13 @@ export const getTechnicianById = async (req: Request, res: Response) => {
 
 export const editTechnician = async (req: Request, res: Response) => {
   try {
-    const { technicianId } = req.body;
+    const { technicianId } = req.params;
+
+    if (!technicianId) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Technician ID is required" });
+    }
 
     const result = await technicianService.updateTechnicianService(
       technicianId,
