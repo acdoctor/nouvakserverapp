@@ -233,6 +233,48 @@ export const editTechnician = async (req: Request, res: Response) => {
   }
 };
 
+export const updateProfessionalSkills = async (req: Request, res: Response) => {
+  try {
+    const { technicianId } = req.params;
+
+    if (!technicianId || !mongoose.Types.ObjectId.isValid(technicianId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Valid technician ID is required",
+      });
+    }
+
+    const { professionalSkills } = req.body;
+
+    const updatedTech = await technicianService.updateProfessionalSkillsService(
+      technicianId,
+      professionalSkills,
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Professional skills updated successfully",
+      data: updatedTech,
+    });
+  } catch (err) {
+    const message = (err as Error).message;
+
+    if (message === "Technician not found") {
+      return res.status(404).json({
+        success: false,
+        message,
+      });
+    }
+
+    // fallback
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: message,
+    });
+  }
+};
+
 export const deleteTechnician = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;

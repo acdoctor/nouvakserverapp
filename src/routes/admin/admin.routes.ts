@@ -28,6 +28,7 @@ import {
   technicianListValidator,
   technicianSchema,
   updateKycStatusValidator,
+  updateProfessionalSkillsSchema,
 } from "../../validators/technician/technician.validator";
 
 const router = Router();
@@ -87,6 +88,13 @@ router.get(
   "/admin/technician/:technicianId",
   authenticate,
   technicianController.getTechnicianById,
+);
+
+router.put(
+  "/admin/technician/professional-skill/technicianId",
+  authenticate,
+  validateRequest(updateProfessionalSkillsSchema),
+  technicianController.updateProfessionalSkills,
 );
 
 router.put(

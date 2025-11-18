@@ -12,6 +12,13 @@ export interface IKycDoc {
   comment?: string;
 }
 
+interface ProfessionalSkill {
+  acType: string;
+  service: boolean;
+  repair: boolean;
+  install: boolean;
+}
+
 export interface ITechnician extends Document {
   name: string;
   joiningDate?: Date;
@@ -32,6 +39,7 @@ export interface ITechnician extends Document {
     | "REJECTED"
     | "REQUESTED";
   kycDocs?: IKycDoc[];
+  professionalSkills?: ProfessionalSkill[];
   profilePhoto?: string;
   countryCode: string;
   phoneNumber: string;
@@ -109,6 +117,14 @@ const technicianSchema = new Schema<ITechnician>(
         },
         url: String,
         comment: String,
+      },
+    ],
+    professionalSkills: [
+      {
+        acType: { type: String, required: true }, // e.g., "Window AC", "Split AC", etc.
+        service: { type: Boolean, default: false },
+        repair: { type: Boolean, default: false },
+        install: { type: Boolean, default: false },
       },
     ],
     profilePhoto: { type: String, default: "" },

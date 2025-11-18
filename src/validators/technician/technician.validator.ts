@@ -133,3 +133,23 @@ export const technicianAssignedBookingListSchema = Joi.object({
     "date.base": "End date must be a valid date",
   }),
 });
+
+export const updateProfessionalSkillsSchema = Joi.object({
+  professionalSkills: Joi.array()
+    .items(
+      Joi.object({
+        acType: Joi.string().required().messages({
+          "string.base": "acType must be a string",
+          "any.required": "acType is required",
+        }),
+        service: Joi.boolean().default(false),
+        repair: Joi.boolean().default(false),
+        install: Joi.boolean().default(false),
+      }),
+    )
+    .required()
+    .messages({
+      "array.base": "professionalSkills must be an array",
+      "any.required": "professionalSkills is required",
+    }),
+});

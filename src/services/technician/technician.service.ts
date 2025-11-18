@@ -60,6 +60,13 @@ export interface TechnicianBookingListResult {
   total: number;
 }
 
+interface ProfessionalSkill {
+  acType: string;
+  service: boolean;
+  repair: boolean;
+  install: boolean;
+}
+
 export interface BookingMatchCondition {
   assigned_to?: Types.ObjectId;
   date?: {
@@ -216,6 +223,22 @@ export const updateTechnicianService = async (
   );
 
   return updated;
+};
+
+export const updateProfessionalSkillsService = async (
+  technicianId: string,
+  skills: ProfessionalSkill[],
+) => {
+  const technician = await Technician.findById(technicianId);
+
+  if (!technician) {
+    throw new Error("Technician not found");
+  }
+
+  technician.professionalSkills = skills;
+  await technician.save();
+
+  return technician;
 };
 
 // Delete technician by ID
