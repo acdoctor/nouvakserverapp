@@ -83,7 +83,7 @@ router.post(
   technicianController.toggleTechnicianStatus,
 );
 
-router.post(
+router.get(
   "/admin/technician/:technicianId",
   authenticate,
   technicianController.getTechnicianById,
