@@ -96,7 +96,7 @@ router.put(
   technicianController.editTechnician,
 );
 
-router.post(
+router.get(
   "/admin/technician/list",
   authenticate,
   validateRequest(technicianListValidator),
