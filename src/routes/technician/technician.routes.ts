@@ -5,7 +5,7 @@ import * as technicianController from "../../controllers/technician/technician.c
 import { authenticate } from "../../middlewares/technician/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
-import { updateTechnicianSchema } from "../../validators/technician/technician.validator";
+// import { updateTechnicianSchema } from "../../validators/technician/technician.validator";
 
 const router = Router();
 
@@ -31,7 +31,7 @@ router.get(
 // router.get("/technician/all", technicianController.getAllTechnicians);
 router.put(
   "/technician/:id",
-  validateRequest(updateTechnicianSchema),
+  // validateRequest(updateTechnicianSchema),
   technicianController.editTechnician,
 );
 router.delete("/technician/:id", technicianController.deleteTechnician);

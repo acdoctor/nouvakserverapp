@@ -9,7 +9,7 @@ import Joi from "joi";
 //   profilePhoto: Joi.string().uri().optional(),
 // }).min(1);
 
-export const TechnicianSchema = Joi.object({
+export const technicianSchema = Joi.object({
   name: Joi.string().optional().messages({
     "string.base": "Name must be a string",
   }),

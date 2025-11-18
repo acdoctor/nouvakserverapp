@@ -26,6 +26,7 @@ import {
   technicianAssignedBookingListSchema,
   technicianIdParamValidator,
   technicianListValidator,
+  technicianSchema,
   updateKycStatusValidator,
 } from "../../validators/technician/technician.validator";
 
@@ -85,6 +86,7 @@ router.post(
 router.put(
   "/admin/technician/edit/:technicianId",
   authenticate,
+  validateRequest(technicianSchema),
   technicianController.editTechnician,
 );
 
