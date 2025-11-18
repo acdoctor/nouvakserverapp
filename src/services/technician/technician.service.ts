@@ -177,7 +177,7 @@ export const getTechnicianById = async (id: string) => {
 //   return technician;
 // };
 
-export const editTechnicianService = async (
+export const updateTechnicianService = async (
   technicianId: string,
   data: Partial<ITechnician>,
 ) => {
@@ -209,13 +209,12 @@ export const editTechnicianService = async (
       data.secondaryContactNumber ?? existingTechnician.secondaryContactNumber,
   };
 
-  await Technician.updateOne({ _id: technicianId }, updatedFields);
+  const updated = await Technician.updateOne(
+    { _id: technicianId },
+    updatedFields,
+  );
 
-  return {
-    success: true,
-    code: 200,
-    message: "Technician updated successfully",
-  };
+  return updated;
 };
 
 // Delete technician by ID

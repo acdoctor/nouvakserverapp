@@ -122,28 +122,69 @@ export const getTechnicianById = async (req: Request, res: Response) => {
 //   }
 // };
 
-export const updateTechnician = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    if (!id) {
-      return res
-        .status(400)
-        .json({ success: false, error: "Technician ID is required" });
-    }
+// export const updateTechnician = async (req: Request, res: Response) => {
+//   try {
+//     const { id } = req.params;
+//     if (!id) {
+//       return res
+//         .status(400)
+//         .json({ success: false, error: "Technician ID is required" });
+//     }
 
-    const updatedTechnician = await technicianService.updateTechnicianById(
-      id,
+//     const updatedTechnician = await technicianService.updateTechnicianById(
+//       id,
+//       req.body,
+//     );
+//     res.json({
+//       success: true,
+//       message: "Technician updated successfully",
+//       data: updatedTechnician,
+//     });
+//   } catch (err: unknown) {
+//     res.status(400).json({
+//       success: false,
+//       error: err instanceof Error ? err.message : String(err),
+//     });
+//   }
+// };
+
+export const editTechnician = async (req: Request, res: Response) => {
+  try {
+    const { technicianId } = req.body;
+
+    const result = await technicianService.updateTechnicianService(
+      technicianId,
       req.body,
     );
-    res.json({
+
+    return res.status(200).json({
       success: true,
       message: "Technician updated successfully",
-      data: updatedTechnician,
+      data: result,
     });
-  } catch (err: unknown) {
-    res.status(400).json({
+  } catch (err) {
+    const message = (err as Error).message;
+
+    // custom handling based on known errors
+    if (message === "Technician ID is required") {
+      return res.status(400).json({
+        success: false,
+        message,
+      });
+    }
+
+    if (message === "Technician not found") {
+      return res.status(404).json({
+        success: false,
+        message,
+      });
+    }
+
+    // fallback
+    return res.status(500).json({
       success: false,
-      error: err instanceof Error ? err.message : String(err),
+      message: "Internal server error",
+      error: message,
     });
   }
 };
