@@ -91,7 +91,7 @@ router.get(
 );
 
 router.put(
-  "/admin/technician/professional-skill/technicianId",
+  "/admin/technician/professional-skill/:technicianId",
   authenticate,
   validateRequest(updateProfessionalSkillsSchema),
   technicianController.updateProfessionalSkills,
