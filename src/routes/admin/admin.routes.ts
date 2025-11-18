@@ -84,12 +84,12 @@ router.post(
 
 router.post(
   "/admin/technician/list",
-  // authenticate,
+  authenticate,
   validateRequest(technicianListValidator),
   technicianController.technicianList,
 );
 
-router.post(
+router.get(
   "/admin/technician/list/available",
   authenticate,
   technicianController.getAvailableTechnicians,
