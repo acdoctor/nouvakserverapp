@@ -1,5 +1,7 @@
 import { PipelineStage } from "mongoose";
-import Technician from "../../models/technician/technician.model";
+import Technician, {
+  ITechnician,
+} from "../../models/technician/technician.model";
 import * as technicianotpService from "../technician/otp.service";
 import { Types } from "mongoose";
 import { Booking } from "../../models/booking/booking.model";
@@ -164,15 +166,56 @@ export const getTechnicianById = async (id: string) => {
 // };
 
 // Update technician by ID
-export const updateTechnicianById = async (
-  id: string,
-  updateData: Partial<TechnicianInput>,
+// export const updateTechnicianById = async (
+//   id: string,
+//   updateData: Partial<TechnicianInput>,
+// ) => {
+//   const technician = await Technician.findByIdAndUpdate(id, updateData, {
+//     new: true,
+//   });
+//   if (!technician) throw new Error("Technician not found");
+//   return technician;
+// };
+
+export const editTechnicianService = async (
+  technicianId: string,
+  data: Partial<ITechnician>,
 ) => {
-  const technician = await Technician.findByIdAndUpdate(id, updateData, {
-    new: true,
-  });
-  if (!technician) throw new Error("Technician not found");
-  return technician;
+  // Validate ID inside service
+  if (!technicianId) {
+    return { success: false, code: 400, message: "Technician ID is required" };
+  }
+
+  // Check if technician exists
+  const existingTechnician = await Technician.findById(technicianId);
+  if (!existingTechnician) {
+    return {
+      success: false,
+      code: 404,
+      message: "Technician not found",
+    };
+  }
+
+  // Build update data by preserving old values
+  const updatedFields = {
+    name: data.name ?? existingTechnician.name,
+    joiningDate: data.joiningDate ?? existingTechnician.joiningDate,
+    profilePhoto: data.profilePhoto ?? existingTechnician.profilePhoto,
+    position: data.position ?? existingTechnician.position,
+    type: data.type ?? existingTechnician.type,
+    dob: data.dob ?? existingTechnician.dob,
+    email: data.email ?? existingTechnician.email,
+    secondaryContactNumber:
+      data.secondaryContactNumber ?? existingTechnician.secondaryContactNumber,
+  };
+
+  await Technician.updateOne({ _id: technicianId }, updatedFields);
+
+  return {
+    success: true,
+    code: 200,
+    message: "Technician updated successfully",
+  };
 };
 
 // Delete technician by ID
