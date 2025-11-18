@@ -32,7 +32,7 @@ router.get(
 router.put(
   "/technician/:id",
   validateRequest(updateTechnicianSchema),
-  technicianController.updateTechnician,
+  technicianController.editTechnician,
 );
 router.delete("/technician/:id", technicianController.deleteTechnician);
 
