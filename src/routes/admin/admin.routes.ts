@@ -6,6 +6,7 @@ import * as technicianController from "../../controllers/technician/technician.c
 import * as userController from "../../controllers/user/user.controller";
 import * as serviceController from "../../controllers/service/service.controller";
 import * as bookingController from "../../controllers/booking/booking.controller";
+import * as toolsAndToolsBagController from "../../controllers/toolsAndToolsBag/toolsAndToolsBag.controller";
 import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
@@ -30,6 +31,7 @@ import {
   updateKycStatusValidator,
   updateProfessionalSkillsSchema,
 } from "../../validators/technician/technician.validator";
+import { addToolSchema } from "../../validators/toolsAndToolsBag/toolsAndToolsBag.validator";
 
 const router = Router();
 
@@ -143,6 +145,15 @@ router.post(
   "/admin/user/toggle-active/:id",
   authenticate,
   userController.activeInactiveUser,
+);
+
+// Tools and tools bag controller routes
+
+router.post(
+  "/admin/tools/add",
+  authenticate,
+  validateRequest(addToolSchema),
+  toolsAndToolsBagController.addTool,
 );
 
 // Service controller routes
