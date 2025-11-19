@@ -10,6 +10,7 @@ export const addToolService = async (payload: AddToolPayload) => {
   const { name, description, image } = payload;
 
   const existing = await Tool.findOne({ name });
+
   if (existing) {
     throw new Error("Tool with this name already exists");
   }

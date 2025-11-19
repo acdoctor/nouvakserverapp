@@ -3,7 +3,7 @@ import { addToolService } from "../../services/toolsAndToolBag/toolsAndToolbag.s
 
 export const addTool = async (req: Request, res: Response) => {
   try {
-    const tool = await addToolService(req.body);
+    const tool = req.body;
 
     // Validate input
     if (!tool.name || !tool.description) {
@@ -12,6 +12,8 @@ export const addTool = async (req: Request, res: Response) => {
         message: "name and desctiption is required",
       });
     }
+
+    await addToolService(tool);
 
     return res.status(201).json({
       success: true,
