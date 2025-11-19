@@ -5,6 +5,14 @@ export const addTool = async (req: Request, res: Response) => {
   try {
     const tool = await addToolService(req.body);
 
+    // Validate input
+    if (!tool.name || !tool.description) {
+      return res.status(400).json({
+        success: false,
+        message: "name and desctiption is required",
+      });
+    }
+
     return res.status(201).json({
       success: true,
       message: "Tool created successfully",
