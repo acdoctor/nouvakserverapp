@@ -657,6 +657,418 @@
 					]
 				},
 				{
+					"name": "Technician",
+					"item": [
+						{
+							"name": "Manage KYC",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWNjNzJlOTYwYzEyOGY3ZTJiMTY3MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2MzExMzEzNCwiZXhwIjoxNzYzMTE0MDM0fQ._RNv2wmhegf1ezBnuBb9QFas4sVFrgc0xJ9MGnLGXLo",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"type\": \"PAN\",\r\n    \"docUrl\": \"http://www.doc.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/technician/kyc/manage/6905e13769152d9c37863e54",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"technician",
+										"kyc",
+										"manage",
+										"6905e13769152d9c37863e54"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Technician List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWNjNzJlOTYwYzEyOGY3ZTJiMTY3MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2MzEyMDQ2MCwiZXhwIjoxNzYzMTIxMzYwfQ.ClAUX6cdhYdwIIK61l31HbK3Gh2itA8kcc6fDa3r0So",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/technician/list?search=tech&active=true&page=1&limit=15&status=PENDING",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"technician",
+										"list"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": "tech"
+										},
+										{
+											"key": "active",
+											"value": "true"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "15"
+										},
+										{
+											"key": "status",
+											"value": "PENDING"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update KYC Status",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWNjNzJlOTYwYzEyOGY3ZTJiMTY3MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2MzEyMDQ2MCwiZXhwIjoxNzYzMTIxMzYwfQ.ClAUX6cdhYdwIIK61l31HbK3Gh2itA8kcc6fDa3r0So",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"technicianId\": \"6905e13769152d9c37863e54\",\r\n    \"action\": \"APPROVE\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/technician/kyc-status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"technician",
+										"kyc-status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Toggle Status",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWNjNzJlOTYwYzEyOGY3ZTJiMTY3MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2MzEyMDQ2MCwiZXhwIjoxNzYzMTIxMzYwfQ.ClAUX6cdhYdwIIK61l31HbK3Gh2itA8kcc6fDa3r0So",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/technician/status/6905e13769152d9c37863e54",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"technician",
+										"status",
+										"6905e13769152d9c37863e54"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Available Technician List",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/technician/list/available?page=1&limit=10",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"technician",
+										"list",
+										"available"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Assigned Booking List",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/technician/assigned/booking/list/6905e13769152d9c37863e54?page=1&limit=10&sortby=createdAt&orderby=desc&startDate=2025-01-01&endDate=2025-01-31",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"technician",
+										"assigned",
+										"booking",
+										"list",
+										"6905e13769152d9c37863e54"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										},
+										{
+											"key": "sortby",
+											"value": "createdAt"
+										},
+										{
+											"key": "orderby",
+											"value": "desc"
+										},
+										{
+											"key": "startDate",
+											"value": "2025-01-01"
+										},
+										{
+											"key": "endDate",
+											"value": "2025-01-31"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Technician By Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/technician/6905e13769152d9c37863e54",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"technician",
+										"6905e13769152d9c37863e54"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Technician",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Sachin Sharma\",\r\n  \"joiningDate\": \"2025-01-10\",\r\n  \"profilePhoto\": \"https://example.com/uploads/tech123.jpg\",\r\n  \"position\": \"SENIOR TECHNICIAN\",\r\n  \"type\": \"ACD\",\r\n  \"dob\": \"1995-06-21\",\r\n  \"email\": \"sachin.sharma@example.com\",\r\n  \"secondaryContactNumber\": \"9876543211\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/technician/edit/6905e13769152d9c37863e54",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"technician",
+										"edit",
+										"6905e13769152d9c37863e54"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Professional Skills",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"professionalSkills\": [\r\n    {\r\n      \"acType\": \"WINDOW_AC\",\r\n      \"service\": true,\r\n      \"repair\": false,\r\n      \"install\": true\r\n    },\r\n    {\r\n      \"acType\": \"SPLIT_AC\",\r\n      \"service\": true,\r\n      \"repair\": true,\r\n      \"install\": false\r\n    },\r\n    {\r\n      \"acType\": \"TOWER_AC\",\r\n      \"service\": false,\r\n      \"repair\": true,\r\n      \"install\": true\r\n    }\r\n  ]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/technician/professional-skill/6905e13769152d9c37863e54",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"technician",
+										"professional-skill",
+										"6905e13769152d9c37863e54"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register Technician",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Sachin Sharma\",\r\n  \"phoneNumber\": \"9876543210\",\r\n  \"joiningDate\": \"2025-01-15\",\r\n  \"profilePhoto\": \"https://example.com/uploads/tech_profile.jpg\",\r\n  \"position\": \"TECHNICIAN\",\r\n  \"secondaryContactNumber\": \"9123456789\",\r\n  \"countryCode\": \"+91\",\r\n  \"type\": \"ACD\",\r\n  \"email\": \"sachin.sharma@example.com\",\r\n  \"dob\": \"1995-06-21\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/technician/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"technician",
+										"register"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Register Admin",
 					"request": {
 						"method": "POST",
@@ -1060,7 +1472,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"technicianId\":\"6905e13769152d9c37863e54\",\r\n    \"otp\": \"5245\"\r\n}",
+							"raw": "{\r\n    \"technicianId\":\"6905e13769152d9c37863e54\",\r\n    \"otp\": \"3823\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
