@@ -86,3 +86,31 @@ export const updateTool = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const getToolList = async (req: Request, res: Response) => {
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const search = (req.query.search as string)?.trim() || "";
+
+    const { tools, total } = await toolsAndToolBagService.getToolListService({
+      page,
+      limit,
+      search,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: tools,
+      count: total,
+      page,
+      limit,
+    });
+  } catch (err: unknown) {
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+};

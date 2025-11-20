@@ -1,9 +1,16 @@
-import { Tool } from "../../models/tools/tools.model";
+import { FilterQuery } from "mongoose";
+import { Tool, ITool } from "../../models/tools/tools.model";
 
 interface AddToolPayload {
   name: string;
   description: string;
   image?: string;
+}
+
+export interface GetToolListParams {
+  page: number;
+  limit: number;
+  search: string;
 }
 
 export const addToolService = async (payload: AddToolPayload) => {
@@ -43,4 +50,24 @@ export const updateToolService = async (payload: {
   );
 
   return updatedTool;
+};
+
+export const getToolListService = async ({
+  page,
+  limit,
+  search,
+}: GetToolListParams) => {
+  const query: FilterQuery<ITool> = { active: true };
+
+  if (search) {
+    query.name = { $regex: search, $options: "i" };
+  }
+
+  const total = await Tool.countDocuments(query);
+
+  const tools = await Tool.find(query)
+    .skip((page - 1) * limit)
+    .limit(limit);
+
+  return { tools, total };
 };

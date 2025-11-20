@@ -18,3 +18,9 @@ export const updateToolSchema = Joi.object({
   description: Joi.string().trim().optional(),
   image: Joi.string().optional(),
 });
+
+export const getToolListSchema = Joi.object({
+  page: Joi.number().integer().min(1).optional(),
+  limit: Joi.number().integer().min(1).max(100).optional(),
+  search: Joi.string().allow("").optional(),
+});

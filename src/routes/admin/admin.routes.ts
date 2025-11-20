@@ -33,6 +33,7 @@ import {
 } from "../../validators/technician/technician.validator";
 import {
   addToolSchema,
+  getToolListSchema,
   updateToolSchema,
 } from "../../validators/toolsAndToolsBag/toolsAndToolsBag.validator";
 
@@ -164,6 +165,13 @@ router.put(
   authenticate,
   validateRequest(updateToolSchema),
   toolsAndToolsBagController.updateTool,
+);
+
+router.get(
+  "/admin/tools",
+  authenticate,
+  validateRequest(getToolListSchema),
+  toolsAndToolsBagController.getToolList,
 );
 
 // Service controller routes
