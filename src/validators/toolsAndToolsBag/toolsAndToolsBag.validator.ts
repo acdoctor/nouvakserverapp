@@ -24,3 +24,7 @@ export const getToolListSchema = Joi.object({
   limit: Joi.number().integer().min(1).max(100).optional(),
   search: Joi.string().allow("").optional(),
 });
+
+export const removeToolIdParamsSchema = Joi.object({
+  toolId: Joi.string().length(24).hex().required(),
+});

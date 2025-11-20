@@ -71,3 +71,13 @@ export const getToolListService = async ({
 
   return { tools, total };
 };
+
+export const removeToolService = async (toolId: string) => {
+  const deletedTool = await Tool.findByIdAndUpdate(
+    toolId,
+    { active: false },
+    { new: true },
+  );
+
+  return deletedTool; // returns null if not found
+};

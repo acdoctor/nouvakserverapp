@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as toolsAndToolBagService from "../../services/toolsAndToolBag/toolsAndToolbag.service";
+import mongoose from "mongoose";
 
 export const addTool = async (req: Request, res: Response) => {
   try {
@@ -111,6 +112,39 @@ export const getToolList = async (req: Request, res: Response) => {
       success: false,
       message: "Something went wrong",
       error: err instanceof Error ? err.message : String(err),
+    });
+  }
+};
+
+export const removeTool = async (req: Request, res: Response) => {
+  try {
+    const { toolId } = req.params;
+
+    if (!toolId || !mongoose.Types.ObjectId.isValid(toolId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Valid tool ID is required",
+      });
+    }
+
+    const deleted = await toolsAndToolBagService.removeToolService(toolId);
+
+    if (!deleted) {
+      return res.status(404).json({
+        success: false,
+        message: "Tool not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Tool removed successfully",
+    });
+  } catch (error: unknown) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error instanceof Error ? error.message : String(error),
     });
   }
 };

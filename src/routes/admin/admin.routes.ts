@@ -34,6 +34,7 @@ import {
 import {
   addToolSchema,
   getToolListSchema,
+  removeToolIdParamsSchema,
   updateToolSchema,
 } from "../../validators/toolsAndToolsBag/toolsAndToolsBag.validator";
 
@@ -172,6 +173,13 @@ router.get(
   authenticate,
   validateRequest(getToolListSchema),
   toolsAndToolsBagController.getToolList,
+);
+
+router.delete(
+  "/admin/tools/delete",
+  authenticate,
+  validateRequest(removeToolIdParamsSchema),
+  toolsAndToolsBagController.removeTool,
 );
 
 // Service controller routes
