@@ -6,19 +6,20 @@ export const addTool = async (req: Request, res: Response) => {
     const tool = req.body;
 
     // Validate input
-    if (!tool.name || !tool.description) {
+    if (!tool.name?.trim() || !tool.description?.trim()) {
       return res.status(400).json({
         success: false,
-        message: "name and desctiption is required",
+        message: "Name and description are required",
       });
     }
 
-    await addToolService(tool);
+    // Create tool using service
+    const createdTool = await addToolService(tool);
 
     return res.status(201).json({
       success: true,
       message: "Tool created successfully",
-      data: tool,
+      data: createdTool, // return the saved document
     });
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -29,7 +30,7 @@ export const addTool = async (req: Request, res: Response) => {
       });
     }
 
-    // fallback if error is not instance of Error
+    // fallback
     return res.status(500).json({
       success: false,
       message: "Internal server error",
