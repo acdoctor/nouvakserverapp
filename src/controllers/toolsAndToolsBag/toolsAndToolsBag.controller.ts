@@ -1,8 +1,5 @@
 import { Request, Response } from "express";
-import {
-  addToolService,
-  updateToolService,
-} from "../../services/toolsAndToolBag/toolsAndToolbag.service";
+import * as toolsAndToolBagService from "../../services/toolsAndToolBag/toolsAndToolbag.service";
 
 export const addTool = async (req: Request, res: Response) => {
   try {
@@ -17,7 +14,7 @@ export const addTool = async (req: Request, res: Response) => {
     }
 
     // Create tool using service
-    const createdTool = await addToolService(tool);
+    const createdTool = await toolsAndToolBagService.addToolService(tool);
 
     return res.status(201).json({
       success: true,
@@ -54,7 +51,7 @@ export const updateTool = async (req: Request, res: Response) => {
       });
     }
 
-    const updatedTool = await updateToolService({
+    const updatedTool = await toolsAndToolBagService.updateToolService({
       toolId,
       name,
       description,
