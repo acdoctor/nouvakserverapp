@@ -31,7 +31,10 @@ import {
   updateKycStatusValidator,
   updateProfessionalSkillsSchema,
 } from "../../validators/technician/technician.validator";
-import { addToolSchema } from "../../validators/toolsAndToolsBag/toolsAndToolsBag.validator";
+import {
+  addToolSchema,
+  updateToolSchema,
+} from "../../validators/toolsAndToolsBag/toolsAndToolsBag.validator";
 
 const router = Router();
 
@@ -154,6 +157,13 @@ router.post(
   authenticate,
   validateRequest(addToolSchema),
   toolsAndToolsBagController.addTool,
+);
+
+router.put(
+  "/admin/tools/edit/:toolId",
+  authenticate,
+  validateRequest(updateToolSchema),
+  toolsAndToolsBagController.updateTool,
 );
 
 // Service controller routes

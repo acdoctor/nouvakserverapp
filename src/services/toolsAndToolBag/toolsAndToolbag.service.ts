@@ -23,3 +23,24 @@ export const addToolService = async (payload: AddToolPayload) => {
 
   return newTool;
 };
+
+export const updateToolService = async (payload: {
+  toolId: string;
+  name?: string;
+  description?: string;
+  image?: string;
+}) => {
+  const { toolId, name, description, image } = payload;
+
+  const updatedTool = await Tool.findByIdAndUpdate(
+    toolId,
+    {
+      ...(name !== undefined && { name }),
+      ...(description !== undefined && { description }),
+      ...(image !== undefined && { image }),
+    },
+    { new: true },
+  );
+
+  return updatedTool;
+};

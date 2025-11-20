@@ -11,3 +11,10 @@ export const addToolSchema = Joi.object({
 
   image: Joi.string().uri().optional().allow(""),
 });
+
+export const updateToolSchema = Joi.object({
+  toolId: Joi.string().required(),
+  name: Joi.string().trim().optional(),
+  description: Joi.string().trim().optional(),
+  image: Joi.string().optional(),
+});
