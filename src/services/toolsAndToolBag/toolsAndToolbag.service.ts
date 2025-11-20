@@ -1,5 +1,5 @@
 import { FilterQuery } from "mongoose";
-import { Tool, ITool } from "../../models/tools/tools.model";
+import { Tool, ITool } from "../../models/toolsAndToolsBag/tools.model";
 
 interface AddToolPayload {
   name: string;
