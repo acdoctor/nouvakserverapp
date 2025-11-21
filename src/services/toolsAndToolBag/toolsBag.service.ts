@@ -73,3 +73,19 @@ export const getToolBagListService = async (
 
   return { toolBags, total };
 };
+
+export const getToolBagByIdService = async (
+  toolBagId: string,
+): Promise<IToolBag> => {
+  if (!mongoose.Types.ObjectId.isValid(toolBagId)) {
+    throw { status: 400, message: "Invalid ToolBag ID format" };
+  }
+
+  const toolBag = await ToolBag.findById(toolBagId).populate("tools");
+
+  if (!toolBag) {
+    throw { status: 404, message: "ToolBag not found" };
+  }
+
+  return toolBag;
+};

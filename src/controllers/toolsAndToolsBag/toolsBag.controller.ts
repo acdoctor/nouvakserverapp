@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   addToolBagService,
+  getToolBagByIdService,
   getToolBagListService,
 } from "../../services/toolsAndToolBag/toolsBag.service";
 import {
@@ -76,6 +77,34 @@ export const getToolBagList = async (req: Request, res: Response) => {
       message: "ToolBag list fetched successfully",
       data: toolBags,
       count: total,
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: err.message,
+    });
+  }
+};
+
+export const getToolBagById = async (req: Request, res: Response) => {
+  try {
+    const { toolsBagId } = req.params;
+
+    if (!toolsBagId) {
+      return res.status(400).json({
+        success: false,
+        message: "tools bag ID is required",
+      });
+    }
+
+    const toolBag = await getToolBagByIdService(toolsBagId);
+
+    return res.status(200).json({
+      success: true,
+      data: toolBag,
     });
   } catch (error: unknown) {
     const err = error as Error;

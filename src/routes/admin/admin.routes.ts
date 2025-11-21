@@ -207,6 +207,12 @@ router.get(
   toolsBagController.getToolBagList,
 );
 
+router.get(
+  "/admin/tools-bag/:toolsBagId",
+  authenticate,
+  toolsBagController.getToolBagById,
+);
+
 // Service controller routes
 router.post(
   "/admin/service/add",
