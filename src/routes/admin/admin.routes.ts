@@ -213,6 +213,12 @@ router.get(
   toolsBagController.getToolBagById,
 );
 
+router.get(
+  "/admin/tools-bag/delete/:toolsBagId",
+  authenticate,
+  toolsBagController.deleteToolBag,
+);
+
 // Service controller routes
 router.post(
   "/admin/service/add",

@@ -89,3 +89,21 @@ export const getToolBagByIdService = async (
 
   return toolBag;
 };
+
+export const deleteToolBagService = async (toolBagId: string) => {
+  if (!mongoose.Types.ObjectId.isValid(toolBagId)) {
+    throw { status: 400, message: "Invalid ToolBag ID format" };
+  }
+
+  const deletedToolBag = await ToolBag.findByIdAndUpdate(
+    toolBagId,
+    { active: false },
+    { new: true },
+  );
+
+  if (!deletedToolBag) {
+    throw { status: 404, message: "ToolBag not found" };
+  }
+
+  return deletedToolBag;
+};
