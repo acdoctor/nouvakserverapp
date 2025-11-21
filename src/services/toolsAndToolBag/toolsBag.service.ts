@@ -53,3 +53,23 @@ export const updateToolBagService = async (
 
   return updatedToolBag;
 };
+
+export const getToolBagListService = async (
+  page: number,
+  limit: number,
+  search: string,
+) => {
+  const query: Record<string, unknown> = { active: true };
+
+  if (search) {
+    query.name = { $regex: search, $options: "i" };
+  }
+
+  const total = await ToolBag.countDocuments(query);
+
+  const toolBags = await ToolBag.find(query)
+    .skip((page - 1) * limit)
+    .limit(limit);
+
+  return { toolBags, total };
+};

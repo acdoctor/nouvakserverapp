@@ -200,6 +200,13 @@ router.put(
   toolsBagController.updateToolBag,
 );
 
+router.get(
+  "/admin/tools-bag/list",
+  authenticate,
+  validateRequest(getToolListSchema),
+  toolsBagController.getToolBagList,
+);
+
 // Service controller routes
 router.post(
   "/admin/service/add",

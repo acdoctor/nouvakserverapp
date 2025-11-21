@@ -119,3 +119,9 @@ export const updateToolBagSchema = Joi.object({
     "string.base": '"image" should be a type of text',
   }),
 });
+
+export const getToolBagListSchema = Joi.object({
+  page: Joi.number().integer().min(1).optional(),
+  limit: Joi.number().integer().min(1).optional(),
+  search: Joi.string().trim().optional(),
+});

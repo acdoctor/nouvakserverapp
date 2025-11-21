@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { addToolBagService } from "../../services/toolsAndToolBag/toolsBag.service";
+import {
+  addToolBagService,
+  getToolBagListService,
+} from "../../services/toolsAndToolBag/toolsBag.service";
 import {
   updateToolBagService,
   ToolBagPayload,
@@ -44,6 +47,35 @@ export const updateToolBag = async (req: Request, res: Response) => {
       success: true,
       message: "ToolBag updated successfully",
       data: toolBag,
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: err.message,
+    });
+  }
+};
+
+export const getToolBagList = async (req: Request, res: Response) => {
+  try {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 10;
+    const search = (req.query.search as string)?.trim() || "";
+
+    const { toolBags, total } = await getToolBagListService(
+      page,
+      limit,
+      search,
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "ToolBag list fetched successfully",
+      data: toolBags,
+      count: total,
     });
   } catch (error: unknown) {
     const err = error as Error;
