@@ -75,3 +75,47 @@ export const addToolBagSchema = Joi.object({
     "string.base": '"image" should be a type of text',
   }),
 });
+
+export const updateToolBagSchema = Joi.object({
+  name: Joi.string().trim().optional().messages({
+    "string.base": '"name" should be a type of text',
+  }),
+
+  description: Joi.string().trim().optional().allow(null, "").messages({
+    "string.base": '"description" should be a type of text',
+  }),
+
+  tools: Joi.array()
+    .items(
+      Joi.object({
+        toolId: Joi.string().required().messages({
+          "string.base": '"toolId" should be a type of text',
+          "string.empty": '"toolId" cannot be an empty field',
+          "any.required": '"toolId" is a required field',
+        }),
+
+        name: Joi.string().required().messages({
+          "string.base": '"Tool name" should be a type of text',
+          "string.empty": '"Tool name" cannot be an empty field',
+          "any.required": '"Tool name" is a required field',
+        }),
+
+        quantity: Joi.number().required().messages({
+          "number.base": '"quantity" should be a type of number',
+          "any.required": '"quantity" is a required field',
+        }),
+
+        description: Joi.string().optional().allow(null, "").messages({
+          "string.base": '"description" should be a type of text',
+        }),
+      }),
+    )
+    .optional()
+    .messages({
+      "array.base": '"tools" should be an array of objects',
+    }),
+
+  image: Joi.string().optional().messages({
+    "string.base": '"image" should be a type of text',
+  }),
+});

@@ -1,9 +1,10 @@
+import mongoose from "mongoose";
 import {
   ToolBag,
   IToolBag,
 } from "../../models/toolsAndToolsBag/toolsBag.model";
 
-interface ToolBagPayload {
+export interface ToolBagPayload {
   name: string;
   description?: string;
   tools: {
@@ -28,4 +29,27 @@ export const addToolBagService = async (
   await newToolBag.save();
 
   return newToolBag;
+};
+
+export const updateToolBagService = async (
+  toolsBagId: string,
+  updateData: Partial<ToolBagPayload>,
+): Promise<IToolBag> => {
+  if (!mongoose.Types.ObjectId.isValid(toolsBagId)) {
+    throw { code: 400, message: "Invalid ToolBag ID format" };
+  }
+
+  const updatedToolBag = await ToolBag.findByIdAndUpdate(
+    toolsBagId,
+    updateData,
+    {
+      new: true,
+    },
+  );
+
+  if (!updatedToolBag) {
+    throw { code: 404, message: "ToolBag not found" };
+  }
+
+  return updatedToolBag;
 };

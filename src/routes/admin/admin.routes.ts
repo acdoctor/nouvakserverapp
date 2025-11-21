@@ -36,6 +36,7 @@ import {
   addToolSchema,
   getToolListSchema,
   removeToolIdParamsSchema,
+  updateToolBagSchema,
   updateToolSchema,
 } from "../../validators/toolsAndToolsBag/toolsAndToolsBag.validator";
 
@@ -183,11 +184,20 @@ router.delete(
   toolsAndToolsBagController.removeTool,
 );
 
+// Tools bag controller routes
+
 router.post(
   "/admin/tools-bag/create",
   authenticate,
   validateRequest(addToolSchema),
   toolsBagController.addToolBag,
+);
+
+router.put(
+  "/admin/tools-bag/edit/:toolsBagId",
+  authenticate,
+  validateRequest(updateToolBagSchema),
+  toolsBagController.updateToolBag,
 );
 
 // Service controller routes
