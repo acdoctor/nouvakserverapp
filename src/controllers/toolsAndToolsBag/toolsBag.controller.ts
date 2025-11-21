@@ -4,6 +4,8 @@ import {
   deleteToolBagService,
   getToolBagByIdService,
   getToolBagListService,
+  modifyToolInToolsBagService,
+  ModifyToolPayload,
 } from "../../services/toolsAndToolBag/toolsBag.service";
 import {
   updateToolBagService,
@@ -142,6 +144,70 @@ export const deleteToolBag = async (req: Request, res: Response) => {
       success: false,
       message: "Internal server error",
       error: err.message,
+    });
+  }
+};
+
+export const modifyToolInToolsBag = async (req: Request, res: Response) => {
+  try {
+    const { toolBagId } = req.params;
+
+    if (!toolBagId) {
+      return res.status(400).json({
+        success: false,
+        message: "Tool bag ID is required",
+      });
+    }
+
+    const payload: ModifyToolPayload = {
+      toolId: req.body.toolId,
+      name: req.body.name,
+      quantity: req.body.quantity,
+      description: req.body.description,
+      action: req.body.action,
+    };
+
+    const updatedToolBag = await modifyToolInToolsBagService(
+      toolBagId,
+      payload,
+    );
+
+    return res.status(200).json({
+      success: true,
+      message:
+        payload.action === "add"
+          ? "Tool added to ToolBag successfully"
+          : "Tool removed from ToolBag successfully",
+      data: updatedToolBag,
+    });
+  } catch (error) {
+    const msg = (error as Error).message.toLowerCase();
+
+    // 404 Not Found
+    if (msg.includes("not found")) {
+      return res.status(404).json({
+        success: false,
+        message: (error as Error).message,
+      });
+    }
+
+    // 400 Bad Request
+    if (
+      msg.includes("required") ||
+      msg.includes("invalid") ||
+      msg.includes("exists")
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: (error as Error).message,
+      });
+    }
+
+    // 500 Internal Error
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: (error as Error).message,
     });
   }
 };

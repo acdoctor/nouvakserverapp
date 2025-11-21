@@ -35,6 +35,7 @@ import {
 import {
   addToolSchema,
   getToolListSchema,
+  modifyToolInToolsBagSchema,
   removeToolIdParamsSchema,
   updateToolBagSchema,
   updateToolSchema,
@@ -217,6 +218,13 @@ router.get(
   "/admin/tools-bag/delete/:toolsBagId",
   authenticate,
   toolsBagController.deleteToolBag,
+);
+
+router.put(
+  "/admin/tools-bag/manage-tools/:toolsBagId",
+  authenticate,
+  validateRequest(modifyToolInToolsBagSchema),
+  toolsBagController.modifyToolInToolsBag,
 );
 
 // Service controller routes

@@ -125,3 +125,40 @@ export const getToolBagListSchema = Joi.object({
   limit: Joi.number().integer().min(1).optional(),
   search: Joi.string().trim().optional(),
 });
+
+export const modifyToolInToolsBagSchema = Joi.object({
+  toolId: Joi.string().required().messages({
+    "string.base": '"toolId" must be a string',
+    "string.empty": '"toolId" cannot be empty',
+    "any.required": '"toolId" is required',
+  }),
+
+  action: Joi.string().valid("add", "remove").required().messages({
+    "any.only": '"action" must be either "add" or "remove"',
+    "any.required": '"action" is required',
+  }),
+
+  name: Joi.when("action", {
+    is: "add",
+    then: Joi.string().required().messages({
+      "string.base": '"name" must be a string',
+      "string.empty": '"name" cannot be empty when adding a tool',
+      "any.required": '"name" is required when action = add',
+    }),
+    otherwise: Joi.forbidden(),
+  }),
+
+  quantity: Joi.when("action", {
+    is: "add",
+    then: Joi.number().min(1).required().messages({
+      "number.base": '"quantity" must be a number',
+      "number.min": '"quantity" must be at least 1',
+      "any.required": '"quantity" is required when action = add',
+    }),
+    otherwise: Joi.forbidden(),
+  }),
+
+  description: Joi.string().allow("", null).messages({
+    "string.base": '"description" must be a string',
+  }),
+});
