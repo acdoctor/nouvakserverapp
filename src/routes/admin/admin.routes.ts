@@ -6,7 +6,7 @@ import * as technicianController from "../../controllers/technician/technician.c
 import * as userController from "../../controllers/user/user.controller";
 import * as serviceController from "../../controllers/service/service.controller";
 import * as bookingController from "../../controllers/booking/booking.controller";
-import * as toolsAndToolsBagController from "../../controllers/toolsAndToolsBag/toolsAndToolsBag.controller";
+import * as toolsAndToolsBagController from "../../controllers/toolsAndToolsBag/tools.controller";
 import * as toolsBagController from "../../controllers/toolsAndToolsBag/toolsBag.controller";
 import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/auth/auth.validator";

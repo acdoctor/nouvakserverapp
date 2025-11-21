@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import * as toolsAndToolBagService from "../../services/toolsAndToolBag/toolsAndToolbag.service";
+import * as toolsAndToolBagService from "../../services/toolsAndToolBag/tools.service";
 import mongoose from "mongoose";
 
 export const addTool = async (req: Request, res: Response) => {
