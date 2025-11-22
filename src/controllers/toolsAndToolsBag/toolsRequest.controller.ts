@@ -1,10 +1,7 @@
 import { Request, Response } from "express";
 import { createToolRequestService } from "../../services/toolsAndToolBag/toolsRequest.service";
 
-export const createToolRequestController = async (
-  req: Request,
-  res: Response,
-) => {
+export const createToolRequest = async (req: Request, res: Response) => {
   try {
     const {
       technicianId,

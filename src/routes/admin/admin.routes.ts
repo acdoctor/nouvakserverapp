@@ -8,6 +8,7 @@ import * as serviceController from "../../controllers/service/service.controller
 import * as bookingController from "../../controllers/booking/booking.controller";
 import * as tools from "../../controllers/toolsAndToolsBag/tools.controller";
 import * as toolsBagController from "../../controllers/toolsAndToolsBag/toolsBag.controller";
+import * as toolsRequestController from "../../controllers/toolsAndToolsBag/toolsRequest.controller";
 import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
@@ -37,6 +38,7 @@ import {
   getToolListSchema,
   modifyToolInToolsBagSchema,
   removeToolIdParamsSchema,
+  toolRequestValidatorSchema,
   updateToolBagSchema,
   updateToolSchema,
 } from "../../validators/toolsAndToolsBag/toolsAndToolsBag.validator";
@@ -225,6 +227,13 @@ router.put(
   authenticate,
   validateRequest(modifyToolInToolsBagSchema),
   toolsBagController.modifyToolInToolsBag,
+);
+
+router.post(
+  "/admin/tools/request",
+  authenticate,
+  validateRequest(toolRequestValidatorSchema),
+  toolsRequestController.createToolRequest,
 );
 
 // Service controller routes
