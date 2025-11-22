@@ -162,3 +162,64 @@ export const modifyToolInToolsBagSchema = Joi.object({
     "string.base": '"description" must be a string',
   }),
 });
+
+export const toolRequestValidatorSchema = Joi.object({
+  name: Joi.string().trim().required().messages({
+    "string.base": "Name must be a string",
+    "string.empty": "Name cannot be empty",
+    "any.required": "Name is required",
+  }),
+
+  identifier: Joi.string().trim().required().messages({
+    "string.base": "Identifier must be a valid Tool/ToolBag ID string",
+    "string.empty": "Identifier cannot be empty",
+    "any.required": "Identifier is required",
+  }),
+
+  technicianId: Joi.string().trim().required().messages({
+    "string.base": "Technician ID must be a string",
+    "string.empty": "Technician ID cannot be empty",
+    "any.required": "Technician ID is required",
+  }),
+
+  quantity: Joi.number().integer().min(1).required().messages({
+    "number.base": "Quantity must be a number",
+    "number.min": "Quantity must be at least 1",
+    "any.required": "Quantity is required",
+  }),
+
+  status: Joi.string()
+    .valid("REQUESTED", "ASSIGNED", "APPROVED", "DENIED")
+    .default("REQUESTED")
+    .messages({
+      "any.only": "Status must be one of REQUESTED, ASSIGNED, APPROVED, DENIED",
+    }),
+
+  type: Joi.string()
+    .valid("TOOL", "TOOL_BAG")
+    .default("TOOL")
+    .required()
+    .messages({
+      "string.base": "Type must be a string",
+      "any.only": "Type must be either TOOL or TOOL_BAG",
+      "any.required": "Type is required",
+    }),
+
+  reason: Joi.string()
+    .valid("BROKEN", "LOST", "OTHER", "NEW_ASSIGNMENT")
+    .default("OTHER")
+    .required()
+    .messages({
+      "string.base": "Reason must be a string",
+      "any.only": "Reason must be one of BROKEN, LOST, OTHER, NEW_ASSIGNMENT",
+      "any.required": "Reason is required",
+    }),
+
+  description: Joi.string().allow("").default("").messages({
+    "string.base": "Description must be a string",
+  }),
+
+  comment: Joi.string().allow("").default("").messages({
+    "string.base": "Comment must be a string",
+  }),
+});
