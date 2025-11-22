@@ -150,9 +150,9 @@ export const deleteToolBag = async (req: Request, res: Response) => {
 
 export const modifyToolInToolsBag = async (req: Request, res: Response) => {
   try {
-    const { toolBagId } = req.params;
+    const { toolsBagId } = req.params;
 
-    if (!toolBagId) {
+    if (!toolsBagId) {
       return res.status(400).json({
         success: false,
         message: "Tool bag ID is required",
@@ -168,7 +168,7 @@ export const modifyToolInToolsBag = async (req: Request, res: Response) => {
     };
 
     const updatedToolBag = await modifyToolInToolsBagService(
-      toolBagId,
+      toolsBagId,
       payload,
     );
 
