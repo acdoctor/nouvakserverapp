@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { createToolRequestService } from "../../services/toolsAndToolBag/toolsRequest.service";
+import {
+  createToolRequestService,
+  getToolRequestListService,
+} from "../../services/toolsAndToolBag/toolsRequest.service";
 
 export const createToolRequest = async (req: Request, res: Response) => {
   try {
@@ -38,6 +41,45 @@ export const createToolRequest = async (req: Request, res: Response) => {
       status: "fail",
       message: "Internal server error",
       error: err.message,
+    });
+  }
+};
+
+export const getToolRequestList = async (req: Request, res: Response) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const search = (req.query.search as string)?.trim() || "";
+    const sortby = (req.query.sortby as string) || "createdAt";
+
+    const result = await getToolRequestListService({
+      page,
+      limit,
+      search,
+      sortby,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: result.data,
+      count: result.total,
+      pagination: {
+        total: result.total,
+        page,
+        limit,
+        totalPages: Math.ceil(result.total / limit),
+      },
+    });
+  } catch (error: unknown) {
+    console.error("Error fetching tool request list:", error);
+
+    const message =
+      error instanceof Error ? error.message : "Internal server error";
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: message,
     });
   }
 };

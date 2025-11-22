@@ -36,6 +36,7 @@ import {
 import {
   addToolSchema,
   getToolListSchema,
+  getToolRequestListQuerySchema,
   modifyToolInToolsBagSchema,
   removeToolIdParamsSchema,
   toolRequestValidatorSchema,
@@ -236,6 +237,12 @@ router.post(
   toolsRequestController.createToolRequest,
 );
 
+router.get(
+  "/admin/tools/request/list",
+  authenticate,
+  validateRequest(getToolRequestListQuerySchema),
+  toolsRequestController.getToolRequestList,
+);
 // Service controller routes
 router.post(
   "/admin/service/add",

@@ -3,6 +3,13 @@ import {
   IToolRequest,
 } from "../../models/toolsAndToolsBag/toolsRequest.model";
 
+interface GetToolRequestListParams {
+  page: number;
+  limit: number;
+  search: string;
+  sortby: string;
+}
+
 export const createToolRequestService = async (payload: {
   technicianId: string;
   identifier: string;
@@ -27,4 +34,35 @@ export const createToolRequestService = async (payload: {
 
   await newRequest.save();
   return newRequest;
+};
+
+export const getToolRequestListService = async ({
+  page,
+  limit,
+  search,
+  sortby,
+}: GetToolRequestListParams) => {
+  try {
+    const query = search
+      ? {
+          $or: [
+            { identifier: { $regex: search, $options: "i" } },
+            { name: { $regex: search, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const total = await ToolRequest.countDocuments(query);
+    const toolRequests = await ToolRequest.find(query)
+      .sort({ [sortby]: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    return {
+      data: toolRequests,
+      total,
+    };
+  } catch {
+    throw new Error("Failed to fetch tool request list");
+  }
 };
