@@ -1383,6 +1383,113 @@
 					]
 				},
 				{
+					"name": "Tools Request",
+					"item": [
+						{
+							"name": "Tools Request",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"technicianId\": \"6791c3f63f18a65e4d1f2b90\",\r\n  \"identifier\": \"678fa72d89b1f93c245801ab\",\r\n  \"name\": \"Digital Multimeter\",\r\n  \"quantity\": 2,\r\n  \"type\": \"TOOL\",\r\n  \"reason\": \"BROKEN\",\r\n  \"description\": \"Old multimeter stopped working unexpectedly.\",\r\n  \"comment\": \"Need urgent replacement\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/tools/request",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"tools",
+										"request"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Tools Request List",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"technicianId\": \"6791c3f63f18a65e4d1f2b90\",\r\n  \"identifier\": \"678fa72d89b1f93c245801ab\",\r\n  \"name\": \"Digital Multimeter\",\r\n  \"quantity\": 2,\r\n  \"type\": \"TOOL\",\r\n  \"reason\": \"BROKEN\",\r\n  \"description\": \"Old multimeter stopped working unexpectedly.\",\r\n  \"comment\": \"Need urgent replacement\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/tools/request/list",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"tools",
+										"request",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Tools Request Update Status",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"requestId\": \"6792ab4e91c7f72cd87a1234\",\r\n  \"status\": \"APPROVED\",\r\n  \"comment\": \"Approved by admin. Proceed with assignment.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/tools/request/update-status/6921b291fe66b752d91bd9b5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"tools",
+										"request",
+										"update-status",
+										"6921b291fe66b752d91bd9b5"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Register Admin",
 					"request": {
 						"method": "POST",
