@@ -179,7 +179,7 @@ router.get(
 );
 
 router.delete(
-  "/admin/tools/delete",
+  "/admin/tools/delete/:toolId",
   authenticate,
   validateRequest(removeToolIdParamsSchema),
   tools.removeTool,

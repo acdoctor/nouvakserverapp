@@ -13,7 +13,7 @@ export const addToolSchema = Joi.object({
 });
 
 export const updateToolSchema = Joi.object({
-  toolId: Joi.string().required(),
+  // toolId: Joi.string().required(), // not needed as of now
   name: Joi.string().trim().optional(),
   description: Joi.string().trim().optional(),
   image: Joi.string().optional(),
