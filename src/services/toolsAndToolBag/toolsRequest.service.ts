@@ -66,3 +66,28 @@ export const getToolRequestListService = async ({
     throw new Error("Failed to fetch tool request list");
   }
 };
+
+export const updateToolRequestStatusService = async (params: {
+  requestId: string;
+  status: string;
+  comment?: string;
+}) => {
+  const { requestId, status, comment } = params;
+
+  const validStatuses = ["REQUESTED", "APPROVED", "DENIED", "ASSIGNED"];
+  if (!validStatuses.includes(status)) {
+    throw new Error("Invalid status provided");
+  }
+
+  const updatedRequest = await ToolRequest.findByIdAndUpdate(
+    requestId,
+    { status, comment },
+    { new: true },
+  );
+
+  if (!updatedRequest) {
+    return null;
+  }
+
+  return updatedRequest;
+};

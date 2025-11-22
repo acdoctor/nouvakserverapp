@@ -232,3 +232,14 @@ export const getToolRequestListQuerySchema = Joi.object({
     .valid("createdAt", "name", "identifier", "quantity", "status")
     .default("createdAt"),
 });
+
+export const updateToolRequestStatusParamsSchema = Joi.object({
+  requestId: Joi.string().length(24).required(),
+});
+
+export const updateToolRequestStatusBodySchema = Joi.object({
+  status: Joi.string()
+    .valid("REQUESTED", "APPROVED", "DENIED", "ASSIGNED")
+    .required(),
+  comment: Joi.string().optional(),
+});

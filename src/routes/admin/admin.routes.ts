@@ -41,6 +41,7 @@ import {
   removeToolIdParamsSchema,
   toolRequestValidatorSchema,
   updateToolBagSchema,
+  updateToolRequestStatusBodySchema,
   updateToolSchema,
 } from "../../validators/toolsAndToolsBag/toolsAndToolsBag.validator";
 
@@ -243,6 +244,14 @@ router.get(
   validateRequest(getToolRequestListQuerySchema),
   toolsRequestController.getToolRequestList,
 );
+
+router.put(
+  "/admin/tools/request/update-status/:requestId",
+  authenticate,
+  validateRequest(updateToolRequestStatusBodySchema),
+  toolsRequestController.updateToolRequestStatus,
+);
+
 // Service controller routes
 router.post(
   "/admin/service/add",

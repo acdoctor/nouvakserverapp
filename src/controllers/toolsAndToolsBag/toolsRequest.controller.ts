@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   createToolRequestService,
   getToolRequestListService,
+  updateToolRequestStatusService,
 } from "../../services/toolsAndToolBag/toolsRequest.service";
 
 export const createToolRequest = async (req: Request, res: Response) => {
@@ -80,6 +81,45 @@ export const getToolRequestList = async (req: Request, res: Response) => {
       success: false,
       message: "Internal server error",
       error: message,
+    });
+  }
+};
+
+export const updateToolRequestStatus = async (req: Request, res: Response) => {
+  try {
+    const { requestId } = req.params;
+    const { status, comment } = req.body;
+
+    if (!requestId) {
+      return res.status(400).json({
+        success: false,
+        message: "Request ID is required",
+      });
+    }
+
+    const updatedRequest = await updateToolRequestStatusService({
+      requestId,
+      status,
+      ...(comment !== undefined && { comment }),
+    });
+
+    if (!updatedRequest) {
+      return res.status(404).json({
+        success: false,
+        message: "Tool request not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Tool request status updated successfully",
+      data: updatedRequest,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: (error as Error).message,
     });
   }
 };
