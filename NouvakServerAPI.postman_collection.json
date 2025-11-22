@@ -1069,6 +1069,320 @@
 					]
 				},
 				{
+					"name": "Tools",
+					"item": [
+						{
+							"name": "Tools Add",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Screwdriver Set\",\r\n  \"description\": \"A high-quality magnetic screwdriver set used for AC servicing and installation.\",\r\n  \"image\": \"https://example.com/uploads/tools/screwdriver-set.png\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/tools/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"tools",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Tools Edit",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Screwdriver\",\r\n  \"description\": \"A high-quality magnetic screwdriver set used for AC servicing and installation.\",\r\n  \"image\": \"https://example.com/uploads/tools/screwdriver-set.png\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/tools/edit/692159319919470f41b50f25",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"tools",
+										"edit",
+										"692159319919470f41b50f25"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Tools List",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/tools",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"tools"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Tool Remove",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/tools/delete/692159319919470f41b50f25",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"tools",
+										"delete",
+										"692159319919470f41b50f25"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tools Bag",
+					"item": [
+						{
+							"name": "Tools Bag Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Standard AC Technician Tool Bag\",\r\n  \"description\": \"Contains tools required for regular AC servicing tasks.\",\r\n  \"tools\": [\r\n    {\r\n      \"toolId\": \"673a12f4c9df8b34d8fa9012\",\r\n      \"quantity\": 2,\r\n      \"name\": \"Screwdriver Set\",\r\n      \"description\": \"Magnetic screwdriver set for opening AC panels.\"\r\n    },\r\n    {\r\n      \"toolId\": \"673a1307c9df8b34d8fa9013\",\r\n      \"quantity\": 1,\r\n      \"name\": \"Pipe Wrench\",\r\n      \"description\": \"Used for tightening and loosening pipe fittings.\"\r\n    },\r\n    {\r\n      \"toolId\": \"673a1315c9df8b34d8fa9014\",\r\n      \"quantity\": 3,\r\n      \"name\": \"Insulation Tape\",\r\n      \"description\": \"Used for wire insulation and securing joints.\"\r\n    }\r\n  ]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/tools-bag/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"tools-bag",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Tools Bag Edit",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Standard AC Technician Tool Bag\",\r\n  \"description\": \"Contains tools required for regular AC servicing tasks.\",\r\n  \"tools\": [\r\n    {\r\n      \"toolId\": \"673a12f4c9df8b34d8fa9012\",\r\n      \"quantity\": 2,\r\n      \"name\": \"Screwdriver Set\",\r\n      \"description\": \"Magnetic screwdriver set for opening AC panels.\"\r\n    },\r\n    {\r\n      \"toolId\": \"673a1307c9df8b34d8fa9013\",\r\n      \"quantity\": 1,\r\n      \"name\": \"Pipe Wrench\",\r\n      \"description\": \"Used for tightening and loosening pipe fittings.\"\r\n    },\r\n    {\r\n      \"toolId\": \"673a1315c9df8b34d8fa9014\",\r\n      \"quantity\": 3,\r\n      \"name\": \"Insulation Tape\",\r\n      \"description\": \"Used for wire insulation and securing joints.\"\r\n    }\r\n  ]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/tools-bag/edit/69215fd4b4e454d16ec45aa5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"tools-bag",
+										"edit",
+										"69215fd4b4e454d16ec45aa5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Tools Bag List",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Standard AC Technician Tool Bag\",\r\n  \"description\": \"Contains tools required for regular AC servicing tasks.\",\r\n  \"tools\": [\r\n    {\r\n      \"toolId\": \"673a12f4c9df8b34d8fa9012\",\r\n      \"quantity\": 2,\r\n      \"name\": \"Screwdriver Set\",\r\n      \"description\": \"Magnetic screwdriver set for opening AC panels.\"\r\n    },\r\n    {\r\n      \"toolId\": \"673a1307c9df8b34d8fa9013\",\r\n      \"quantity\": 1,\r\n      \"name\": \"Pipe Wrench\",\r\n      \"description\": \"Used for tightening and loosening pipe fittings.\"\r\n    },\r\n    {\r\n      \"toolId\": \"673a1315c9df8b34d8fa9014\",\r\n      \"quantity\": 3,\r\n      \"name\": \"Insulation Tape\",\r\n      \"description\": \"Used for wire insulation and securing joints.\"\r\n    }\r\n  ]\r\n}\r\n"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/tools-bag/list",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"tools-bag",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Tools Bag Get By Id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Standard AC Technician Tool Bag\",\r\n  \"description\": \"Contains tools required for regular AC servicing tasks.\",\r\n  \"tools\": [\r\n    {\r\n      \"toolId\": \"673a12f4c9df8b34d8fa9012\",\r\n      \"quantity\": 2,\r\n      \"name\": \"Screwdriver Set\",\r\n      \"description\": \"Magnetic screwdriver set for opening AC panels.\"\r\n    },\r\n    {\r\n      \"toolId\": \"673a1307c9df8b34d8fa9013\",\r\n      \"quantity\": 1,\r\n      \"name\": \"Pipe Wrench\",\r\n      \"description\": \"Used for tightening and loosening pipe fittings.\"\r\n    },\r\n    {\r\n      \"toolId\": \"673a1315c9df8b34d8fa9014\",\r\n      \"quantity\": 3,\r\n      \"name\": \"Insulation Tape\",\r\n      \"description\": \"Used for wire insulation and securing joints.\"\r\n    }\r\n  ]\r\n}\r\n"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/tools-bag/69215fd4b4e454d16ec45aa5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"tools-bag",
+										"69215fd4b4e454d16ec45aa5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Tools Bag Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Standard AC Technician Tool Bag\",\r\n  \"description\": \"Contains tools required for regular AC servicing tasks.\",\r\n  \"tools\": [\r\n    {\r\n      \"toolId\": \"673a12f4c9df8b34d8fa9012\",\r\n      \"quantity\": 2,\r\n      \"name\": \"Screwdriver Set\",\r\n      \"description\": \"Magnetic screwdriver set for opening AC panels.\"\r\n    },\r\n    {\r\n      \"toolId\": \"673a1307c9df8b34d8fa9013\",\r\n      \"quantity\": 1,\r\n      \"name\": \"Pipe Wrench\",\r\n      \"description\": \"Used for tightening and loosening pipe fittings.\"\r\n    },\r\n    {\r\n      \"toolId\": \"673a1315c9df8b34d8fa9014\",\r\n      \"quantity\": 3,\r\n      \"name\": \"Insulation Tape\",\r\n      \"description\": \"Used for wire insulation and securing joints.\"\r\n    }\r\n  ]\r\n}\r\n"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/tools-bag/delete/69215fd4b4e454d16ec45aa5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"tools-bag",
+										"delete",
+										"69215fd4b4e454d16ec45aa5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Tools Bag Manage",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"toolId\": \"673a12f4c9df8b34d8fa9012\",\r\n  \"name\": \"Voltage Tester\",\r\n  \"quantity\": 1,\r\n  \"description\": \"Used for checking electrical current.\",\r\n  \"action\": \"add\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/admin/tools-bag/manage-tools/69215fd4b4e454d16ec45aa5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"tools-bag",
+										"manage-tools",
+										"69215fd4b4e454d16ec45aa5"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Register Admin",
 					"request": {
 						"method": "POST",
