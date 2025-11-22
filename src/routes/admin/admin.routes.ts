@@ -6,7 +6,7 @@ import * as technicianController from "../../controllers/technician/technician.c
 import * as userController from "../../controllers/user/user.controller";
 import * as serviceController from "../../controllers/service/service.controller";
 import * as bookingController from "../../controllers/booking/booking.controller";
-import * as toolsAndToolsBagController from "../../controllers/toolsAndToolsBag/tools.controller";
+import * as tools from "../../controllers/toolsAndToolsBag/tools.controller";
 import * as toolsBagController from "../../controllers/toolsAndToolsBag/toolsBag.controller";
 import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
@@ -161,28 +161,28 @@ router.post(
   "/admin/tools/add",
   authenticate,
   validateRequest(addToolSchema),
-  toolsAndToolsBagController.addTool,
+  tools.addTool,
 );
 
 router.put(
   "/admin/tools/edit/:toolId",
   authenticate,
   validateRequest(updateToolSchema),
-  toolsAndToolsBagController.updateTool,
+  tools.updateTool,
 );
 
 router.get(
   "/admin/tools",
   authenticate,
   validateRequest(getToolListSchema),
-  toolsAndToolsBagController.getToolList,
+  tools.getToolList,
 );
 
 router.delete(
   "/admin/tools/delete",
   authenticate,
   validateRequest(removeToolIdParamsSchema),
-  toolsAndToolsBagController.removeTool,
+  tools.removeTool,
 );
 
 // Tools bag controller routes
