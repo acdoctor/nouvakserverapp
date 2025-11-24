@@ -38,7 +38,6 @@ router.put(
 router.delete("/technician/:id", technicianController.deleteTechnician);
 
 // KYC
-
 router.post(
   "/technician/kyc",
   authenticate,
