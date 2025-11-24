@@ -88,6 +88,13 @@ interface MatchConditions {
   $and?: Record<string, unknown>[];
 }
 
+interface MarkAttendanceParams {
+  technicianId: string;
+  date: string;
+  type: "PRESENT" | "ABSENT" | "LEAVE" | "HOLIDAY";
+  description?: string;
+}
+
 const KYC_PENDING = "KYC_PENDING";
 const REQUESTED = "REQUESTED";
 const VERIFIED = "VERIFIED";
@@ -373,13 +380,6 @@ export const createKycReviewRequestService = async (technicianId: string) => {
 
   return updatedTechnician;
 };
-
-interface MarkAttendanceParams {
-  technicianId: string;
-  date: string;
-  type: "PRESENT" | "ABSENT" | "LEAVE" | "HOLIDAY";
-  description?: string;
-}
 
 export const markAttendanceService = async ({
   technicianId,
