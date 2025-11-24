@@ -449,6 +449,34 @@ export const createKycReviewRequest = async (req: Request, res: Response) => {
   }
 };
 
+export const markAttendance = async (req: Request, res: Response) => {
+  try {
+    const technicianId = (req as unknown as { technicianId: string })
+      .technicianId;
+
+    const { date, type, description } = req.body;
+
+    const record = await technicianService.markAttendanceService({
+      technicianId,
+      date,
+      type,
+      description,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Attendance marked successfully",
+      data: record,
+    });
+  } catch (error: unknown) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: (error as Error).message,
+    });
+  }
+};
+
 export const technicianList = async (req: Request, res: Response) => {
   try {
     const result = await technicianService.getTechnicianListService(req.query);

@@ -1,10 +1,11 @@
-import { PipelineStage } from "mongoose";
+import mongoose, { PipelineStage } from "mongoose";
 import Technician, {
   ITechnician,
 } from "../../models/technician/technician.model";
 import * as technicianotpService from "../technician/otp.service";
 import { Types } from "mongoose";
 import { Booking } from "../../models/booking/booking.model";
+import { Attendance } from "../../models/Attendance/attendance.model";
 
 interface TechnicianInput {
   name: string;
@@ -371,6 +372,57 @@ export const createKycReviewRequestService = async (technicianId: string) => {
   );
 
   return updatedTechnician;
+};
+
+interface MarkAttendanceParams {
+  technicianId: string;
+  date: string;
+  type: "PRESENT" | "ABSENT" | "LEAVE" | "HOLIDAY";
+  description?: string;
+}
+
+export const markAttendanceService = async ({
+  technicianId,
+  date,
+  type,
+  description,
+}: MarkAttendanceParams) => {
+  // Validate technicianId
+  if (!technicianId) {
+    throw new Error("Technician ID is required");
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(technicianId)) {
+    throw new Error("Invalid technician ID format");
+  }
+
+  // Validate date
+  if (!date || isNaN(Date.parse(date))) {
+    throw new Error("Valid date is required");
+  }
+
+  // Validate type
+  const allowedTypes = ["PRESENT", "ABSENT", "LEAVE", "HOLIDAY"];
+  if (!allowedTypes.includes(type)) {
+    throw new Error("Invalid attendance type");
+  }
+
+  // Check technician exists
+  const technician = await Technician.findById(technicianId);
+  if (!technician) {
+    throw new Error("Technician not found");
+  }
+
+  const attendanceRecord = new Attendance({
+    technicianId,
+    date: new Date(date),
+    type,
+    description: description || "NOT PROVIDED",
+  });
+
+  await attendanceRecord.save();
+
+  return attendanceRecord;
 };
 
 export const toggleTechnicianStatusService = async (technicianId: string) => {

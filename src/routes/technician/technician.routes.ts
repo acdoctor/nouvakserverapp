@@ -6,6 +6,7 @@ import { authenticate } from "../../middlewares/technician/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
 import { updateKycSchema } from "../../validators/technician/KYCDoc.valitator";
+import { attendanceValidationSchema } from "../../validators/technician/attendance.validator";
 // import { updateTechnicianSchema } from "../../validators/technician/technician.validator";
 
 const router = Router();
@@ -52,5 +53,13 @@ router.post(
 );
 
 router.post("/technician/kyc", authenticate, technicianController.getKyc);
+
+// Attendance
+router.post(
+  "/technician/attendance",
+  authenticate,
+  validateRequest(attendanceValidationSchema),
+  technicianController.markAttendance,
+);
 
 export default router;
