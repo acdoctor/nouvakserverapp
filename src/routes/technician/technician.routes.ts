@@ -45,4 +45,6 @@ router.post(
   technicianController.updateKyc,
 );
 
+router.post("/technician/kyc", authenticate, technicianController.getKyc);
+
 export default router;

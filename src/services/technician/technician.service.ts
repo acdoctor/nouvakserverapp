@@ -340,6 +340,20 @@ export const updateKycStatusService = async ({
   };
 };
 
+export const getKycService = async (technicianId: string) => {
+  if (!technicianId) {
+    throw new Error("Technician ID is required");
+  }
+
+  const technician = await Technician.findById(technicianId);
+
+  if (!technician) {
+    throw new Error("Technician not found");
+  }
+
+  return technician.kycDocs;
+};
+
 export const toggleTechnicianStatusService = async (technicianId: string) => {
   const technician = await Technician.findById(technicianId);
 

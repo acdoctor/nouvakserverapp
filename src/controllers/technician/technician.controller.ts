@@ -408,6 +408,25 @@ export const toggleTechnicianStatus = async (req: Request, res: Response) => {
   }
 };
 
+export const getKyc = async (req: Request, res: Response) => {
+  try {
+    const technicianId = (req as unknown as { technicianId: string })
+      .technicianId;
+
+    const kycDocs = await technicianService.getKycService(technicianId);
+
+    return res.status(200).json({
+      success: true,
+      data: kycDocs,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: (error as Error).message || "Internal server error",
+    });
+  }
+};
+
 export const technicianList = async (req: Request, res: Response) => {
   try {
     const result = await technicianService.getTechnicianListService(req.query);
