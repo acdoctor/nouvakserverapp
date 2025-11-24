@@ -425,6 +425,26 @@ export const markAttendanceService = async ({
   return attendanceRecord;
 };
 
+export const getAttendanceDataForDateRangeService = async (
+  technicianId: string,
+  startDate: string,
+  endDate: string,
+) => {
+  try {
+    const attendanceData = await Attendance.find({
+      technicianId,
+      date: {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
+      },
+    }).sort({ date: -1 });
+
+    return attendanceData;
+  } catch {
+    throw new Error("Failed to fetch attendance data");
+  }
+};
+
 export const toggleTechnicianStatusService = async (technicianId: string) => {
   const technician = await Technician.findById(technicianId);
 

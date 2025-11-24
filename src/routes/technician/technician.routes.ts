@@ -62,4 +62,10 @@ router.post(
   technicianController.markAttendance,
 );
 
+router.get(
+  "/technician/attendance",
+  authenticate,
+  technicianController.getAttendanceDataForDateRange,
+);
+
 export default router;

@@ -15,6 +15,10 @@ export interface UpdateKycDTO {
   docUrl: string;
 }
 
+interface AuthenticatedRequest extends Request {
+  technicianId?: string; // coming from your auth middleware
+}
+
 export const registerTechnician = async (req: Request, res: Response) => {
   try {
     await technicianService.createTechnician(req.body);
@@ -473,6 +477,62 @@ export const markAttendance = async (req: Request, res: Response) => {
       success: false,
       message: "Internal server error",
       error: (error as Error).message,
+    });
+  }
+};
+
+export const getAttendanceDataForDateRange = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  const technicianId = req.technicianId;
+  const { startDate, endDate } = req.query;
+
+  if (!technicianId) {
+    return res.status(400).json({
+      success: false,
+      message: "Technician ID is missing from auth token",
+    });
+  }
+
+  if (!startDate || !endDate) {
+    return res.status(400).json({
+      success: false,
+      message: "Start date and end date are required",
+    });
+  }
+
+  try {
+    const data = await technicianService.getAttendanceDataForDateRangeService(
+      technicianId,
+      startDate as string,
+      endDate as string,
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Attendance data fetched successfully",
+      data,
+    });
+  } catch (error: unknown) {
+    // SAFE ERROR HANDLING
+    let errorMessage = "Something went wrong";
+    // let statusCode = 500;
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+      // Optional: custom error classes for better mapping
+      // if ((error as any).statusCode) {
+      //   statusCode = (error as any).statusCode;
+      // }
+    }
+
+    console.error("Attendance Error:", errorMessage);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: errorMessage,
     });
   }
 };
