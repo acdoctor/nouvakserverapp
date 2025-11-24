@@ -45,6 +45,12 @@ router.post(
   technicianController.updateKyc,
 );
 
+router.post(
+  "/technician/review-kyc",
+  authenticate,
+  technicianController.createKycReviewRequest,
+);
+
 router.post("/technician/kyc", authenticate, technicianController.getKyc);
 
 export default router;

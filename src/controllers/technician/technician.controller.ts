@@ -427,6 +427,28 @@ export const getKyc = async (req: Request, res: Response) => {
   }
 };
 
+export const createKycReviewRequest = async (req: Request, res: Response) => {
+  try {
+    const technicianId = (req as unknown as { technicianId: string })
+      .technicianId;
+
+    const result = await technicianService.createKycReviewRequestService(
+      technicianId!,
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "KYC review request submitted successfully",
+      data: result,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: (error as Error).message || "Internal server error",
+    });
+  }
+};
+
 export const technicianList = async (req: Request, res: Response) => {
   try {
     const result = await technicianService.getTechnicianListService(req.query);

@@ -354,6 +354,25 @@ export const getKycService = async (technicianId: string) => {
   return technician.kycDocs;
 };
 
+export const createKycReviewRequestService = async (technicianId: string) => {
+  if (!technicianId) {
+    throw new Error("Technician ID is required");
+  }
+
+  const technician = await Technician.findById(technicianId);
+  if (!technician) {
+    throw new Error("Technician not found");
+  }
+
+  const updatedTechnician = await Technician.findByIdAndUpdate(
+    technicianId,
+    { kycStatus: "REVIEW_REQUESTED" },
+    { new: true },
+  );
+
+  return updatedTechnician;
+};
+
 export const toggleTechnicianStatusService = async (technicianId: string) => {
   const technician = await Technician.findById(technicianId);
 
