@@ -662,6 +662,36 @@ export const createToolRequest = async (req: Request, res: Response) => {
   }
 };
 
+export const deleteToolRequest = async (req: Request, res: Response) => {
+  const technicianId = (req as unknown as { technicianId?: string })
+    .technicianId;
+  const { requestId } = req.params;
+
+  if (!technicianId) {
+    return res.status(400).json({
+      success: false,
+      message: "Technician ID is required",
+    });
+  }
+
+  if (!requestId) {
+    return res.status(400).json({
+      success: false,
+      message: "Request ID is required",
+    });
+  }
+
+  const result = await technicianService.deleteToolRequestService(
+    technicianId,
+    requestId,
+  );
+
+  return res.status(result.statusCode).json({
+    success: result.success,
+    message: result.message,
+  });
+};
+
 export const technicianList = async (req: Request, res: Response) => {
   try {
     const result = await technicianService.getTechnicianListService(req.query);

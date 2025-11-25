@@ -619,6 +619,43 @@ export const createToolRequestService = async (
   }
 };
 
+export const deleteToolRequestService = async (
+  technicianId: string,
+  requestId: string,
+) => {
+  try {
+    const deletedRequest = await ToolRequest.findOneAndDelete({
+      _id: requestId,
+      technicianId,
+    });
+
+    if (!deletedRequest) {
+      return {
+        success: false,
+        statusCode: 404,
+        message: "Tool request not found",
+      };
+    }
+
+    return {
+      success: true,
+      statusCode: 200,
+      message: "Tool request deleted successfully",
+    };
+  } catch (error: unknown) {
+    let errorMessage = "Something went wrong";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
+    return {
+      success: false,
+      statusCode: 500,
+      message: errorMessage,
+    };
+  }
+};
+
 export const toggleTechnicianStatusService = async (technicianId: string) => {
   const technician = await Technician.findById(technicianId);
 

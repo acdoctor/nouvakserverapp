@@ -90,4 +90,10 @@ router.post(
   technicianController.createToolRequest,
 );
 
+router.delete(
+  "/technician/tools/request/delete/:toolsRequestId",
+  authenticate,
+  technicianController.deleteToolRequest,
+);
+
 export default router;
