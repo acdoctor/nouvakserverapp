@@ -85,7 +85,7 @@ router.get(
 );
 
 router.post(
-  "/technician/tools-request",
+  "/technician/tools/request",
   authenticate,
   technicianController.createToolRequest,
 );
