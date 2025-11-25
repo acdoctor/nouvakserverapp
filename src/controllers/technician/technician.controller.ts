@@ -615,6 +615,53 @@ export const getLeaveHistory = async (req: Request, res: Response) => {
   }
 };
 
+export const createToolRequest = async (req: Request, res: Response) => {
+  const technicianId = (req as unknown as { technicianId: string })
+    .technicianId;
+
+  if (!technicianId) {
+    return res.status(400).json({
+      success: false,
+      message: "Technician ID is required",
+    });
+  }
+
+  try {
+    const result = await technicianService.createToolRequestService(
+      technicianId,
+      req.body,
+    );
+
+    return res.status(201).json({
+      success: true,
+      message: result.message,
+      data: result.data,
+    });
+  } catch (error: unknown) {
+    let message = "Something went wrong";
+    let statusCode = 500;
+
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "statusCode" in error &&
+      "message" in error
+    ) {
+      statusCode = (error as { statusCode: number }).statusCode;
+      message = (error as { message: string }).message;
+    } else if (error instanceof Error) {
+      message = error.message;
+    }
+
+    console.error("Tool Request Error:", message);
+
+    return res.status(statusCode).json({
+      success: false,
+      message,
+    });
+  }
+};
+
 export const technicianList = async (req: Request, res: Response) => {
   try {
     const result = await technicianService.getTechnicianListService(req.query);

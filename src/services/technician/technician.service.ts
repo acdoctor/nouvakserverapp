@@ -8,6 +8,7 @@ import { Booking } from "../../models/booking/booking.model";
 import { Attendance } from "../../models/Attendance/attendance.model";
 import { Leave } from "../../models/Attendance/leave.model";
 import { Holiday } from "../../models/Attendance/holiday.model";
+import { ToolRequest } from "../../models/toolsAndToolsBag/toolsRequest.model";
 
 interface TechnicianInput {
   name: string;
@@ -575,6 +576,46 @@ export const getLeaveHistoryService = async (technicianId: string) => {
       statusCode: 500,
       message: "Failed to fetch leave history",
     };
+  }
+};
+
+export const createToolRequestService = async (
+  technicianId: string,
+  payload: {
+    identifier: string;
+    name: string;
+    type?: string;
+    quantity: number;
+    comment?: string;
+    reason?: string;
+  },
+) => {
+  try {
+    const { identifier, name, type, quantity, comment, reason } = payload;
+
+    const newRequest = new ToolRequest({
+      technicianId,
+      identifier,
+      name,
+      type: type || "TOOL",
+      quantity,
+      status: "REQUESTED",
+      comment: comment || "",
+      description: comment || "",
+      reason,
+    });
+
+    await newRequest.save();
+
+    return {
+      message: "Tool request submitted successfully",
+      data: newRequest,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw { message: error.message, statusCode: 500 };
+    }
+    throw { message: "Internal server error", statusCode: 500 };
   }
 };
 

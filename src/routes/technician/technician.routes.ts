@@ -84,4 +84,10 @@ router.get(
   technicianController.getLeaveHistory,
 );
 
+router.post(
+  "/technician/tools-request",
+  authenticate,
+  technicianController.createToolRequest,
+);
+
 export default router;
