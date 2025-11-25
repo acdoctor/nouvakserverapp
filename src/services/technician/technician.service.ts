@@ -6,6 +6,8 @@ import * as technicianotpService from "../technician/otp.service";
 import { Types } from "mongoose";
 import { Booking } from "../../models/booking/booking.model";
 import { Attendance } from "../../models/Attendance/attendance.model";
+import { Leave } from "../../models/Attendance/leave.model";
+import { Holiday } from "../../models/Attendance/holiday.model";
 
 interface TechnicianInput {
   name: string;
@@ -443,6 +445,117 @@ export const getAttendanceDataForDateRangeService = async (
   } catch {
     throw new Error("Failed to fetch attendance data");
   }
+};
+
+export interface LeaveDataResult {
+  leavesRemaining: number;
+  totalLeavesAllowed: number;
+  leavesTaken: number;
+}
+
+export const getLeaveData = async (
+  technicianId: string,
+  technicianData?: ITechnician | null,
+): Promise<LeaveDataResult> => {
+  if (!technicianId) {
+    throw new Error("Technician ID is required");
+  }
+
+  try {
+    // Use passed technician data or fetch fresh
+    let technician = technicianData;
+    if (!technician) {
+      technician = await Technician.findById(technicianId);
+    }
+
+    if (!technician) {
+      throw new Error("Technician not found");
+    }
+
+    const totalLeavesAllowed = technician.totalLeaves ?? 12; // Default value 12
+
+    const leavesTaken = await Leave.countDocuments({
+      technicianId,
+      status: { $in: ["APPROVED", "PENDING"] },
+    });
+
+    const leavesRemaining = totalLeavesAllowed - leavesTaken;
+
+    return {
+      leavesRemaining,
+      totalLeavesAllowed,
+      leavesTaken,
+    };
+  } catch (error: unknown) {
+    let message = "Failed to fetch leave data";
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    throw new Error(message); // Controller will handle final response
+  }
+};
+
+// leave
+export const applyLeaveService = async (
+  technicianId: string,
+  date: string,
+  reason: string,
+  type: string,
+) => {
+  try {
+    const isHoliday = await Holiday.findOne({ date: new Date(date) });
+
+    if (isHoliday) {
+      throw {
+        statusCode: 400,
+        message: "Cannot apply for leave on a holiday",
+      };
+    }
+
+    const technician = await Technician.findById(technicianId);
+    if (!technician) {
+      throw {
+        statusCode: 404,
+        message: "Technician not found",
+      };
+    }
+
+    const leaveData = await getLeaveData(technicianId, technician);
+
+    if (leaveData.leavesRemaining <= 0) {
+      throw {
+        statusCode: 400,
+        message: "No leaves remaining",
+      };
+    }
+
+    const leaveRecord = new Leave({
+      technicianId,
+      date,
+      reason,
+      leaveType: type.toUpperCase(),
+      status: "PENDING",
+    });
+
+    // Safely decrement stored remaining/total leaves (fallback to allowed total if stored value is missing)
+    technician.totalLeaves =
+      (technician.totalLeaves ?? leaveData.totalLeavesAllowed) - 1;
+
+    await technician.save();
+    await leaveRecord.save();
+
+    return { message: "Leave applied successfully" };
+  } catch (error: unknown) {
+    let message = "Internal server error";
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    throw new Error(message); // Controller will handle final response
+  } // pass exact error to controller
 };
 
 export const toggleTechnicianStatusService = async (technicianId: string) => {

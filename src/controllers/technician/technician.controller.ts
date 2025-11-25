@@ -537,6 +537,48 @@ export const getAttendanceDataForDateRange = async (
   }
 };
 
+export const applyLeave = async (req: Request, res: Response) => {
+  const technicianId = (req as unknown as { technicianId: string })
+    .technicianId;
+  const { date, reason, type } = req.body;
+
+  try {
+    const result = await technicianService.applyLeaveService(
+      technicianId,
+      date,
+      reason,
+      type,
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error: unknown) {
+    let message = "Something went wrong";
+    let statusCode = 500;
+
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "message" in error &&
+      "statusCode" in error
+    ) {
+      message = (error as { message: string }).message;
+      statusCode = (error as { statusCode: number }).statusCode;
+    } else if (error instanceof Error) {
+      message = error.message;
+    }
+
+    console.error("Leave Error:", message);
+
+    return res.status(statusCode).json({
+      success: false,
+      message,
+    });
+  }
+};
+
 export const technicianList = async (req: Request, res: Response) => {
   try {
     const result = await technicianService.getTechnicianListService(req.query);

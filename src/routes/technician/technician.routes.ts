@@ -7,6 +7,7 @@ import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
 import { updateKycSchema } from "../../validators/technician/KYCDoc.valitator";
 import { attendanceValidationSchema } from "../../validators/technician/attendance.validator";
+import { applyLeaveSchema } from "../../validators/technician/technician.validator";
 // import { updateTechnicianSchema } from "../../validators/technician/technician.validator";
 
 const router = Router();
@@ -66,6 +67,15 @@ router.get(
   "/technician/attendance",
   authenticate,
   technicianController.getAttendanceDataForDateRange,
+);
+
+// Leave
+
+router.post(
+  "/technician/leave",
+  authenticate,
+  validateRequest(applyLeaveSchema),
+  technicianController.applyLeave,
 );
 
 export default router;

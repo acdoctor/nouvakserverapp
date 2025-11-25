@@ -153,3 +153,25 @@ export const updateProfessionalSkillsSchema = Joi.object({
       "any.required": "professionalSkills is required",
     }),
 });
+
+export const applyLeaveSchema = Joi.object({
+  date: Joi.date().required().messages({
+    "date.base": "Invalid date format",
+    "any.required": "Date is required",
+  }),
+
+  reason: Joi.string().min(3).required().messages({
+    "string.base": "Reason must be a string",
+    "string.min": "Reason must be at least 3 characters",
+    "any.required": "Reason is required",
+  }),
+
+  type: Joi.string()
+    .valid("SICK_LEAVE", "CASUAL_LEAVE", "PAID_LEAVE")
+    .required()
+    .messages({
+      "any.only":
+        'Leave type must be one of ["SICK_LEAVE","CASUAL_LEAVE","PAID_LEAVE"]',
+      "any.required": "Leave type is required",
+    }),
+});
