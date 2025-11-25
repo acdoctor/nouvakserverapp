@@ -78,4 +78,10 @@ router.post(
   technicianController.applyLeave,
 );
 
+router.get(
+  "/techniciabn/leave",
+  authenticate,
+  technicianController.getLeaveHistory,
+);
+
 export default router;

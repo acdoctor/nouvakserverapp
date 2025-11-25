@@ -558,6 +558,26 @@ export const applyLeaveService = async (
   } // pass exact error to controller
 };
 
+export const getLeaveHistoryService = async (technicianId: string) => {
+  if (!technicianId) {
+    throw {
+      statusCode: 400,
+      message: "Technician ID is required",
+    };
+  }
+
+  try {
+    const history = await Leave.find({ technicianId }).sort({ date: -1 });
+    return history;
+  } catch (err) {
+    console.error("Service Error (Leave History):", err);
+    throw {
+      statusCode: 500,
+      message: "Failed to fetch leave history",
+    };
+  }
+};
+
 export const toggleTechnicianStatusService = async (technicianId: string) => {
   const technician = await Technician.findById(technicianId);
 

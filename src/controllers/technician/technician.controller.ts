@@ -579,6 +579,42 @@ export const applyLeave = async (req: Request, res: Response) => {
   }
 };
 
+export const getLeaveHistory = async (req: Request, res: Response) => {
+  const technicianId = (req as unknown as { technicianId: string })
+    .technicianId;
+
+  try {
+    const data = await technicianService.getLeaveHistoryService(technicianId);
+
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error: unknown) {
+    let message = "Something went wrong";
+    let statusCode = 500;
+
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "message" in error &&
+      "statusCode" in error
+    ) {
+      message = (error as { message: string }).message;
+      statusCode = (error as { statusCode: number }).statusCode;
+    } else if (error instanceof Error) {
+      message = error.message;
+    }
+
+    console.error("Leave History Error:", message);
+
+    return res.status(statusCode).json({
+      success: false,
+      message,
+    });
+  }
+};
+
 export const technicianList = async (req: Request, res: Response) => {
   try {
     const result = await technicianService.getTechnicianListService(req.query);
