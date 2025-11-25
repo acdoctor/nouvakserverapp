@@ -83,4 +83,5 @@ router.get(
   authenticate,
   technicianController.getLeaveHistory,
 );
+
 export default router;
