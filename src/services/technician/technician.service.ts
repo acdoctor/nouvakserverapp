@@ -656,6 +656,41 @@ export const deleteToolRequestService = async (
   }
 };
 
+export const getAssignedToolsService = async (technicianId: string) => {
+  try {
+    const assignedTools = await ToolRequest.find({
+      technicianId,
+      status: { $in: ["ASSIGNED", "PARTIALLY_ASSIGNED"] },
+    }).sort({ createdAt: -1 });
+
+    if (assignedTools.length === 0) {
+      return {
+        statusCode: 404,
+        message: "No assigned tools found for this technician",
+        data: null,
+      };
+    }
+
+    return {
+      statusCode: 200,
+      message: "Assigned tools fetched successfully",
+      data: assignedTools,
+    };
+  } catch (error: unknown) {
+    let message = "Internal server error";
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    // throw formatted error to controller
+    throw {
+      statusCode: 500,
+      message,
+    };
+  }
+};
+
 export const toggleTechnicianStatusService = async (technicianId: string) => {
   const technician = await Technician.findById(technicianId);
 

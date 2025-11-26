@@ -692,6 +692,49 @@ export const deleteToolRequest = async (req: Request, res: Response) => {
   });
 };
 
+export const getAssignedTools = async (req: Request, res: Response) => {
+  const technicianId = (req as unknown as { technicianId: string })
+    .technicianId;
+
+  if (!technicianId) {
+    return res.status(400).json({
+      success: false,
+      message: "Technician ID is required",
+    });
+  }
+
+  try {
+    const result =
+      await technicianService.getAssignedToolsService(technicianId);
+
+    return res.status(result.statusCode).json({
+      success: result.statusCode === 200,
+      message: result.message,
+      data: result.data,
+    });
+  } catch (error: unknown) {
+    let message = "Something went wrong";
+    let statusCode = 500;
+
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "message" in error &&
+      "statusCode" in error
+    ) {
+      statusCode = (error as { statusCode: number }).statusCode;
+      message = (error as { message: string }).message;
+    }
+
+    console.error("Assigned Tools Error:", message);
+
+    return res.status(statusCode).json({
+      success: false,
+      message,
+    });
+  }
+};
+
 export const technicianList = async (req: Request, res: Response) => {
   try {
     const result = await technicianService.getTechnicianListService(req.query);

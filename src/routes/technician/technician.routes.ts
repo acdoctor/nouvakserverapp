@@ -96,4 +96,10 @@ router.delete(
   technicianController.deleteToolRequest,
 );
 
+router.get(
+  "/technician/tools/",
+  authenticate,
+  technicianController.getAssignedTools,
+);
+
 export default router;
