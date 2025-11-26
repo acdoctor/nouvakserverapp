@@ -325,3 +325,40 @@ export const addEditAddress = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const deleteUserAddressController = async (
+  req: Request,
+  res: Response,
+) => {
+  const userId = (req as unknown as { userId: string }).userId;
+  const { addressId } = req.params;
+
+  if (!addressId) {
+    return res
+      .status(400)
+      .json({ success: false, error: "Address ID is required" });
+  }
+
+  try {
+    const result = await userService.deleteUserAddressService(
+      userId,
+      addressId,
+    );
+
+    return res.status(result.statusCode).json({
+      success: result.statusCode === 200,
+      message: result.message,
+    });
+  } catch (error: unknown) {
+    let message = "Internal server error";
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    return res.status(500).json({
+      success: false,
+      message,
+    });
+  }
+};

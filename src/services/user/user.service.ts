@@ -244,3 +244,35 @@ export const addEditAddressService = async (
     data: updatedAddress,
   };
 };
+
+export const deleteUserAddressService = async (
+  userId: string,
+  addressId: string,
+) => {
+  if (!mongoose.Types.ObjectId.isValid(addressId)) {
+    return {
+      statusCode: 400,
+      message: "Invalid address ID",
+    };
+  }
+
+  const address = await Address.findOne({
+    _id: addressId,
+    userId,
+    isActive: 1,
+  });
+
+  if (!address) {
+    return {
+      statusCode: 404,
+      message: "Address not found or not associated with this user",
+    };
+  }
+
+  await Address.updateOne({ _id: addressId }, { isActive: 0 });
+
+  return {
+    statusCode: 200,
+    message: "Address deleted successfully",
+  };
+};

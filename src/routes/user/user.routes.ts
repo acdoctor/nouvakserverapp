@@ -41,4 +41,11 @@ router.post(
   userController.addEditAddress,
 );
 
+router.post(
+  "/user/address/delete/:addressId",
+  authenticate,
+  validateRequest(addEditAddressSchema),
+  userController.deleteUserAddressController,
+);
+
 export default router;
