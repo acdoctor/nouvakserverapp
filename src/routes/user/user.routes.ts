@@ -5,7 +5,10 @@ import * as authController from "../../controllers/user/auth.controller";
 import { authenticate } from "../../middlewares/user/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
-import { updateUserSchema } from "../../validators/user/user.validator";
+import {
+  addEditAddressSchema,
+  updateUserSchema,
+} from "../../validators/user/user.validator";
 
 const router = Router();
 
@@ -31,5 +34,11 @@ router.put(
 );
 router.delete("/user/delete/:id", userController.deleteUser);
 router.get("/user/addresses-list/:userId", userController.userAddressesList);
+router.post(
+  "/user/address/add-edit",
+  authenticate,
+  validateRequest(addEditAddressSchema),
+  userController.addEditAddress,
+);
 
 export default router;

@@ -2,7 +2,7 @@ import User from "../../models/user/user.model";
 import * as otpService from "../user/otp.service";
 import { IUser } from "../../models/user/user.model";
 import mongoose, { Types } from "mongoose";
-import Address from "../../models/user/address.model";
+import Address, { IAddress } from "../../models/user/address.model";
 
 interface UserListParams {
   page?: number;
@@ -170,5 +170,77 @@ export const getUserList = async ({
       limit,
       totalPages: Math.ceil(total / limit),
     },
+  };
+};
+
+export const addEditAddressService = async (
+  addressId: string | null,
+  payload: {
+    userId: string;
+    houseNumber?: string;
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    landmark?: string;
+    saveAs?: string;
+  },
+): Promise<{ message: string; data: IAddress }> => {
+  const {
+    userId,
+    houseNumber,
+    street,
+    city,
+    state,
+    zipCode,
+    landmark,
+    saveAs,
+  } = payload;
+
+  // Create new address
+  if (!addressId) {
+    const createdAddress = await Address.create({
+      userId: new mongoose.Types.ObjectId(userId),
+      house: houseNumber,
+      street,
+      state,
+      city,
+      zipcode: zipCode,
+      saveAs: saveAs || "",
+      landmark: landmark || "",
+    });
+
+    return {
+      message: "Address created successfully",
+      data: createdAddress,
+    };
+  }
+
+  // Update
+  const updatedAddress = await Address.findByIdAndUpdate(
+    addressId,
+    {
+      userId: new mongoose.Types.ObjectId(userId),
+      house: houseNumber,
+      street,
+      state,
+      city,
+      zipcode: zipCode,
+      saveAs: saveAs || "",
+      landmark: landmark || "",
+    },
+    { new: true },
+  );
+
+  if (!updatedAddress) {
+    throw {
+      statusCode: 404,
+      message: "Address not found",
+    };
+  }
+
+  return {
+    message: "Address updated successfully",
+    data: updatedAddress,
   };
 };

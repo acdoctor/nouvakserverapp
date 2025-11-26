@@ -264,3 +264,63 @@ export const userList = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const addEditAddress = async (req: Request, res: Response) => {
+  const userId = (req as unknown as { userId: string }).userId;
+
+  const {
+    addressId,
+    // userId,
+    houseNumber,
+    street,
+    state,
+    city,
+    zipCode,
+    landmark,
+    saveAs,
+  } = req.body;
+
+  if (!userId || !houseNumber || !street || !state || !city || !zipCode) {
+    return res.status(400).json({
+      success: false,
+      message: "All fields are required",
+    });
+  }
+
+  try {
+    const result = await userService.addEditAddressService(addressId || null, {
+      userId,
+      houseNumber,
+      street,
+      state,
+      city,
+      zipCode,
+      landmark,
+      saveAs,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: result.message,
+      data: result.data,
+    });
+  } catch (error: unknown) {
+    let status = 500;
+    let message = "Something went wrong";
+
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "statusCode" in error &&
+      "message" in error
+    ) {
+      status = (error as { statusCode: number }).statusCode;
+      message = (error as { message: string }).message;
+    }
+
+    return res.status(status).json({
+      success: false,
+      message,
+    });
+  }
+};
