@@ -326,10 +326,7 @@ export const addEditAddress = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteUserAddressController = async (
-  req: Request,
-  res: Response,
-) => {
+export const deleteUserAddress = async (req: Request, res: Response) => {
   const userId = (req as unknown as { userId: string }).userId;
   const { addressId } = req.params;
 
