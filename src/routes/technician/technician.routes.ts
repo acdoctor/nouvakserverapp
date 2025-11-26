@@ -92,7 +92,7 @@ router.post(
 );
 
 router.delete(
-  "/technician/tools/request/delete",
+  "/technician/tools/request/delete/:toolsRequestId",
   authenticate,
   technicianController.deleteToolRequest,
 );
