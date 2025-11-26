@@ -102,4 +102,10 @@ router.get(
   technicianController.getAssignedTools,
 );
 
+router.get(
+  "/technician/tools/my-requests",
+  authenticate,
+  technicianController.getMyToolRequests,
+);
+
 export default router;

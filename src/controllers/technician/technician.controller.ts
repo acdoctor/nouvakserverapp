@@ -692,6 +692,42 @@ export const deleteToolRequest = async (req: Request, res: Response) => {
   });
 };
 
+export const getMyToolRequests = async (req: Request, res: Response) => {
+  const technicianId = (req as unknown as { technicianId: string })
+    .technicianId;
+
+  try {
+    const data = await technicianService.getMyToolRequestsService(technicianId);
+
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error: unknown) {
+    let message = "Something went wrong";
+    let statusCode = 500;
+
+    if (
+      error &&
+      typeof error === "object" &&
+      "message" in error &&
+      "statusCode" in error
+    ) {
+      message = (error as { message: string }).message;
+      statusCode = (error as { statusCode: number }).statusCode;
+    } else if (error instanceof Error) {
+      message = error.message;
+    }
+
+    console.error("Tool Request Fetch Error:", message);
+
+    return res.status(statusCode).json({
+      success: false,
+      message,
+    });
+  }
+};
+
 export const getAssignedTools = async (req: Request, res: Response) => {
   const technicianId = (req as unknown as { technicianId: string })
     .technicianId;

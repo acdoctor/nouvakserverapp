@@ -656,6 +656,34 @@ export const deleteToolRequestService = async (
   }
 };
 
+export const getMyToolRequestsService = async (technicianId: string) => {
+  if (!technicianId) {
+    throw {
+      statusCode: 400,
+      message: "Technician ID is required",
+    };
+  }
+
+  try {
+    const requests = await ToolRequest.find({ technicianId }).sort({
+      createdAt: -1,
+    });
+
+    return requests;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw {
+        statusCode: 500,
+        message: error.message || "Failed to fetch tool requests",
+      };
+    }
+    throw {
+      statusCode: 500,
+      message: "Failed to fetch tool requests",
+    };
+  }
+};
+
 export const getAssignedToolsService = async (technicianId: string) => {
   try {
     const assignedTools = await ToolRequest.find({
