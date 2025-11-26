@@ -84,6 +84,7 @@ router.get(
   technicianController.getLeaveHistory,
 );
 
+// Request Tools
 router.post(
   "/technician/tools/request",
   authenticate,
@@ -91,7 +92,7 @@ router.post(
 );
 
 router.delete(
-  "/technician/tools/request/delete/:toolsRequestId",
+  "/technician/tools/request/delete",
   authenticate,
   technicianController.deleteToolRequest,
 );
