@@ -7,7 +7,10 @@ import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
 import { updateKycSchema } from "../../validators/technician/KYCDoc.valitator";
 import { attendanceValidationSchema } from "../../validators/technician/attendance.validator";
-import { applyLeaveSchema } from "../../validators/technician/technician.validator";
+import {
+  applyLeaveSchema,
+  technicianSchema,
+} from "../../validators/technician/technician.validator";
 // import { updateTechnicianSchema } from "../../validators/technician/technician.validator";
 
 const router = Router();
@@ -18,11 +21,13 @@ router.post(
   validateRequest(authSchema),
   technicianController.registerTechnician,
 );
+
 router.post(
   "/technician/login",
   validateRequest(authSchema),
   technicianController.loginRegisterTechnician,
 );
+
 router.post("/technician/resend-otp", otpController.resendOtp);
 router.post("/technician/verify-otp", otpController.verifyOtp);
 router.post("/technician/refresh", authController.refresh);
@@ -31,12 +36,15 @@ router.get(
   authenticate,
   technicianController.getTechnicianById,
 );
+
 // router.get("/technician/all", technicianController.getAllTechnicians);
+
 router.put(
   "/technician/:id",
-  // validateRequest(updateTechnicianSchema),
+  validateRequest(technicianSchema),
   technicianController.editTechnician,
 );
+
 router.delete("/technician/:id", technicianController.deleteTechnician);
 
 // KYC
@@ -70,7 +78,6 @@ router.get(
 );
 
 // Leave
-
 router.post(
   "/technician/leave",
   authenticate,
