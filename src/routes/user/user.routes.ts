@@ -35,7 +35,7 @@ router.put(
 router.delete("/user/delete/:id", userController.deleteUser);
 router.get("/user/addresses-list/:userId", userController.userAddressesList);
 router.post(
-  "/user/address/add-edit",
+  "/user/address/add-edit/:addressId",
   authenticate,
   validateRequest(addEditAddressSchema),
   userController.addEditAddress,

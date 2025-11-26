@@ -267,9 +267,10 @@ export const userList = async (req: Request, res: Response) => {
 
 export const addEditAddress = async (req: Request, res: Response) => {
   const userId = (req as unknown as { userId: string }).userId;
+  const { addressId } = req.body;
 
   const {
-    addressId,
+    // addressId,
     // userId,
     houseNumber,
     street,
