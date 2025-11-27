@@ -2,11 +2,13 @@ import { Router } from "express";
 import * as userController from "../../controllers/user/user.controller";
 import * as otpController from "../../controllers/user/otp.controller";
 import * as authController from "../../controllers/user/auth.controller";
+import * as leadsController from "../../controllers/leads/leads.controller";
 import { authenticate } from "../../middlewares/user/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
 import {
   addEditAddressSchema,
+  createLeadSchema,
   updateUserSchema,
 } from "../../validators/user/user.validator";
 
@@ -48,5 +50,12 @@ router.delete(
 );
 
 router.get("/user/home/home-screen-data", userController.getUserHomeScreenList);
+
+router.post(
+  "/user/leads/create",
+  authenticate,
+  validateRequest(createLeadSchema),
+  leadsController.createLead,
+);
 
 export default router;

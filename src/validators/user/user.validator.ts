@@ -41,3 +41,25 @@ export const addEditAddressSchema = Joi.object({
 
   landmark: Joi.string().allow("").optional(),
 });
+
+// leads
+
+export const createLeadSchema = Joi.object({
+  place: Joi.string().valid("commercial", "residential").required().messages({
+    "any.required": "Place is required",
+    "any.only": "Invalid place value. Allowed: commercial, residential",
+  }),
+
+  quantity: Joi.number().integer().min(1).required().messages({
+    "any.required": "Quantity is required",
+    "number.base": "Quantity must be a number",
+    "number.min": "Quantity must be greater than 0",
+  }),
+
+  userId: Joi.string().required().length(24).messages({
+    "any.required": "User ID is required",
+    "string.length": "User ID must be a valid 24-character MongoDB ObjectId",
+  }),
+
+  comment: Joi.string().allow("").optional(),
+});
