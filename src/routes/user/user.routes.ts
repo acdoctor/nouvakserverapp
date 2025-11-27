@@ -47,4 +47,6 @@ router.delete(
   userController.deleteUserAddress,
 );
 
+router.get("/user/home/home-screen-data", userController.getUserHomeScreenList);
+
 export default router;

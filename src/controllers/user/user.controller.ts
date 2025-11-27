@@ -359,3 +359,27 @@ export const deleteUserAddress = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const getUserHomeScreenList = (req: Request, res: Response) => {
+  try {
+    const data = userService.getUserHomeScreenListService();
+
+    return res.status(200).json({
+      status: true,
+      data,
+    });
+  } catch (error: unknown) {
+    let message = "Something went wrong";
+
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    console.error("Home Screen Error:", message);
+
+    return res.status(500).json({
+      status: false,
+      message,
+    });
+  }
+};

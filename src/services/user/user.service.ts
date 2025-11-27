@@ -276,3 +276,14 @@ export const deleteUserAddressService = async (
     message: "Address deleted successfully",
   };
 };
+
+export const getUserHomeScreenListService = () => {
+  // Static home screen data (can later be fetched from DB)
+  const data = [
+    {
+      logo: "https://service.com/prod/homescreen/homebanner.png",
+    },
+  ];
+
+  return data;
+};
