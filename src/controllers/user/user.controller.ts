@@ -365,7 +365,7 @@ export const getUserHomeScreenList = (req: Request, res: Response) => {
     const data = userService.getUserHomeScreenListService();
 
     return res.status(200).json({
-      status: true,
+      success: true,
       data,
     });
   } catch (error: unknown) {
@@ -378,7 +378,7 @@ export const getUserHomeScreenList = (req: Request, res: Response) => {
     console.error("Home Screen Error:", message);
 
     return res.status(500).json({
-      status: false,
+      success: false,
       message,
     });
   }
