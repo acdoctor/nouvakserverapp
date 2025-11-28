@@ -9,6 +9,7 @@ import * as bookingController from "../../controllers/booking/booking.controller
 import * as tools from "../../controllers/toolsAndToolsBag/tools.controller";
 import * as toolsBagController from "../../controllers/toolsAndToolsBag/toolsBag.controller";
 import * as toolsRequestController from "../../controllers/toolsAndToolsBag/toolsRequest.controller";
+import * as leadsController from "../../controllers/leads/leads.controller";
 import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
@@ -350,5 +351,7 @@ router.post(
   authenticate,
   bookingController.manageBookingStatus,
 );
+
+router.get("/admin/leads/list", authenticate, leadsController.getAdminLeadList);
 
 export default router;

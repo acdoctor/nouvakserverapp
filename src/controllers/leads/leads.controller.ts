@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   createLeadService,
+  getAdminLeadListService,
   getUserLeadDetailsService,
   getUserLeadListService,
 } from "../../services/leads/leads.service";
@@ -91,6 +92,38 @@ export const getUserLeadList = async (req: Request, res: Response) => {
       userId,
       page,
       limit,
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: leads,
+      count: totalLeads,
+      page,
+      limit,
+    });
+  } catch (error: unknown) {
+    return res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
+    });
+  }
+};
+
+export const getAdminLeadList = async (req: Request, res: Response) => {
+  try {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 10;
+
+    const search = (req.query.search as string) || "";
+    const sortField = (req.query.sortby as string) || "createdAt";
+    const sortOrder = req.query.orderby === "asc" ? 1 : -1; // default desc
+
+    const { leads, totalLeads } = await getAdminLeadListService(
+      page,
+      limit,
+      search,
+      sortField,
+      sortOrder,
     );
 
     return res.status(200).json({

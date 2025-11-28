@@ -116,3 +116,74 @@ export const getUserLeadListService = async (
 
   return { leads, totalLeads };
 };
+
+export const getAdminLeadListService = async (
+  page: number,
+  limit: number,
+  search: string,
+  sortField: string,
+  sortOrder: 1 | -1,
+) => {
+  const offset = (page - 1) * limit;
+
+  const filter = {
+    $or: [
+      { place: { $regex: search, $options: "i" } },
+      { "userDetails.name": { $regex: search, $options: "i" } },
+      { "userDetails.phoneNumber": { $regex: search, $options: "i" } },
+    ],
+  };
+
+  // ------- Fetch paginated list -------
+  const leads = await Lead.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "user_id",
+        foreignField: "_id",
+        as: "userDetails",
+      },
+    },
+    { $unwind: { path: "$userDetails", preserveNullAndEmptyArrays: true } },
+    { $match: filter },
+    {
+      $project: {
+        _id: 1,
+        place: { $ifNull: ["$place", ""] },
+        quantity: { $ifNull: ["$quantity", 0] },
+        comment: { $ifNull: ["$comment", ""] },
+        leadId: { $ifNull: ["$leadId", ""] },
+        createdAt: 1,
+        updatedAt: 1,
+        userDetails: {
+          _id: 1,
+          name: 1,
+          email: 1,
+          phoneNumber: 1,
+        },
+      },
+    },
+    { $sort: { [sortField]: sortOrder } },
+    { $skip: offset },
+    { $limit: limit },
+  ]);
+
+  // ------- Total count (with same filters) -------
+  const totalCount = await Lead.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "user_id",
+        foreignField: "_id",
+        as: "userDetails",
+      },
+    },
+    { $unwind: { path: "$userDetails", preserveNullAndEmptyArrays: true } },
+    { $match: filter },
+    { $count: "total" },
+  ]);
+
+  const totalLeads = totalCount.length ? totalCount[0].total : 0;
+
+  return { leads, totalLeads };
+};
