@@ -47,3 +47,30 @@ export const createLeadService = async (
 
   return createdLead;
 };
+
+export const getUserLeadDetailsService = async (leadId: string) => {
+  if (!leadId || leadId.trim() === "") {
+    throw new Error("Lead id is required");
+  }
+
+  const result = await Lead.aggregate([
+    {
+      $match: { leadId: leadId }, // match custom string id
+    },
+    {
+      $project: {
+        _id: 1,
+        place: { $ifNull: ["$place", ""] },
+        quantity: { $ifNull: ["$quantity", ""] },
+        leadId: { $ifNull: ["$leadId", ""] },
+        comment: { $ifNull: ["$comment", ""] },
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    },
+  ]);
+
+  if (result.length === 0) return null;
+
+  return result[0];
+};

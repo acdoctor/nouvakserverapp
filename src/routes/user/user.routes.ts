@@ -58,4 +58,10 @@ router.post(
   leadsController.createLead,
 );
 
+router.get(
+  "/user/leads/:leadId",
+  authenticate,
+  leadsController.getUserLeadDetails,
+);
+
 export default router;
