@@ -20,14 +20,14 @@ export const createLead = async (
     await createLeadService(place, quantity, userId, comment);
 
     return res.status(201).json({
-      status: true,
+      success: true,
       message: "Lead created successfully",
     });
   } catch (error: unknown) {
     const err = error as Error;
 
     return res.status(400).json({
-      status: false,
+      success: false,
       message: err.message || "Something went wrong",
     });
   }
@@ -79,7 +79,7 @@ export const getUserLeadList = async (req: Request, res: Response) => {
 
     if (!userId || userId.trim() === "") {
       return res.status(400).json({
-        status: "fail",
+        success: "fail",
         message: "User ID is required",
       });
     }
@@ -94,7 +94,7 @@ export const getUserLeadList = async (req: Request, res: Response) => {
     );
 
     return res.status(200).json({
-      status: "success",
+      success: true,
       data: leads,
       count: totalLeads,
       page,
@@ -102,7 +102,7 @@ export const getUserLeadList = async (req: Request, res: Response) => {
     });
   } catch (error: unknown) {
     return res.status(500).json({
-      status: "fail",
+      success: false,
       message: error instanceof Error ? error.message : "Something went wrong",
     });
   }
