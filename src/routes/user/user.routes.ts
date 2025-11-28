@@ -3,6 +3,7 @@ import * as userController from "../../controllers/user/user.controller";
 import * as otpController from "../../controllers/user/otp.controller";
 import * as authController from "../../controllers/user/auth.controller";
 import * as leadsController from "../../controllers/leads/leads.controller";
+import * as consultancyController from "../../controllers/consultancy/consultancy.controller";
 import { authenticate } from "../../middlewares/user/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
@@ -11,6 +12,8 @@ import {
   createLeadSchema,
   updateUserSchema,
 } from "../../validators/user/user.validator";
+import { upload } from "../../middlewares/fileHandler/fileHandler";
+import { createConsultancySchema } from "../../validators/consultancy/consultancy.validator";
 
 const router = Router();
 
@@ -67,5 +70,13 @@ router.get(
 );
 
 router.get("/user/leads/list", authenticate, leadsController.getUserLeadList);
+
+router.post(
+  "/user/consultancy/create",
+  authenticate,
+  validateRequest(createConsultancySchema),
+  upload.single("file"),
+  consultancyController.createConsultancy,
+);
 
 export default router;
