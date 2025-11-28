@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   createLeadService,
   getUserLeadDetailsService,
+  getUserLeadListService,
 } from "../../services/leads/leads.service";
 
 export const createLead = async (
@@ -67,6 +68,42 @@ export const getUserLeadDetails = async (req: Request, res: Response) => {
         error instanceof Error
           ? error.message
           : "Something went wrong on the server",
+    });
+  }
+};
+
+export const getUserLeadList = async (req: Request, res: Response) => {
+  try {
+    // const userId = req.params.userId;
+    const userId = (req as unknown as { userId: string }).userId;
+
+    if (!userId || userId.trim() === "") {
+      return res.status(400).json({
+        status: "fail",
+        message: "User ID is required",
+      });
+    }
+
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 10;
+
+    const { leads, totalLeads } = await getUserLeadListService(
+      userId,
+      page,
+      limit,
+    );
+
+    return res.status(200).json({
+      status: "success",
+      data: leads,
+      count: totalLeads,
+      page,
+      limit,
+    });
+  } catch (error: unknown) {
+    return res.status(500).json({
+      status: "fail",
+      message: error instanceof Error ? error.message : "Something went wrong",
     });
   }
 };

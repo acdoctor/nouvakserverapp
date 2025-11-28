@@ -1,6 +1,7 @@
 // src/services/leads/leads.service.ts
 import moment from "moment";
 import Lead, { ILead } from "../../models/leads/leads.model";
+import { Types } from "mongoose";
 // import { Types } from "mongoose";
 
 const ALLOWED_PLACE = ["commercial", "residential"];
@@ -73,4 +74,45 @@ export const getUserLeadDetailsService = async (leadId: string) => {
   if (result.length === 0) return null;
 
   return result[0];
+};
+
+export const getUserLeadListService = async (
+  userId: string,
+  page: number,
+  limit: number,
+) => {
+  if (!userId || userId.trim() === "") {
+    throw new Error("User ID is required");
+  }
+
+  if (!Types.ObjectId.isValid(userId)) {
+    throw new Error("Invalid userId format");
+  }
+
+  const offset = (page - 1) * limit;
+
+  const leads = await Lead.aggregate([
+    {
+      $match: { user_id: new Types.ObjectId(userId) },
+    },
+    {
+      $project: {
+        _id: 1,
+        place: { $ifNull: ["$place", ""] },
+        quantity: { $ifNull: ["$quantity", 0] },
+        comment: { $ifNull: ["$comment", ""] },
+        leadId: { $ifNull: ["$leadId", ""] },
+        createdAt: 1,
+      },
+    },
+    { $sort: { createdAt: -1 } },
+    { $skip: offset },
+    { $limit: limit },
+  ]);
+
+  const totalLeads = await Lead.countDocuments({
+    user_id: new Types.ObjectId(userId),
+  });
+
+  return { leads, totalLeads };
 };

@@ -64,4 +64,6 @@ router.get(
   leadsController.getUserLeadDetails,
 );
 
+router.get("/user/leads/list", authenticate, leadsController.getUserLeadList);
+
 export default router;
