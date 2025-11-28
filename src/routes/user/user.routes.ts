@@ -79,4 +79,10 @@ router.post(
   consultancyController.createConsultancy,
 );
 
+router.get(
+  "/user/consultancy/:consultancyId",
+  authenticate,
+  consultancyController.userConsultancyDetails,
+);
+
 export default router;

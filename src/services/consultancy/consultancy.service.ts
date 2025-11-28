@@ -1,6 +1,9 @@
 import moment from "moment";
 import { Types } from "mongoose";
-import { Consultancy } from "../../models/consultancy/consultancy.model";
+import {
+  Consultancy,
+  IConsultancy,
+} from "../../models/consultancy/consultancy.model";
 import Address from "../../models/user/address.model";
 import User from "../../models/user/user.model";
 import { Notification } from "../../models/notification/notification.model";
@@ -91,4 +94,19 @@ export const createConsultancyService = async (payload: ConsultancyPayload) => {
   }
 
   return { message: "Request submitted successfully" };
+};
+
+export const getConsultancyDetailsService = async (
+  consultancyId: string,
+): Promise<IConsultancy | null> => {
+  if (!Types.ObjectId.isValid(consultancyId)) {
+    throw new Error("INVALID_ID");
+  }
+
+  const consultancy = await Consultancy.findById(consultancyId).populate(
+    "brandId",
+    "name",
+  );
+
+  return consultancy;
 };
