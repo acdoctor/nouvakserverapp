@@ -187,3 +187,30 @@ export const getAdminLeadListService = async (
 
   return { leads, totalLeads };
 };
+
+export const getAdminLeadDetailsService = async (leadId: string) => {
+  if (!leadId || leadId.trim() === "") {
+    throw new Error("Lead id is required");
+  }
+
+  if (!Types.ObjectId.isValid(leadId)) {
+    throw new Error("Invalid leadId format");
+  }
+
+  const result = await Lead.aggregate([
+    { $match: { _id: new Types.ObjectId(leadId) } },
+    {
+      $project: {
+        _id: 1,
+        place: { $ifNull: ["$place", ""] },
+        quantity: { $ifNull: ["$quantity", ""] },
+        comment: { $ifNull: ["$comment", ""] },
+        leadId: { $ifNull: ["$leadId", ""] },
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    },
+  ]);
+
+  return result.length > 0 ? result[0] : null;
+};

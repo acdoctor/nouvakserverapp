@@ -353,5 +353,10 @@ router.post(
 );
 
 router.get("/admin/leads/list", authenticate, leadsController.getAdminLeadList);
+router.get(
+  "/admin/leads/:leadId",
+  authenticate,
+  leadsController.getAdminLeadDetails,
+);
 
 export default router;

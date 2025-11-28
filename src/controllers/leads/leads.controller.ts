@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   createLeadService,
+  getAdminLeadDetailsService,
   getAdminLeadListService,
   getUserLeadDetailsService,
   getUserLeadListService,
@@ -132,6 +133,39 @@ export const getAdminLeadList = async (req: Request, res: Response) => {
       count: totalLeads,
       page,
       limit,
+    });
+  } catch (error: unknown) {
+    return res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
+    });
+  }
+};
+
+export const getAdminLeadDetails = async (req: Request, res: Response) => {
+  try {
+    const { leadId } = req.params;
+    if (!leadId || leadId.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: "Lead id is required",
+        data: {},
+      });
+    }
+
+    const lead = await getAdminLeadDetailsService(leadId);
+
+    if (!lead) {
+      return res.status(200).json({
+        success: false,
+        message: "Lead not found",
+        data: {},
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: lead,
     });
   } catch (error: unknown) {
     return res.status(500).json({
