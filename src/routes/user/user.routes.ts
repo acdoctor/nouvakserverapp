@@ -35,6 +35,7 @@ router.put(
   userController.updateUser,
 );
 router.delete("/user/delete/:id", userController.deleteUser);
+
 router.get("/user/addresses-list/:userId", userController.userAddressesList);
 router.post(
   "/user/address/add-edit/:addressId",
@@ -51,6 +52,7 @@ router.delete(
 
 router.get("/user/home/home-screen-data", userController.getUserHomeScreenList);
 
+// User Leads controller routes
 router.post(
   "/user/leads/create",
   authenticate,

@@ -161,7 +161,6 @@ router.post(
 );
 
 // Tools and tools bag controller routes
-
 router.post(
   "/admin/tools/add",
   authenticate,
@@ -191,7 +190,6 @@ router.delete(
 );
 
 // Tools bag controller routes
-
 router.post(
   "/admin/tools-bag/create",
   authenticate,
@@ -352,6 +350,7 @@ router.post(
   bookingController.manageBookingStatus,
 );
 
+// Leads controller routes
 router.get("/admin/leads/list", authenticate, leadsController.getAdminLeadList);
 router.get(
   "/admin/leads/:leadId",
