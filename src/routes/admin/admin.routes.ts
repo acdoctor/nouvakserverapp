@@ -10,6 +10,7 @@ import * as tools from "../../controllers/toolsAndToolsBag/tools.controller";
 import * as toolsBagController from "../../controllers/toolsAndToolsBag/toolsBag.controller";
 import * as toolsRequestController from "../../controllers/toolsAndToolsBag/toolsRequest.controller";
 import * as leadsController from "../../controllers/leads/leads.controller";
+import * as consultancyController from "../../controllers/consultancy/consultancy.controller";
 import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
@@ -356,6 +357,14 @@ router.get(
   "/admin/leads/:leadId",
   authenticate,
   leadsController.getAdminLeadDetails,
+);
+
+// Consultancy controller routes
+router.post(
+  "/admin/consultancy/create",
+  authenticate,
+  validateRequest(createConsultancySchema),
+  consultancyController.createConsultancy,
 );
 
 export default router;
