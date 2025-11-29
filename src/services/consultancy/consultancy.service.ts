@@ -23,6 +23,21 @@ export interface ConsultancyPayload {
   file?: Express.Multer.File | undefined;
 }
 
+export interface AdminCreateConsultancyPayload {
+  user_id: string;
+  brandId: string;
+  alternatePhone?: string;
+  documentURL?: string;
+  serviceName?: string[];
+  consultancyId?: string; // optional (update)
+  quantity?: number;
+  comment?: string;
+  place?: string;
+  addressId: string;
+  slot: "FIRST_HALF" | "SECOND_HALF";
+  date: string;
+}
+
 export const createConsultancyService = async (payload: ConsultancyPayload) => {
   const {
     user_id,
@@ -169,6 +184,120 @@ export const getUserConsultancyListService = async (
   });
 
   return { list, total };
+};
+
+export const adminCreateConsultancyService = async (
+  payload: AdminCreateConsultancyPayload,
+) => {
+  const {
+    user_id,
+    brandId,
+    alternatePhone,
+    documentURL,
+    serviceName,
+    consultancyId,
+    quantity,
+    comment,
+    place,
+    addressId,
+    slot,
+    date,
+  } = payload;
+
+  // ----------- VALIDATIONS -----------
+
+  if (!Types.ObjectId.isValid(user_id)) {
+    throw new Error("INVALID_USER_ID");
+  }
+
+  if (!Types.ObjectId.isValid(addressId)) {
+    throw new Error("INVALID_ADDRESS_ID");
+  }
+
+  if (!Types.ObjectId.isValid(brandId)) {
+    throw new Error("INVALID_BRAND_ID");
+  }
+
+  // consultancyId is optional, but if passed then validate format
+  if (consultancyId && !Types.ObjectId.isValid(consultancyId)) {
+    throw new Error("INVALID_CONSULTANCY_ID");
+  }
+
+  // ----------- REQUIRED CHECKS ADDED HERE -----------
+
+  if (!slot) {
+    throw new Error("SLOT_REQUIRED");
+  }
+
+  if (!["FIRST_HALF", "SECOND_HALF"].includes(slot)) {
+    throw new Error("INVALID_SLOT");
+  }
+
+  if (!date) {
+    throw new Error("DATE_REQUIRED");
+  }
+
+  if (isNaN(new Date(date).getTime())) {
+    throw new Error("INVALID_DATE");
+  }
+
+  const address = await Address.findById(addressId);
+  if (!address) {
+    throw new Error("ADDRESS_NOT_FOUND");
+  }
+
+  // ---------------------------------------------------
+  // CHECK IF UPDATE OR NEW CREATE
+  // ---------------------------------------------------
+  let existingConsultancy = null;
+
+  if (consultancyId) {
+    existingConsultancy = await Consultancy.findById(consultancyId);
+  }
+
+  // ----------- CREATE NEW CONSULTANCY -----------
+  if (!existingConsultancy) {
+    const total = await Consultancy.countDocuments();
+    const sequenceNumber = String(total + 1).padStart(5, "0");
+    const formattedDate = moment().format("DDMMYYYY");
+    const generatedId = `CONS-${formattedDate}-${sequenceNumber}`;
+
+    await Consultancy.create({
+      brandId,
+      user_id,
+      alternatePhone,
+      documentURL,
+      consultancyId: generatedId,
+      serviceName: serviceName || [],
+      addressDetails: address,
+      slot,
+      date,
+      quantity,
+      comment,
+      place,
+    });
+
+    return { message: "Request submitted successfully" };
+  }
+
+  // ----------- UPDATE EXISTING CONSULTANCY -----------
+  await Consultancy.updateOne(
+    { _id: consultancyId },
+    {
+      serviceName: serviceName || [],
+      addressDetails: address,
+      brandId,
+      alternatePhone,
+      documentURL,
+      slot,
+      date,
+      quantity,
+      comment,
+      place,
+    },
+  );
+
+  return { message: "Request updated successfully" };
 };
 
 export const getAdminConsultancyDetailsService = async (

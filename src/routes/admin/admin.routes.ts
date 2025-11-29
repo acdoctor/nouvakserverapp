@@ -16,6 +16,7 @@ import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
 import {
   adminConsultancyListSchema,
+  adminCreateConsultancySchema,
   adminUpdateSchema,
 } from "../../validators/admin/admin.validator";
 import { updateUserSchema } from "../../validators/user/user.validator";
@@ -49,7 +50,6 @@ import {
   updateToolRequestStatusBodySchema,
   updateToolSchema,
 } from "../../validators/toolsAndToolsBag/toolsAndToolsBag.validator";
-import { createConsultancySchema } from "../../validators/consultancy/consultancy.validator";
 
 const router = Router();
 
@@ -367,8 +367,8 @@ router.get(
 router.post(
   "/admin/consultancy/create",
   authenticate,
-  validateRequest(createConsultancySchema),
-  consultancyController.createConsultancy,
+  validateRequest(adminCreateConsultancySchema),
+  consultancyController.adminCreateConsultancy,
 );
 
 router.get(

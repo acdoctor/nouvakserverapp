@@ -14,6 +14,31 @@ export const adminUpdateSchema = Joi.object({
 }).min(1); // At least one field must be provided
 
 // Consultancy
+export const adminCreateConsultancySchema = Joi.object({
+  user_id: Joi.string().required().messages({
+    "any.required": "user_id is required",
+  }),
+  brandId: Joi.string().optional(),
+  addressId: Joi.string().required().messages({
+    "any.required": "addressId is required",
+  }),
+  slot: Joi.string().valid("FIRST_HALF", "SECOND_HALF").required().messages({
+    "any.required": "slot is required",
+    "any.only": "slot must be FIRST_HALF or SECOND_HALF",
+  }),
+  date: Joi.date().required().messages({
+    "any.required": "date is required",
+    "date.base": "Invalid date format",
+  }),
+  consultancyId: Joi.string().optional(),
+  alternatePhone: Joi.string().optional(),
+  documentURL: Joi.string().optional(),
+  serviceName: Joi.array().optional(),
+  quantity: Joi.string().optional(),
+  comment: Joi.string().optional(),
+  place: Joi.string().optional(),
+});
+
 export const adminConsultancyListSchema = Joi.object({
   page: Joi.number().integer().min(1).default(1).messages({
     "number.base": "Page must be a number",

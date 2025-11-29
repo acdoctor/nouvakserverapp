@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   adminConsultancyListService,
+  adminCreateConsultancyService,
   createConsultancyService,
   getAdminConsultancyDetailsService,
   getConsultancyDetailsService,
@@ -192,6 +193,42 @@ export const adminConsultancyList = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : "Internal Server Error",
+      message: "Something went wrong",
+    });
+  }
+};
+
+export const adminCreateConsultancy = async (req: Request, res: Response) => {
+  try {
+    const result = await adminCreateConsultancyService(req.body);
+
+    return res.status(201).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      const msg = error.message;
+
+      if (msg === "INVALID_USER_ID") {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid user_id" });
+      }
+      if (msg === "INVALID_ADDRESS_ID") {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid addressId" });
+      }
+      if (msg === "ADDRESS_NOT_FOUND") {
+        return res
+          .status(400)
+          .json({ success: false, message: "Valid addressId required" });
+      }
+    }
+
+    return res.status(500).json({
+      success: false,
       message: "Something went wrong",
     });
   }
