@@ -368,4 +368,9 @@ router.post(
   consultancyController.createConsultancy,
 );
 
+router.get(
+  "/admin/consultancy/:consultancyId",
+  authenticate,
+  consultancyController.adminConsultancyDetails,
+);
 export default router;

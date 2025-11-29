@@ -170,3 +170,77 @@ export const getUserConsultancyListService = async (
 
   return { list, total };
 };
+
+export const getAdminConsultancyDetailsService = async (
+  consultancyId: string,
+) => {
+  if (!Types.ObjectId.isValid(consultancyId)) {
+    throw new Error("INVALID_ID");
+  }
+
+  const results = await Consultancy.aggregate([
+    {
+      $match: { _id: new Types.ObjectId(consultancyId) },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user_id",
+        foreignField: "_id",
+        as: "userDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$userDetails",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "brands",
+        localField: "brandId",
+        foreignField: "_id",
+        as: "brandData",
+      },
+    },
+    {
+      $unwind: {
+        path: "$brandData",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $addFields: {
+        "userDetails.name": { $ifNull: ["$userDetails.name", ""] },
+        "userDetails.phoneNumber": {
+          $ifNull: ["$userDetails.phoneNumber", ""],
+        },
+        "userDetails.countryCode": {
+          $ifNull: ["$userDetails.countryCode", ""],
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        bookingId: 1,
+        serviceDetails: 1,
+        alternatePhone: { $ifNull: ["$alternatePhone", ""] },
+        documentURL: { $ifNull: ["$documentURL", ""] },
+        addressDetails: 1,
+        slot: 1,
+        date: 1,
+        brand: { $ifNull: ["$brandData", {}] },
+        status: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        "userDetails.name": 1,
+        "userDetails.phoneNumber": 1,
+        "userDetails.countryCode": 1,
+      },
+    },
+  ]);
+
+  return results[0] || null;
+};
