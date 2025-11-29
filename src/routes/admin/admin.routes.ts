@@ -14,7 +14,10 @@ import * as consultancyController from "../../controllers/consultancy/consultanc
 import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
-import { adminUpdateSchema } from "../../validators/admin/admin.validator";
+import {
+  adminConsultancyListSchema,
+  adminUpdateSchema,
+} from "../../validators/admin/admin.validator";
 import { updateUserSchema } from "../../validators/user/user.validator";
 import {
   addServiceSchema,
@@ -372,5 +375,12 @@ router.get(
   "/admin/consultancy/:consultancyId",
   authenticate,
   consultancyController.adminConsultancyDetails,
+);
+
+router.get(
+  "/admin/consultancy/list",
+  authenticate,
+  validateRequest(adminConsultancyListSchema),
+  consultancyController.adminConsultancyList,
 );
 export default router;

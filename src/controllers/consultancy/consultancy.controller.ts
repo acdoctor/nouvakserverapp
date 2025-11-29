@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import {
+  adminConsultancyListService,
   createConsultancyService,
   getAdminConsultancyDetailsService,
   getConsultancyDetailsService,
@@ -160,6 +161,37 @@ export const adminConsultancyDetails = async (req: Request, res: Response) => {
 
     return res.status(500).json({
       success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
+export const adminConsultancyList = async (req: Request, res: Response) => {
+  try {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 10;
+    const search = (req.query.search as string) || "";
+    const sortField = (req.query.sortby as string) || "createdAt";
+    // const sortOrder = req.query.orderby === "asc" ? 1 : -1;
+    const sortOrder = (req.query.orderby === "asc" ? 1 : -1) as 1 | -1;
+
+    const { list, totalCount } = await adminConsultancyListService(
+      page,
+      limit,
+      search,
+      sortField,
+      sortOrder,
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: list,
+      count: totalCount,
+    });
+  } catch (error: unknown) {
+    return res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : "Internal Server Error",
       message: "Something went wrong",
     });
   }

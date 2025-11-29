@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Types } from "mongoose";
+import { PipelineStage, Types } from "mongoose";
 import {
   Consultancy,
   IConsultancy,
@@ -243,4 +243,103 @@ export const getAdminConsultancyDetailsService = async (
   ]);
 
   return results[0] || null;
+};
+
+export const adminConsultancyListService = async (
+  page: number,
+  limit: number,
+  search: string,
+  sortField: string,
+  sortOrder: 1 | -1,
+) => {
+  const skip = (page - 1) * limit;
+
+  const pipeline: PipelineStage[] = [
+    {
+      $lookup: {
+        from: "users",
+        localField: "user_id",
+        foreignField: "_id",
+        as: "userDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$userDetails",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "brands",
+        localField: "brandId",
+        foreignField: "_id",
+        as: "brandData",
+      },
+    },
+    {
+      $unwind: {
+        path: "$brandData",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $match: {
+        $or: [{ "userDetails.name": { $regex: search, $options: "i" } }],
+      },
+    },
+    {
+      $addFields: {
+        "userDetails.name": { $ifNull: ["$userDetails.name", ""] },
+        "userDetails.phoneNumber": {
+          $ifNull: ["$userDetails.phoneNumber", ""],
+        },
+        "userDetails.countryCode": {
+          $ifNull: ["$userDetails.countryCode", ""],
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        place: { $ifNull: ["$place", ""] },
+        quantity: { $ifNull: ["$quantity", 0] },
+        alternatePhone: { $ifNull: ["$alternatePhone", ""] },
+        documentURL: { $ifNull: ["$documentURL", ""] },
+        comment: { $ifNull: ["$comment", ""] },
+        slot: { $ifNull: ["$slot", ""] },
+        date: { $ifNull: ["$date", ""] },
+        consultancyId: { $ifNull: ["$consultancyId", ""] },
+        serviceName: { $ifNull: ["$serviceName", []] },
+        brandData: { $ifNull: ["$brandData", {}] },
+        createdAt: 1,
+        userDetails: {
+          name: 1,
+          phoneNumber: 1,
+          countryCode: 1,
+        },
+      },
+    },
+    {
+      $sort: {
+        [sortField]: sortOrder,
+      },
+    },
+    { $skip: skip },
+    { $limit: limit },
+  ];
+
+  const list = await Consultancy.aggregate(pipeline);
+
+  const totalCountPipeline = [
+    ...pipeline.slice(0, 6), // until match + addFields + project
+    { $count: "totalCount" },
+  ];
+
+  const totalCountResult = await Consultancy.aggregate(totalCountPipeline);
+  const totalCount = totalCountResult.length
+    ? totalCountResult[0].totalCount
+    : 0;
+
+  return { list, totalCount };
 };
