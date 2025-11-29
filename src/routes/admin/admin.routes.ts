@@ -394,4 +394,10 @@ router.post(
   brandController.adminCreateEditBrand,
 );
 
+router.post(
+  "/admin/brand/toggle-status/:brandId",
+  authenticate,
+  brandController.adminBrandActiveInactive,
+);
+
 export default router;

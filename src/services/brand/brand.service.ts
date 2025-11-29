@@ -45,3 +45,23 @@ export const adminCreateEditBrandService = async (
 
   return { message: "Brand created successfully" };
 };
+
+export const toggleBrandStatusService = async (brandId: string) => {
+  if (!Types.ObjectId.isValid(brandId)) {
+    throw new Error("INVALID_BRAND_ID");
+  }
+
+  const brand = await Brand.findById(brandId);
+
+  if (!brand) {
+    throw new Error("BRAND_NOT_FOUND");
+  }
+
+  const newStatus = brand.isActive === 1 ? 0 : 1;
+
+  await Brand.updateOne({ _id: brandId }, { isActive: newStatus });
+
+  return {
+    message: newStatus === 1 ? "Brand activated" : "Brand inactivated",
+  };
+};
