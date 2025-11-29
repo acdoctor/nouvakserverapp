@@ -11,6 +11,7 @@ import * as toolsBagController from "../../controllers/toolsAndToolsBag/toolsBag
 import * as toolsRequestController from "../../controllers/toolsAndToolsBag/toolsRequest.controller";
 import * as leadsController from "../../controllers/leads/leads.controller";
 import * as consultancyController from "../../controllers/consultancy/consultancy.controller";
+import * as brandController from "../../controllers/brand/brand.controller";
 import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
@@ -50,6 +51,7 @@ import {
   updateToolRequestStatusBodySchema,
   updateToolSchema,
 } from "../../validators/toolsAndToolsBag/toolsAndToolsBag.validator";
+import { adminCreateEditBrandSchema } from "../../validators/brand/brand.validator";
 
 const router = Router();
 
@@ -383,4 +385,13 @@ router.get(
   validateRequest(adminConsultancyListSchema),
   consultancyController.adminConsultancyList,
 );
+
+// Brand controller routes
+router.post(
+  "/admin/brand/create-edit",
+  authenticate,
+  validateRequest(adminCreateEditBrandSchema),
+  brandController.adminCreateEditBrand,
+);
+
 export default router;
