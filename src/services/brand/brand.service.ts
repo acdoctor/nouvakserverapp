@@ -1,9 +1,17 @@
-import { Types } from "mongoose";
+import { PipelineStage, Types } from "mongoose";
 import { Brand } from "../../models/brand/brand.model";
 
 export interface AdminCreateEditBrandPayload {
   brandId?: string;
   name: string;
+}
+
+interface BrandListParams {
+  page: number;
+  limit: number;
+  search: string;
+  sortField: string;
+  sortOrder: 1 | -1;
 }
 
 export const adminCreateEditBrandService = async (
@@ -64,4 +72,74 @@ export const toggleBrandStatusService = async (brandId: string) => {
   return {
     message: newStatus === 1 ? "Brand activated" : "Brand inactivated",
   };
+};
+
+export const getBrandListService = async ({
+  page,
+  limit,
+  search,
+  sortField,
+  sortOrder,
+}: BrandListParams) => {
+  const skip = (page - 1) * limit;
+
+  const pipeline: PipelineStage[] = [
+    {
+      $unwind: { path: "$globalErrorCodes", preserveNullAndEmptyArrays: true },
+    },
+    {
+      $match: {
+        $or: [
+          { name: { $regex: search, $options: "i" } },
+          { "globalErrorCodes.code": { $regex: search, $options: "i" } },
+        ],
+      },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        name: { $first: "$name" },
+        isActive: { $first: "$isActive" },
+        createdAt: { $first: "$createdAt" },
+        updatedAt: { $first: "$updatedAt" },
+        expiryDate: { $first: "$expiryDate" },
+        registeredDate: {
+          $first: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+        },
+        globalErrorCodes: { $push: "$globalErrorCodes" },
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        name: { $ifNull: ["$name", ""] },
+        isActive: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        expiryDate: 1,
+        globalErrorCodes: 1,
+        registeredDate: 1,
+        errorCodeCount: { $size: { $ifNull: ["$globalErrorCodes", []] } },
+      },
+    },
+    { $sort: { [sortField]: sortOrder } },
+    { $skip: skip },
+    { $limit: limit },
+  ];
+
+  const list = await Brand.aggregate(pipeline);
+
+  // Total count
+  const countResult = await Brand.aggregate([
+    {
+      $match: {
+        name: { $regex: search, $options: "i" },
+      },
+    },
+    { $count: "totalCount" },
+  ]);
+
+  const totalCount = countResult.length ? countResult[0].totalCount : 0;
+
+  return { list, totalCount };
 };

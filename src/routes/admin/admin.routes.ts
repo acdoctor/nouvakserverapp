@@ -51,7 +51,10 @@ import {
   updateToolRequestStatusBodySchema,
   updateToolSchema,
 } from "../../validators/toolsAndToolsBag/toolsAndToolsBag.validator";
-import { adminCreateEditBrandSchema } from "../../validators/brand/brand.validator";
+import {
+  adminCreateEditBrandSchema,
+  brandListQuerySchema,
+} from "../../validators/brand/brand.validator";
 
 const router = Router();
 
@@ -400,4 +403,10 @@ router.post(
   brandController.adminBrandActiveInactive,
 );
 
+router.get(
+  "/admin/brand/list",
+  authenticate,
+  validateRequest(brandListQuerySchema),
+  brandController.adminBrandList,
+);
 export default router;
