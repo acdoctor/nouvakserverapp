@@ -85,4 +85,10 @@ router.get(
   consultancyController.userConsultancyDetails,
 );
 
+router.get(
+  "/user/consultancy/list",
+  authenticate,
+  consultancyController.userConsultancyList,
+);
+
 export default router;

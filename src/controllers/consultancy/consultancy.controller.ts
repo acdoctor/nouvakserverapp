@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   createConsultancyService,
   getConsultancyDetailsService,
+  getUserConsultancyListService,
 } from "../../services/consultancy/consultancy.service";
 
 export const createConsultancy = async (req: Request, res: Response) => {
@@ -71,6 +72,49 @@ export const userConsultancyDetails = async (req: Request, res: Response) => {
       return res.status(400).json({
         success: false,
         message: "Invalid consultancyId format",
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
+export const userConsultancyList = async (req: Request, res: Response) => {
+  try {
+    // const { userId } = req.params;
+    const userId = (req as unknown as { userId: string }).userId;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "userId is required",
+      });
+    }
+
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 10;
+
+    const { list, total } = await getUserConsultancyListService(
+      userId,
+      page,
+      limit,
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: list,
+      count: total,
+      page,
+      limit,
+    });
+  } catch (error: unknown) {
+    if (error instanceof Error && error.message === "INVALID_ID") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid userId format",
       });
     }
 

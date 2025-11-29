@@ -110,3 +110,63 @@ export const getConsultancyDetailsService = async (
 
   return consultancy;
 };
+
+export const getUserConsultancyListService = async (
+  userId: string,
+  page: number,
+  limit: number,
+) => {
+  if (!Types.ObjectId.isValid(userId)) {
+    throw new Error("INVALID_ID");
+  }
+
+  const offset = (page - 1) * limit;
+
+  const list = await Consultancy.aggregate([
+    {
+      $match: { user_id: new Types.ObjectId(userId) },
+    },
+    {
+      $lookup: {
+        from: "brands",
+        localField: "brandId",
+        foreignField: "_id",
+        as: "brandData",
+      },
+    },
+    {
+      $unwind: {
+        path: "$brandData",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        place: { $ifNull: ["$place", ""] },
+        brandName: { $ifNull: ["$brandData.name", ""] },
+        quantity: { $ifNull: ["$quantity", 0] },
+        comment: { $ifNull: ["$comment", ""] },
+        slot: { $ifNull: ["$slot", ""] },
+        alternatePhone: { $ifNull: ["$alternatePhone", ""] },
+        documentURL: { $ifNull: ["$documentURL", ""] },
+        date: { $ifNull: ["$date", ""] },
+        consultancyId: { $ifNull: ["$consultancyId", ""] },
+        serviceName: { $ifNull: ["$serviceName", []] },
+        addressDetails: { $ifNull: ["$addressDetails", {}] },
+        createdAt: 1,
+      },
+    },
+    {
+      $sort: { createdAt: -1 },
+    },
+  ])
+    .skip(offset)
+    .limit(limit);
+
+  const total = await Consultancy.countDocuments({
+    user_id: new Types.ObjectId(userId),
+  });
+
+  return { list, total };
+};
