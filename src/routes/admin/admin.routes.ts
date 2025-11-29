@@ -46,6 +46,7 @@ import {
   updateToolRequestStatusBodySchema,
   updateToolSchema,
 } from "../../validators/toolsAndToolsBag/toolsAndToolsBag.validator";
+import { createConsultancySchema } from "../../validators/consultancy/consultancy.validator";
 
 const router = Router();
 
