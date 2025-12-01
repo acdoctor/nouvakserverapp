@@ -25,3 +25,21 @@ export const saveHomeBannerService = async (
   await banner.save();
   return banner;
 };
+
+export const editHomeBannerService = async (
+  homeBannerId: string,
+  payload: {
+    imageUrl: string;
+    destination: "COUPON" | "AD";
+    position: number;
+    data: string;
+  },
+): Promise<IHomeBanner | null> => {
+  const updatedHomeBanner = await HomeBanner.findByIdAndUpdate(
+    homeBannerId,
+    payload,
+    { new: true },
+  );
+
+  return updatedHomeBanner;
+};

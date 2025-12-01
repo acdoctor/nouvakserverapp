@@ -419,4 +419,11 @@ router.post(
   validateRequest(bannerValidatorSchema),
   homeBannerController.addHomeBanner,
 );
+
+router.put(
+  "/admin/home-banner/edit/:homeBannerId",
+  authenticate,
+  validateRequest(bannerValidatorSchema),
+  homeBannerController.editHomeBanner,
+);
 export default router;
