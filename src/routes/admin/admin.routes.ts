@@ -12,6 +12,7 @@ import * as toolsRequestController from "../../controllers/toolsAndToolsBag/tool
 import * as leadsController from "../../controllers/leads/leads.controller";
 import * as consultancyController from "../../controllers/consultancy/consultancy.controller";
 import * as brandController from "../../controllers/brand/brand.controller";
+import * as homeBannerController from "../../controllers/homeBanner/homeBanner.controller";
 import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
@@ -408,5 +409,13 @@ router.get(
   authenticate,
   validateRequest(brandListQuerySchema),
   brandController.adminBrandList,
+);
+
+// home banner controller routes
+router.post(
+  "/admin/home-banner/add",
+  authenticate,
+  validateRequest(bannerValidatorSchema),
+  homeBannerController.addHomeBanner,
 );
 export default router;
