@@ -56,6 +56,7 @@ import {
   adminCreateEditBrandSchema,
   brandListQuerySchema,
 } from "../../validators/brand/brand.validator";
+import { bannerValidatorSchema } from "../../validators/homeBanner/homeBanner.validator";
 
 const router = Router();
 
