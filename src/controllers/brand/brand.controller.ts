@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   adminCreateEditBrandService,
   getBrandListService,
+  getUserBrandListService,
   toggleBrandStatusService,
 } from "../../services/brand/brand.service";
 import { AdminCreateEditBrandPayload } from "../../services/brand/brand.service";
@@ -108,6 +109,34 @@ export const adminBrandList = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Something went wrong",
+    });
+  }
+};
+
+export const userBrandList = async (req: Request, res: Response) => {
+  const value = req.query;
+
+  const page = parseInt((value.page as string) || "1", 10) || 1;
+  const limit = parseInt((value.limit as string) || "999", 10) || 999;
+  const search = (value.search as string) || "";
+
+  try {
+    const result = await getUserBrandListService({
+      page,
+      limit,
+      search,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: result.data,
+      count: result.total,
+    });
+  } catch (err: unknown) {
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: err instanceof Error ? err.message : "Unknown error",
     });
   }
 };

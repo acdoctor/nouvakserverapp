@@ -4,6 +4,8 @@ import * as otpController from "../../controllers/user/otp.controller";
 import * as authController from "../../controllers/user/auth.controller";
 import * as leadsController from "../../controllers/leads/leads.controller";
 import * as consultancyController from "../../controllers/consultancy/consultancy.controller";
+import * as brandController from "../../controllers/brand/brand.controller";
+
 import { authenticate } from "../../middlewares/user/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
@@ -14,6 +16,7 @@ import {
 } from "../../validators/user/user.validator";
 import { upload } from "../../middlewares/fileHandler/fileHandler";
 import { createConsultancySchema } from "../../validators/consultancy/consultancy.validator";
+import { userBrandListQuerySchema } from "../../validators/brand/brand.validator";
 
 const router = Router();
 
@@ -89,6 +92,14 @@ router.get(
   "/user/consultancy/list",
   authenticate,
   consultancyController.userConsultancyList,
+);
+
+// Brand List for User
+router.post(
+  "/user/brand/list",
+  authenticate,
+  validateRequest(userBrandListQuerySchema),
+  brandController.userBrandList,
 );
 
 export default router;

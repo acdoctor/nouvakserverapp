@@ -14,6 +14,12 @@ interface BrandListParams {
   sortOrder: 1 | -1;
 }
 
+interface UserBrandListParams {
+  page: number;
+  limit: number;
+  search: string;
+}
+
 export const adminCreateEditBrandService = async (
   payload: AdminCreateEditBrandPayload,
 ) => {
@@ -142,4 +148,54 @@ export const getBrandListService = async ({
   const totalCount = countResult.length ? countResult[0].totalCount : 0;
 
   return { list, totalCount };
+};
+
+export const getUserBrandListService = async ({
+  // Uncomment if pagination is required
+  // page,
+  // limit,
+  search,
+}: UserBrandListParams) => {
+  // Uncomment if pagination is required
+  // const skip = (page - 1) * limit;
+
+  const pipeline: PipelineStage[] = [
+    {
+      $match: {
+        $and: [{ isActive: 1 }, { name: { $regex: search, $options: "i" } }],
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        name: { $ifNull: ["$name", ""] },
+        isActive: 1,
+        createdAt: 1,
+      },
+    },
+    {
+      $sort: { createdAt: -1 },
+    },
+    // Uncomment if pagination is required
+    // { $skip: skip },
+    // { $limit: limit },
+  ];
+
+  const list = await Brand.aggregate(pipeline);
+
+  const countPipeline: PipelineStage[] = [
+    {
+      $match: {
+        $and: [{ isActive: 1 }, { name: { $regex: search, $options: "i" } }],
+      },
+    },
+    { $count: "totalCount" },
+  ];
+
+  const totalCount = await Brand.aggregate(countPipeline);
+
+  return {
+    data: list,
+    total: totalCount.length > 0 ? totalCount[0].totalCount : 0,
+  };
 };

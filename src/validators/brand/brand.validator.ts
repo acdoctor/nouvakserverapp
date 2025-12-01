@@ -41,3 +41,19 @@ export const brandListQuerySchema = Joi.object({
     "any.only": "OrderBy must be either asc or desc",
   }),
 });
+
+export const userBrandListQuerySchema = Joi.object({
+  page: Joi.number().integer().min(1).optional().messages({
+    "number.base": "Page must be a number",
+    "number.min": "Page must be at least 1",
+  }),
+
+  limit: Joi.number().integer().min(1).optional().messages({
+    "number.base": "Limit must be a number",
+    "number.min": "Limit must be at least 1",
+  }),
+
+  search: Joi.string().allow("").optional().messages({
+    "string.base": "Search must be a string",
+  }),
+});
