@@ -3,6 +3,7 @@
 import { Request, Response } from "express";
 import {
   editHomeBannerService,
+  getHomeBannerListService,
   saveHomeBannerService,
 } from "../../services/homeBanner/homeBanner.service";
 
@@ -83,6 +84,36 @@ export const editHomeBanner = async (req: Request, res: Response) => {
       message: "Something went wrong",
       error:
         error instanceof Error ? error.message : "Unexpected error occurred",
+    });
+  }
+};
+
+export const getHomeBannerList = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  try {
+    const query = req.query as unknown as {
+      sortby?: string;
+      orderby?: string;
+    };
+
+    const sortField = query?.sortby || "position";
+    const sortOrder = query?.orderby === "desc" ? -1 : 1;
+
+    const banners = await getHomeBannerListService(sortField, sortOrder);
+
+    return res.status(200).json({
+      success: true,
+      data: banners,
+    });
+  } catch (error) {
+    console.error("Error fetching home banner list:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching the home banner list.",
+      error: (error as Error).message,
     });
   }
 };

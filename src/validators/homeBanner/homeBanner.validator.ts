@@ -36,3 +36,18 @@ export const bannerValidatorSchema: ObjectSchema<BannerValidationSchema> =
 
     id: Joi.string().optional(),
   });
+
+export const sortingQuerySchema = Joi.object({
+  sortby: Joi.string()
+    .valid("position", "createdAt", "updatedAt")
+    .default("position")
+    .messages({
+      "any.only": "sortby must be one of: position, createdAt, updatedAt",
+      "string.base": "sortby must be a string",
+    }),
+
+  orderby: Joi.string().valid("asc", "desc").default("asc").messages({
+    "any.only": "orderby must be either 'asc' or 'desc'",
+    "string.base": "orderby must be a string",
+  }),
+});

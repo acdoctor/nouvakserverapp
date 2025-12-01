@@ -56,7 +56,10 @@ import {
   adminCreateEditBrandSchema,
   brandListQuerySchema,
 } from "../../validators/brand/brand.validator";
-import { bannerValidatorSchema } from "../../validators/homeBanner/homeBanner.validator";
+import {
+  bannerValidatorSchema,
+  sortingQuerySchema,
+} from "../../validators/homeBanner/homeBanner.validator";
 
 const router = Router();
 
@@ -425,5 +428,12 @@ router.put(
   authenticate,
   validateRequest(bannerValidatorSchema),
   homeBannerController.editHomeBanner,
+);
+
+router.get(
+  "/admin/home-banner/list",
+  authenticate,
+  validateRequest(sortingQuerySchema),
+  homeBannerController.getHomeBannerList,
 );
 export default router;

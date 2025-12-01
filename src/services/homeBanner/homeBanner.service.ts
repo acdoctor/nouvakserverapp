@@ -2,6 +2,7 @@ import {
   HomeBanner,
   IHomeBanner,
 } from "../../models/homeBanner/homeBanner.model";
+import { SortOrder } from "mongoose";
 
 interface SaveHomeBannerPayload {
   imageUrl: string;
@@ -42,4 +43,15 @@ export const editHomeBannerService = async (
   );
 
   return updatedHomeBanner;
+};
+
+export const getHomeBannerListService = async (
+  sortField: string,
+  sortOrder: SortOrder,
+): Promise<IHomeBanner[]> => {
+  const sortObj: Record<string, SortOrder> = {
+    [sortField]: sortOrder,
+  };
+
+  return await HomeBanner.find().sort(sortObj);
 };
