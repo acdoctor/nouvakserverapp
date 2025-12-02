@@ -3,11 +3,11 @@ import { addEditPartnerService } from "../../services/partner/partner.service";
 
 export const addEditPartner = async (req: Request, res: Response) => {
   try {
+    const partnerId = req.params.partnerId;
     const body: unknown = req.body;
 
-    const { name, partnerId, partnerLogo } = body as {
+    const { name, partnerLogo } = body as {
       name: string;
-      partnerId?: string;
       partnerLogo: string;
     };
 

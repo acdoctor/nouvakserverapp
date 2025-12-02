@@ -447,7 +447,7 @@ router.delete(
 
 // Partner controller routes
 router.post(
-  "/admin/partner/add-edit",
+  "/admin/partner/add-edit/:partnerId",
   authenticate,
   validateRequest(addEditPartnerSchema),
   partnerController.addEditPartner,
