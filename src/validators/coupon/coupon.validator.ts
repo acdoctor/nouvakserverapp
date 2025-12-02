@@ -41,7 +41,4 @@ export const couponSchema = Joi.object({
   //     'any.only': 'Type must be one of [percentage, flat]',
   //     'any.required': 'Type is required',
   // }),
-  // isActive: Joi.boolean().optional().default(true).messages({
-  //     'boolean.base': 'IsActive must be a boolean',
-  // }),
 });
