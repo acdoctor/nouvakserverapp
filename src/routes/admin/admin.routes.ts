@@ -13,6 +13,7 @@ import * as leadsController from "../../controllers/leads/leads.controller";
 import * as consultancyController from "../../controllers/consultancy/consultancy.controller";
 import * as brandController from "../../controllers/brand/brand.controller";
 import * as homeBannerController from "../../controllers/homeBanner/homeBanner.controller";
+import * as partnerController from "../../controllers/partner/partner.controller";
 import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
@@ -60,6 +61,7 @@ import {
   bannerValidatorSchema,
   sortingQuerySchema,
 } from "../../validators/homeBanner/homeBanner.validator";
+import { addEditPartnerSchema } from "../../validators/partner/partner.validator";
 
 const router = Router();
 
@@ -441,5 +443,13 @@ router.delete(
   "/admin/home-banner/delete/:homeBannerId",
   authenticate,
   homeBannerController.deleteHomeBanner,
+);
+
+// Partner controller routes
+router.post(
+  "/admin/partner/add-edit",
+  authenticate,
+  validateRequest(addEditPartnerSchema),
+  partnerController.addEditPartner,
 );
 export default router;
