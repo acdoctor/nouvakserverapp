@@ -66,6 +66,10 @@ import {
   addEditPartnerSchema,
   partnerListQuerySchema,
 } from "../../validators/partner/partner.validator";
+import {
+  couponListQuerySchema,
+  couponSchema,
+} from "../../validators/coupon/coupon.validator";
 
 const router = Router();
 
@@ -481,7 +485,14 @@ router.post(
   "/admin/coupon/add-edit",
   authenticate,
   validateRequest(couponSchema),
-  couponController.addEditCouponController,
+  couponController.addEditCoupon,
+);
+
+router.get(
+  "/admin/coupon/list",
+  authenticate,
+  validateRequest(couponListQuerySchema),
+  couponController.couponList,
 );
 
 export default router;

@@ -42,3 +42,39 @@ export const couponSchema = Joi.object({
   //     'any.required': 'Type is required',
   // }),
 });
+
+export const couponListQuerySchema = Joi.object({
+  page: Joi.number().integer().min(1).default(1).messages({
+    "number.base": "Page must be a number",
+    "number.integer": "Page must be an integer",
+    "number.min": "Page must be greater than or equal to 1",
+  }),
+
+  limit: Joi.number().integer().min(1).max(100).default(10).messages({
+    "number.base": "Limit must be a number",
+    "number.integer": "Limit must be an integer",
+    "number.min": "Limit must be at least 1",
+    "number.max": "Limit cannot exceed 100",
+  }),
+
+  search: Joi.string().trim().allow("", null).messages({
+    "string.base": "Search must be a string",
+  }),
+
+  status: Joi.string()
+    .valid("active", "expired", "upcoming")
+    .optional()
+    .messages({
+      "any.only": "Status must be one of: active, expired, upcoming",
+    }),
+
+  sortBy: Joi.string()
+    .valid("createdAt", "updatedAt", "discount", "expiryDate")
+    .optional(),
+
+  sortOrder: Joi.string().valid("asc", "desc").optional().default("desc"),
+
+  userId: Joi.string().trim().optional().messages({
+    "string.base": "User ID must be a string",
+  }),
+});

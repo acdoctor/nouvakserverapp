@@ -1,5 +1,5 @@
 import Coupon, { ICoupon } from "../../models/coupon/coupon.model";
-import { Types } from "mongoose";
+import { Types, SortOrder } from "mongoose";
 
 export const createCouponService = async (payload: {
   couponCode: string | null;
@@ -34,4 +34,33 @@ export const updateCouponService = async (
   });
 
   return updatedCoupon;
+};
+
+export const couponListService = async (
+  page: number,
+  limit: number,
+  search: string,
+  sortField: string,
+  sortOrder: SortOrder,
+): Promise<{
+  data: ICoupon[];
+  count: number;
+}> => {
+  const offset = (page - 1) * limit;
+
+  const query = {
+    $or: [
+      { couponCode: { $regex: search, $options: "i" } },
+      { name: { $regex: search, $options: "i" } },
+    ],
+  };
+
+  const data = await Coupon.find(query)
+    .skip(offset)
+    .limit(limit)
+    .sort({ [sortField]: sortOrder });
+
+  const count = await Coupon.countDocuments(query);
+
+  return { data, count };
 };

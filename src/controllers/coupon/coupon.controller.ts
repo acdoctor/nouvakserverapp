@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import {
+  couponListService,
   createCouponService,
   updateCouponService,
 } from "../../services/coupon/coupon.service";
 
-export const addEditCouponController = async (
+export const addEditCoupon = async (
   req: Request,
   res: Response,
 ): Promise<Response> => {
@@ -75,6 +76,47 @@ export const addEditCouponController = async (
     return res.status(500).json({
       success: false,
       message: error instanceof Error ? error.message : "Internal server error",
+    });
+  }
+};
+
+export const couponList = async (req: Request, res: Response) => {
+  try {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 10;
+    const search = (req.query.search as string) || "";
+    const sortField = (req.query.sortby as string) || "createdAt";
+    const sortOrder =
+      req.query.orderby === "desc" ? -1 : req.query.orderby === "asc" ? 1 : -1;
+
+    const { data, count } = await couponListService(
+      page,
+      limit,
+      search,
+      sortField,
+      sortOrder,
+    );
+
+    if (data.length === 0) {
+      return res.status(200).json({
+        success: false,
+        message: "No data found",
+        data: [],
+        count: 0,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data,
+      count,
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: err.message,
     });
   }
 };
