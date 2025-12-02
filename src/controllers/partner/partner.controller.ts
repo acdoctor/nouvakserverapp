@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   addEditPartnerService,
+  getPartnerByIdService,
   partnerListService,
 } from "../../services/partner/partner.service";
 
@@ -91,6 +92,44 @@ export const partnerList = async (
       success: false,
       message: "Internal Server Error",
       error: err.message,
+    });
+  }
+};
+
+export const getPartnerById = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  try {
+    const { partnerId } = req.params as unknown as { partnerId: string };
+
+    if (!partnerId) {
+      return res.status(400).json({
+        success: false,
+        message: "Partner ID is required",
+      });
+    }
+
+    const partner = await getPartnerByIdService(partnerId);
+
+    if (!partner) {
+      return res.status(404).json({
+        success: false,
+        message: "Partner not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: partner,
+    });
+  } catch (error: unknown) {
+    console.error("Error fetching partner by ID:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error instanceof Error ? error.message : "Unknown error",
     });
   }
 };

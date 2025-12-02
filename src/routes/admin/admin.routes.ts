@@ -462,4 +462,10 @@ router.get(
   validateRequest(partnerListQuerySchema),
   partnerController.partnerList,
 );
+
+router.get(
+  "/admin/partner/:partnerId",
+  authenticate,
+  partnerController.getPartnerById,
+);
 export default router;

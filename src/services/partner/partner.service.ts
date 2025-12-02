@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Partner, { IPartner } from "../../models/partner/partner.model";
 
 interface AddEditPartnerPayload {
@@ -75,4 +76,15 @@ export const partnerListService = async ({
   });
 
   return { partners, total };
+};
+
+export const getPartnerByIdService = async (
+  partnerId: string,
+): Promise<IPartner | null> => {
+  // Validate MongoDB ObjectId
+  if (!mongoose.Types.ObjectId.isValid(partnerId)) {
+    return null;
+  }
+
+  return await Partner.findById(partnerId);
 };
