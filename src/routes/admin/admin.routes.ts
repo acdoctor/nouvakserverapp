@@ -468,4 +468,11 @@ router.get(
   authenticate,
   partnerController.getPartnerById,
 );
+
+router.post(
+  "/admin/partner/active-inactive/:partnerId",
+  authenticate,
+  partnerController.partnerActiveInactive,
+);
+
 export default router;

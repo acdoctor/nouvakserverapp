@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import Partner, { IPartner } from "../../models/partner/partner.model";
 
 interface AddEditPartnerPayload {
@@ -87,4 +87,28 @@ export const getPartnerByIdService = async (
   }
 
   return await Partner.findById(partnerId);
+};
+
+export const partnerActiveInactiveService = async (
+  partnerId: string,
+): Promise<{ message: string } | null> => {
+  if (!mongoose.Types.ObjectId.isValid(partnerId)) {
+    throw new Error("Invalid Partner ID");
+  }
+
+  const partner = await Partner.findById(partnerId);
+  if (!partner) {
+    return null;
+  }
+
+  const newStatus = partner.isActive ? false : true;
+
+  await Partner.updateOne(
+    { _id: new Types.ObjectId(partnerId) },
+    { isActive: newStatus },
+  );
+
+  return {
+    message: newStatus ? "Partner activated" : "Partner de-activated",
+  };
 };

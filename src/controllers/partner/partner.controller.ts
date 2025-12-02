@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   addEditPartnerService,
   getPartnerByIdService,
+  partnerActiveInactiveService,
   partnerListService,
 } from "../../services/partner/partner.service";
 
@@ -130,6 +131,42 @@ export const getPartnerById = async (
       success: false,
       message: "Internal server error",
       error: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
+
+export const partnerActiveInactive = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  try {
+    const { partnerId } = req.params;
+    if (!partnerId) {
+      return res.status(400).json({
+        success: false,
+        message: "Partner ID is required",
+      });
+    }
+
+    const result = await partnerActiveInactiveService(partnerId);
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Partner not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: err.message,
     });
   }
 };
