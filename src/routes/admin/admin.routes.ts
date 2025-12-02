@@ -14,6 +14,7 @@ import * as consultancyController from "../../controllers/consultancy/consultanc
 import * as brandController from "../../controllers/brand/brand.controller";
 import * as homeBannerController from "../../controllers/homeBanner/homeBanner.controller";
 import * as partnerController from "../../controllers/partner/partner.controller";
+import * as couponController from "../../controllers/coupon/coupon.controller";
 import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
@@ -473,6 +474,14 @@ router.post(
   "/admin/partner/active-inactive/:partnerId",
   authenticate,
   partnerController.partnerActiveInactive,
+);
+
+// coupon
+router.post(
+  "/admin/coupon/add-edit",
+  authenticate,
+  validateRequest(couponSchema),
+  couponController.addEditCouponController,
 );
 
 export default router;
