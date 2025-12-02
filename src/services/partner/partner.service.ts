@@ -5,6 +5,17 @@ interface AddEditPartnerPayload {
   partnerId?: string;
   partnerLogo: string;
 }
+export interface PartnerListParams {
+  limit: number;
+  page: number;
+  search: string;
+  sortOrder: 1 | -1;
+}
+
+export interface PartnerListResponse {
+  partners: IPartner[];
+  total: number;
+}
 
 export const addEditPartnerService = async (
   payload: AddEditPartnerPayload,
@@ -42,4 +53,26 @@ export const addEditPartnerService = async (
   );
 
   return await Partner.findById(partnerId);
+};
+
+export const partnerListService = async ({
+  limit,
+  page,
+  search,
+  sortOrder,
+}: PartnerListParams): Promise<PartnerListResponse> => {
+  const offset = (page - 1) * limit;
+
+  const partners = await Partner.find({
+    name: { $regex: search, $options: "i" },
+  })
+    .skip(offset)
+    .limit(limit)
+    .sort({ name: sortOrder });
+
+  const total = await Partner.countDocuments({
+    name: { $regex: search, $options: "i" },
+  });
+
+  return { partners, total };
 };

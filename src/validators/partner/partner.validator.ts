@@ -17,3 +17,20 @@ export const addEditPartnerSchema = Joi.object({
     "string.base": "Partner ID must be a string.",
   }),
 });
+
+export const partnerListQuerySchema = Joi.object({
+  limit: Joi.number().integer().min(1).optional().messages({
+    "number.base": "Limit must be a number",
+    "number.min": "Limit must be at least 1",
+  }),
+  page: Joi.number().integer().min(1).optional().messages({
+    "number.base": "Page must be a number",
+    "number.min": "Page must be at least 1",
+  }),
+  search: Joi.string().allow("").optional().messages({
+    "string.base": "Search must be a string",
+  }),
+  sortOrder: Joi.string().valid("asc", "desc").optional().messages({
+    "any.only": "SortOrder must be one of ['asc', 'desc']",
+  }),
+});

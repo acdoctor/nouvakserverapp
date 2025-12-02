@@ -61,7 +61,10 @@ import {
   bannerValidatorSchema,
   sortingQuerySchema,
 } from "../../validators/homeBanner/homeBanner.validator";
-import { addEditPartnerSchema } from "../../validators/partner/partner.validator";
+import {
+  addEditPartnerSchema,
+  partnerListQuerySchema,
+} from "../../validators/partner/partner.validator";
 
 const router = Router();
 
@@ -451,5 +454,12 @@ router.post(
   authenticate,
   validateRequest(addEditPartnerSchema),
   partnerController.addEditPartner,
+);
+
+router.get(
+  "/admin/partner/list",
+  authenticate,
+  validateRequest(partnerListQuerySchema),
+  partnerController.partnerList,
 );
 export default router;
