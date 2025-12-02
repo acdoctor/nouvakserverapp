@@ -55,3 +55,10 @@ export const getHomeBannerListService = async (
 
   return await HomeBanner.find().sort(sortObj);
 };
+
+export const deleteHomeBannerService = async (
+  bannerId: string,
+): Promise<boolean> => {
+  const deleted = await HomeBanner.findByIdAndDelete(bannerId);
+  return !!deleted;
+};

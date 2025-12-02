@@ -2,6 +2,7 @@
 
 import { Request, Response } from "express";
 import {
+  deleteHomeBannerService,
   editHomeBannerService,
   getHomeBannerListService,
   saveHomeBannerService,
@@ -114,6 +115,37 @@ export const getHomeBannerList = async (
       success: false,
       message: "An error occurred while fetching the home banner list.",
       error: (error as Error).message,
+    });
+  }
+};
+
+export const deleteHomeBanner = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  try {
+    const { bannerId } = req.params as unknown as { bannerId: string };
+
+    const isDeleted = await deleteHomeBannerService(bannerId);
+
+    if (!isDeleted) {
+      return res.status(404).json({
+        success: false,
+        message: "Home banner not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Home banner deleted successfully",
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      error: err.message,
     });
   }
 };

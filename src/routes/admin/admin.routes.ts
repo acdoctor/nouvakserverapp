@@ -436,4 +436,10 @@ router.get(
   validateRequest(sortingQuerySchema),
   homeBannerController.getHomeBannerList,
 );
+
+router.delete(
+  "/admin/home-banner/delete/:homeBannerId",
+  authenticate,
+  homeBannerController.deleteHomeBanner,
+);
 export default router;
