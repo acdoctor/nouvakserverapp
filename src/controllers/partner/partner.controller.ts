@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   addEditPartnerService,
   getPartnerByIdService,
+  mobilePartnerListService,
   partnerActiveInactiveService,
   partnerListService,
 } from "../../services/partner/partner.service";
@@ -160,6 +161,24 @@ export const partnerActiveInactive = async (
     return res.status(200).json({
       success: true,
       message: result.message,
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: err.message,
+    });
+  }
+};
+
+export const mobilePartnerList = async (req: Request, res: Response) => {
+  try {
+    const partners = await mobilePartnerListService();
+
+    return res.status(200).json({
+      success: true,
+      data: partners,
     });
   } catch (error: unknown) {
     const err = error as Error;

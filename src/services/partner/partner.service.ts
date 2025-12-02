@@ -112,3 +112,7 @@ export const partnerActiveInactiveService = async (
     message: newStatus ? "Partner activated" : "Partner de-activated",
   };
 };
+
+export const mobilePartnerListService = async (): Promise<IPartner[]> => {
+  return await Partner.find({ isActive: true });
+};

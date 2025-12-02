@@ -5,6 +5,7 @@ import * as authController from "../../controllers/user/auth.controller";
 import * as leadsController from "../../controllers/leads/leads.controller";
 import * as consultancyController from "../../controllers/consultancy/consultancy.controller";
 import * as brandController from "../../controllers/brand/brand.controller";
+import * as partnerController from "../../controllers/partner/partner.controller";
 
 import { authenticate } from "../../middlewares/user/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
@@ -102,4 +103,10 @@ router.post(
   brandController.userBrandList,
 );
 
+// Partner
+router.get(
+  "/user/partner/mobile-list",
+  authenticate,
+  partnerController.mobilePartnerList,
+);
 export default router;
