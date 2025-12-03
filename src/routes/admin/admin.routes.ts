@@ -495,7 +495,11 @@ router.get(
   couponController.couponList,
 );
 
-router.get("/admin/coupon", authenticate, couponController.getCouponById);
+router.get(
+  "/admin/coupon/:couponId",
+  authenticate,
+  couponController.getCouponById,
+);
 
 router.put(
   "/admin/coupon/active-inactive/:couponId",
