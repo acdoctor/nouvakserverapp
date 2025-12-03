@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import {
+  applyCouponCodeService,
   couponListService,
   createCouponService,
   getCouponByIdService,
@@ -184,6 +185,24 @@ export const couponActiveInactive = async (req: Request, res: Response) => {
     return res.status(500).json({
       status: false,
       message: error instanceof Error ? error.message : "Something went wrong",
+    });
+  }
+};
+
+export const applyCouponCode = async (req: Request, res: Response) => {
+  try {
+    const response = await applyCouponCodeService(req.body as unknown);
+
+    if (response.status) {
+      return res.status(200).json(response);
+    } else {
+      return res.status(400).json(response);
+    }
+  } catch (error) {
+    console.error("Error applying coupon code:", error);
+    return res.status(500).json({
+      status: false,
+      message: "An error occurred while applying the coupon.",
     });
   }
 };

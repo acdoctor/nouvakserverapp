@@ -1,5 +1,14 @@
+import { Booking } from "../../models/booking/booking.model";
 import Coupon, { ICoupon } from "../../models/coupon/coupon.model";
 import { Types, SortOrder } from "mongoose";
+
+interface ApplyCouponInput {
+  couponCode: string;
+  userId: string;
+  bookingId: string;
+  amount: number;
+  isApply: number;
+}
 
 export const createCouponService = async (payload: {
   couponCode: string | null;
@@ -106,5 +115,87 @@ export const toggleCouponStatusService = async (
     updated: true,
     coupon: updatedCoupon!,
     message: newStatus ? "Coupon activated" : "Coupon de-activated",
+  };
+};
+
+export const applyCouponCodeService = async (body: unknown) => {
+  const { couponCode, userId, bookingId, amount, isApply } =
+    body as ApplyCouponInput;
+
+  if (!couponCode || !userId || !bookingId || !isApply) {
+    return {
+      status: false,
+      message: "Coupon code, user ID, and booking ID are required.",
+    };
+  }
+
+  // Validate MongoID
+  if (!Types.ObjectId.isValid(bookingId)) {
+    return {
+      status: false,
+      message: "Invalid booking ID.",
+    };
+  }
+
+  const booking = await Booking.findById(bookingId);
+  if (!booking) {
+    return { status: false, message: "Booking not found." };
+  }
+
+  const coupon = await Coupon.findOne({ couponCode, isActive: true });
+  if (!coupon) {
+    return { status: false, message: "Invalid or inactive coupon code." };
+  }
+
+  // Expiry check
+  if (new Date(coupon.expiryDate) < new Date()) {
+    return { status: false, message: "This coupon has expired." };
+  }
+
+  // Minimum value check
+  if (amount < coupon.minValue) {
+    return {
+      status: false,
+      message: `Minimum order value is ${coupon.minValue}.`,
+    };
+  }
+
+  const discountAmount = (amount * coupon.discount) / 100;
+  const discountedTotal = amount - discountAmount;
+
+  if (isApply === 1) {
+    await Booking.updateOne(
+      { _id: bookingId },
+      {
+        originalTotal: amount,
+        discountAmount,
+        discountedTotal,
+        discount: coupon.discount,
+        isCouponApply: 1,
+        couponDetails: coupon,
+      },
+    );
+  } else {
+    await Booking.updateOne(
+      { _id: bookingId },
+      {
+        originalTotal: "",
+        discountAmount: "",
+        discountedTotal: "",
+        discount: "",
+        isCouponApply: 2,
+        couponDetails: {},
+      },
+    );
+  }
+
+  return {
+    status: true,
+    message: "Coupon applied successfully.",
+    data: {
+      originalTotal: amount,
+      discountAmount,
+      discountedTotal,
+    },
   };
 };

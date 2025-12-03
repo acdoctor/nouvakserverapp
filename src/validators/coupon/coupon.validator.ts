@@ -78,3 +78,30 @@ export const couponListQuerySchema = Joi.object({
     "string.base": "User ID must be a string",
   }),
 });
+
+export const applyCouponSchema = Joi.object({
+  couponCode: Joi.string().trim().required().messages({
+    "any.required": "Coupon code is required",
+    "string.empty": "Coupon code cannot be empty",
+  }),
+
+  userId: Joi.string().trim().required().messages({
+    "any.required": "User ID is required",
+    "string.empty": "User ID cannot be empty",
+  }),
+
+  bookingId: Joi.string().trim().required().messages({
+    "any.required": "Booking ID is required",
+    "string.empty": "Booking ID cannot be empty",
+  }),
+
+  amount: Joi.number().min(0).required().messages({
+    "any.required": "Amount is required",
+    "number.base": "Amount must be a number",
+  }),
+
+  isApply: Joi.number().valid(1, 2).required().messages({
+    "any.only": "isApply must be 1 (apply) or 2 (remove)",
+    "any.required": "isApply is required",
+  }),
+});

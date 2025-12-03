@@ -6,6 +6,7 @@ import * as leadsController from "../../controllers/leads/leads.controller";
 import * as consultancyController from "../../controllers/consultancy/consultancy.controller";
 import * as brandController from "../../controllers/brand/brand.controller";
 import * as partnerController from "../../controllers/partner/partner.controller";
+import * as couponController from "../../controllers/coupon/coupon.controller";
 
 import { authenticate } from "../../middlewares/user/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
@@ -18,6 +19,7 @@ import {
 import { upload } from "../../middlewares/fileHandler/fileHandler";
 import { createConsultancySchema } from "../../validators/consultancy/consultancy.validator";
 import { userBrandListQuerySchema } from "../../validators/brand/brand.validator";
+import { applyCouponSchema } from "../../validators/coupon/coupon.validator";
 
 const router = Router();
 
@@ -108,5 +110,13 @@ router.get(
   "/user/partner/mobile-list",
   authenticate,
   partnerController.mobilePartnerList,
+);
+
+// Coupon
+router.post(
+  "/user/coupon/apply-coupon",
+  authenticate,
+  validateRequest(applyCouponSchema),
+  couponController.applyCouponCode,
 );
 export default router;
