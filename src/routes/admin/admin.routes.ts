@@ -497,4 +497,10 @@ router.get(
 
 router.get("/admin/coupon", authenticate, couponController.getCouponById);
 
+router.put(
+  "/admin/coupon/active-inactive/:couponId",
+  authenticate,
+  couponController.couponActiveInactive,
+);
+
 export default router;

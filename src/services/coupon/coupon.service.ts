@@ -76,3 +76,35 @@ export const getCouponByIdService = async (
   const coupon = await Coupon.findById(couponId).lean<ICoupon>().exec();
   return coupon;
 };
+
+export const toggleCouponStatusService = async (
+  couponId: string,
+): Promise<{ updated: boolean; coupon?: ICoupon | null; message: string }> => {
+  if (!Types.ObjectId.isValid(couponId)) {
+    throw new Error("INVALID_ID");
+  }
+
+  const coupon = await Coupon.findById(couponId);
+  if (!coupon) {
+    return {
+      updated: false,
+      coupon: null,
+      message: "Coupon not found",
+    };
+  }
+
+  const newStatus = coupon.isActive ? false : true;
+
+  await Coupon.updateOne(
+    { _id: new Types.ObjectId(couponId) },
+    { isActive: newStatus },
+  );
+
+  const updatedCoupon = await Coupon.findById(couponId);
+
+  return {
+    updated: true,
+    coupon: updatedCoupon!,
+    message: newStatus ? "Coupon activated" : "Coupon de-activated",
+  };
+};

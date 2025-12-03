@@ -152,3 +152,38 @@ export const getCouponById = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const couponActiveInactive = async (req: Request, res: Response) => {
+  try {
+    const { couponId } = req.params as unknown as { couponId: string };
+
+    if (!couponId) {
+      return res.status(400).json({
+        status: false,
+        message: "couponId is required",
+      });
+    }
+
+    const result = await updateCouponService(couponId, {
+      isActive: !req.body.isActive,
+    });
+
+    if (!result) {
+      return res.status(404).json({
+        status: false,
+        message: "Coupon not found",
+      });
+    }
+
+    return res.status(200).json({
+      status: true,
+      message: "Coupon status updated successfully",
+      data: result,
+    });
+  } catch (error: unknown) {
+    return res.status(500).json({
+      status: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
+    });
+  }
+};
