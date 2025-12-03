@@ -77,6 +77,7 @@ router.get(
 
 router.get("/user/leads/list", authenticate, leadsController.getUserLeadList);
 
+// Consultancy
 router.post(
   "/user/consultancy/create",
   authenticate,
@@ -119,4 +120,5 @@ router.post(
   validateRequest(applyCouponSchema),
   couponController.applyCouponCode,
 );
+
 export default router;
