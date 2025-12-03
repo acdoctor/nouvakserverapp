@@ -29,23 +29,32 @@ router.post(
   validateRequest(authSchema),
   userController.registerUser,
 );
+
 router.post(
   "/user/login",
   validateRequest(authSchema),
   userController.loginRegisterUser,
 );
+
 router.post("/user/resend-otp", otpController.resendOtp);
+
 router.post("/user/verify-otp", otpController.verifyOtp);
+
 router.post("/user/refresh", authController.refresh);
+
 router.get("/user/profile/:id", authenticate, userController.getUserById);
+
 router.put(
   "/user/update/:id",
   validateRequest(updateUserSchema),
   userController.updateUser,
 );
+
 router.delete("/user/delete/:id", userController.deleteUser);
 
+// Address
 router.get("/user/addresses-list/:userId", userController.userAddressesList);
+
 router.post(
   "/user/address/add-edit/:addressId",
   authenticate,
