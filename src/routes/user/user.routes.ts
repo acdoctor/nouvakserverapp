@@ -68,6 +68,7 @@ router.delete(
   userController.deleteUserAddress,
 );
 
+// home screen data
 router.get("/user/home/home-screen-data", userController.getUserHomeScreenList);
 
 // User Leads controller routes
