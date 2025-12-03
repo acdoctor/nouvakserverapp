@@ -7,6 +7,7 @@ import * as consultancyController from "../../controllers/consultancy/consultanc
 import * as brandController from "../../controllers/brand/brand.controller";
 import * as partnerController from "../../controllers/partner/partner.controller";
 import * as couponController from "../../controllers/coupon/coupon.controller";
+import * as serviceController from "../../controllers/service/service.controller";
 
 import { authenticate } from "../../middlewares/user/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
@@ -129,6 +130,13 @@ router.post(
   authenticate,
   validateRequest(applyCouponSchema),
   couponController.applyCouponCode,
+);
+
+// Services
+router.get(
+  "/admin/service/mobile-list",
+  authenticate,
+  serviceController.mobileServiceList,
 );
 
 export default router;

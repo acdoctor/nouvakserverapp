@@ -309,12 +309,6 @@ router.get(
   serviceController.serviceList,
 );
 
-router.get(
-  "/admin/service/mobile-list",
-  authenticate,
-  serviceController.mobileServiceList,
-);
-
 // Booking controller routes
 router.post(
   "/admin/booking/add",
