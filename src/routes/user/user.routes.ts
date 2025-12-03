@@ -68,7 +68,7 @@ router.delete(
   userController.deleteUserAddress,
 );
 
-// home screen data
+// Home screen data
 router.get("/user/home/home-screen-data", userController.getUserHomeScreenList);
 
 // User Leads controller routes
@@ -118,7 +118,7 @@ router.post(
 
 // Partner
 router.get(
-  "/user/partner/mobile-list",
+  "/user/partner-list",
   authenticate,
   partnerController.mobilePartnerList,
 );
