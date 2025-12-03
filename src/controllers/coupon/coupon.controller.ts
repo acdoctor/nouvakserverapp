@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   couponListService,
   createCouponService,
+  getCouponByIdService,
   updateCouponService,
 } from "../../services/coupon/coupon.service";
 
@@ -117,6 +118,37 @@ export const couponList = async (req: Request, res: Response) => {
       success: false,
       message: "Internal server error",
       error: err.message,
+    });
+  }
+};
+
+export const getCouponById = async (req: Request, res: Response) => {
+  try {
+    const { couponId } = req.params as { couponId?: string };
+    if (!couponId) {
+      return res.status(400).json({
+        status: false,
+        message: "couponId is required",
+      });
+    }
+
+    const coupon = await getCouponByIdService(couponId);
+
+    if (!coupon) {
+      return res.status(404).json({
+        status: false,
+        message: "No data found",
+      });
+    }
+
+    return res.status(200).json({
+      status: true,
+      data: coupon,
+    });
+  } catch (error: unknown) {
+    return res.status(400).json({
+      status: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
     });
   }
 };

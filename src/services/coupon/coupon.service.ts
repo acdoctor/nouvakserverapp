@@ -64,3 +64,15 @@ export const couponListService = async (
 
   return { data, count };
 };
+
+export const getCouponByIdService = async (
+  couponId: unknown,
+): Promise<ICoupon | null> => {
+  // Validate ObjectId
+  if (typeof couponId !== "string" || !Types.ObjectId.isValid(couponId)) {
+    throw new Error("INVALID_ID");
+  }
+
+  const coupon = await Coupon.findById(couponId).lean<ICoupon>().exec();
+  return coupon;
+};

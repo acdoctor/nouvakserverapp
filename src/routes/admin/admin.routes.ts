@@ -495,4 +495,6 @@ router.get(
   couponController.couponList,
 );
 
+router.get("/admin/coupon", authenticate, couponController.getCouponById);
+
 export default router;
