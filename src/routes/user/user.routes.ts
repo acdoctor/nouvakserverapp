@@ -8,6 +8,7 @@ import * as brandController from "../../controllers/brand/brand.controller";
 import * as partnerController from "../../controllers/partner/partner.controller";
 import * as couponController from "../../controllers/coupon/coupon.controller";
 import * as serviceController from "../../controllers/service/service.controller";
+import * as bookingController from "../../controllers/booking/booking.controller";
 
 import { authenticate } from "../../middlewares/user/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
@@ -21,6 +22,7 @@ import { upload } from "../../middlewares/fileHandler/fileHandler";
 import { createConsultancySchema } from "../../validators/consultancy/consultancy.validator";
 import { userBrandListQuerySchema } from "../../validators/brand/brand.validator";
 import { applyCouponSchema } from "../../validators/coupon/coupon.validator";
+import { bannerValidatorSchema } from "../../validators/homeBanner/homeBanner.validator";
 
 const router = Router();
 
@@ -107,6 +109,15 @@ router.get(
   "/user/consultancy/list",
   authenticate,
   consultancyController.userConsultancyList,
+);
+
+// Booking controller user
+
+router.post(
+  "/user/booking/add",
+  authenticate,
+  validateRequest(bannerValidatorSchema),
+  bookingController.addBookingController,
 );
 
 // Brand List for User
