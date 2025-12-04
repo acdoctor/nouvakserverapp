@@ -614,3 +614,100 @@ export const updateBookingStatus = async (
     }
   }
 };
+
+export const mobileBookingListService = async (
+  userId: string,
+  page: number,
+  limit: number,
+) => {
+  if (!Types.ObjectId.isValid(userId)) {
+    throw new Error("INVALID_USER_ID");
+  }
+
+  const pageNumber = Number(page) || 1;
+  const pageSize = Number(limit) || 10;
+  const skip = (pageNumber - 1) * pageSize;
+
+  const bookings = await Booking.aggregate([
+    { $match: { user_id: new Types.ObjectId(userId) } },
+
+    {
+      $lookup: {
+        from: "users",
+        localField: "user_id",
+        foreignField: "_id",
+        as: "userDetails",
+      },
+    },
+    { $unwind: { path: "$userDetails", preserveNullAndEmptyArrays: true } },
+
+    { $unwind: { path: "$serviceDetails", preserveNullAndEmptyArrays: true } },
+
+    {
+      $lookup: {
+        from: "services",
+        localField: "serviceDetails.service_id",
+        foreignField: "_id",
+        as: "serviceDetails.serviceData",
+      },
+    },
+    {
+      $unwind: {
+        path: "$serviceDetails.serviceData",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+
+    {
+      $group: {
+        _id: {
+          bookingId: "$_id",
+          service_id: "$serviceDetails.service_id",
+        },
+        bookingId: { $first: "$bookingId" },
+        invoiceId: { $first: "$invoiceId" },
+        status: { $first: "$status" },
+        date: { $first: "$date" },
+        amount: { $first: "$amount" },
+        createdAt: { $first: "$createdAt" },
+      },
+    },
+
+    {
+      $group: {
+        _id: "$_id.bookingId",
+        bookingId: { $first: "$bookingId" },
+        status: { $first: "$status" },
+        date: { $first: "$date" },
+        createdAt: { $first: "$createdAt" },
+      },
+    },
+
+    {
+      $project: {
+        _id: 1,
+        bookingId: 1,
+        status: 1,
+        date: 1,
+        createdAt: 1,
+      },
+    },
+
+    { $sort: { createdAt: -1 } },
+    { $skip: skip },
+    { $limit: pageSize },
+  ]);
+
+  const totalCountPipeline = [
+    { $match: { user_id: new Types.ObjectId(userId) } },
+    { $count: "totalCount" },
+  ];
+
+  const totalCountResult = await Booking.aggregate(totalCountPipeline);
+  const total = totalCountResult[0]?.totalCount || 0;
+
+  return {
+    data: bookings,
+    total,
+  };
+};

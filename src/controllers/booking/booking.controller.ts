@@ -8,6 +8,7 @@ import {
   createInvoice,
   technicianAssign,
   updateBookingStatus,
+  mobileBookingListService,
 } from "../../services/booking/booking.service";
 // import { Booking } from "../../models/booking/booking.model";
 
@@ -294,6 +295,46 @@ export const manageBookingStatus = async (
         error instanceof Error
           ? error.message
           : "Failed to update booking status",
+    });
+  }
+};
+
+export const mobileBookingList = async (req: Request, res: Response) => {
+  try {
+    const query = req.query as unknown;
+    // const params = req.params as unknown;
+
+    const { page = 1, limit = 10 } = query as {
+      page?: number | string;
+      limit?: number | string;
+    };
+    // const { userId } = params as { userId: string };
+    const userId = (req as unknown as { userId: string }).userId;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required",
+      });
+    }
+
+    const result = await mobileBookingListService(
+      userId,
+      Number(page),
+      Number(limit),
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: result.data,
+      total: result.total,
+    });
+  } catch (error: unknown) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
     });
   }
 };

@@ -112,12 +112,17 @@ router.get(
 );
 
 // Booking controller user
-
 router.post(
   "/user/booking/add",
   authenticate,
   validateRequest(bannerValidatorSchema),
   bookingController.addBookingController,
+);
+
+router.get(
+  "/user/booking/list",
+  authenticate,
+  bookingController.mobileBookingList,
 );
 
 // Brand List for User
