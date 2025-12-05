@@ -430,6 +430,116 @@ export const fetchBookingList = async (query: BookingQuery) => {
   };
 };
 
+export const userBookingListService = async (
+  userId: string,
+  page: number,
+  limit: number,
+  search: string,
+  sortField: string,
+  sortOrder: number,
+) => {
+  if (!Types.ObjectId.isValid(userId)) {
+    throw new Error("INVALID_USER_ID");
+  }
+
+  const offset = (page - 1) * limit;
+
+  const matchStage = {
+    $match: {
+      user_id: new Types.ObjectId(userId),
+    },
+  };
+
+  const searchMatch = {
+    $match: {
+      $or: [{ status: { $regex: search, $options: "i" } }],
+    },
+  };
+
+  const lookupStages = [
+    {
+      $lookup: {
+        from: "users",
+        localField: "user_id",
+        foreignField: "_id",
+        as: "user_info",
+      },
+    },
+    { $unwind: { path: "$user_info", preserveNullAndEmptyArrays: true } },
+
+    {
+      $lookup: {
+        from: "services",
+        localField: "service_id",
+        foreignField: "_id",
+        as: "service_info",
+      },
+    },
+    { $unwind: { path: "$service_info", preserveNullAndEmptyArrays: true } },
+
+    {
+      $lookup: {
+        from: "technicians",
+        localField: "assigned_to",
+        foreignField: "_id",
+        as: "technician_data",
+      },
+    },
+    { $unwind: { path: "$technician_data", preserveNullAndEmptyArrays: true } },
+  ];
+
+  // -------- Fetch paginated bookings ----------
+  const bookings = await Booking.aggregate([
+    matchStage,
+    ...lookupStages,
+    searchMatch,
+    { $sort: { [sortField]: sortOrder as 1 | -1 } },
+    { $skip: offset },
+    { $limit: limit },
+    {
+      $project: {
+        address: 1,
+        status: 1,
+        createdAt: 1,
+        date: 1,
+        amount: { $toDouble: "$amount" },
+        order_id: 1,
+        bookingId: 1,
+        invoiceId: 1,
+        invoiceUrl: 1,
+        updatedAt: 1,
+        slot: 1,
+        user: {
+          id: { $ifNull: ["$user_info._id", ""] },
+          name: { $ifNull: ["$user_info.name", ""] },
+          phoneNumber: { $ifNull: ["$user_info.phoneNumber", ""] },
+          createdAt: { $ifNull: ["$user_info.createdAt", null] },
+        },
+        service: {
+          id: { $ifNull: ["$service_info._id", ""] },
+          name: { $ifNull: ["$service_info.name", ""] },
+        },
+        technician: { $ifNull: ["$technician_data", {}] },
+      },
+    },
+  ]);
+
+  // -------- Total Count (same filters but no pagination) ----------
+  const totalResult = await Booking.aggregate([
+    matchStage,
+    ...lookupStages,
+    searchMatch,
+    { $count: "total" },
+  ]);
+
+  const totalCount = totalResult.length ? totalResult[0].total : 0;
+
+  return {
+    bookings,
+    totalCount,
+  };
+};
+
 // Service function to add order items to a booking
 export const createOrderItem = async (
   bookingId: string,

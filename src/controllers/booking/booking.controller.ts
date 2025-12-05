@@ -11,6 +11,7 @@ import {
   mobileBookingListService,
   mobileBookingDetailsService,
   mobileBookingSummaryService,
+  userBookingListService,
 } from "../../services/booking/booking.service";
 // import { Booking } from "../../models/booking/booking.model";
 
@@ -174,6 +175,68 @@ export const ListOfBooking = async (req: Request, res: Response) => {
       success: false,
       message: "Internal server error",
       error: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
+
+interface UserQuery {
+  page?: string;
+  limit?: string;
+  search?: string;
+  sortby?: string;
+  orderby?: "asc" | "desc";
+}
+
+export const userBookingList = async (req: Request, res: Response) => {
+  try {
+    // const query = req.query as unknown;
+
+    const query = req.query as UserQuery;
+
+    const page = parseInt(query.page ?? "1");
+    const limit = parseInt(query.limit ?? "10");
+    const search = query.search ?? "";
+
+    const sortField = query.sortby ?? "createdAt";
+    const sortOrder = query.orderby === "desc" ? -1 : 1;
+
+    const userId = req.params.userId;
+
+    if (!userId) {
+      return res.status(200).json({
+        status: false,
+        message: "User ID is required",
+      });
+    }
+
+    const { bookings, totalCount } = await userBookingListService(
+      userId,
+      page,
+      limit,
+      search,
+      sortField,
+      sortOrder,
+    );
+
+    return res.status(200).json({
+      status: true,
+      data: bookings,
+      count: totalCount,
+      pagination: {
+        totalCount,
+        page,
+        limit,
+        totalPages: Math.ceil(totalCount / limit),
+      },
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+    console.error("Error fetching user booking list:", err.message);
+
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error",
+      error: err.message,
     });
   }
 };

@@ -33,6 +33,7 @@ import {
   bookingListValidator,
   createBookingSchema,
   editBookingValidator,
+  userBookingListSchema,
 } from "../../validators/booking/booking.validator";
 import { updateKycSchema } from "../../validators/technician/KYCDoc.valitator";
 import {
@@ -342,6 +343,13 @@ router.get(
   authenticate,
   validateRequest(bookingListValidator),
   bookingController.ListOfBooking,
+);
+
+router.get(
+  "/admin/user/booking/:userId",
+  authenticate,
+  validateRequest(userBookingListSchema.params),
+  bookingController.userBookingList,
 );
 
 router.post(

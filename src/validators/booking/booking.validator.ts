@@ -178,3 +178,32 @@ export const addOrderItemValidator = Joi.object({
       "any.required": "Order items are required",
     }),
 });
+
+export const userBookingListSchema = {
+  params: Joi.object({
+    userId: Joi.string().required().messages({
+      "string.empty": "User ID is required",
+      "any.required": "User ID is required",
+    }),
+  }),
+
+  query: Joi.object({
+    page: Joi.number().integer().min(1).default(1).messages({
+      "number.base": "Page must be a number",
+      "number.min": "Page must be at least 1",
+    }),
+
+    limit: Joi.number().integer().min(1).default(10).messages({
+      "number.base": "Limit must be a number",
+      "number.min": "Limit must be at least 1",
+    }),
+
+    search: Joi.string().allow("").default(""),
+
+    sortby: Joi.string()
+      .valid("createdAt", "date", "status", "updatedAt", "amount")
+      .default("createdAt"),
+
+    orderby: Joi.string().valid("asc", "desc").default("desc"),
+  }),
+};
