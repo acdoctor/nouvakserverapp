@@ -9,6 +9,7 @@ import {
   technicianAssign,
   updateBookingStatus,
   mobileBookingListService,
+  mobileBookingDetailsService,
 } from "../../services/booking/booking.service";
 // import { Booking } from "../../models/booking/booking.model";
 
@@ -335,6 +336,34 @@ export const mobileBookingList = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error",
+    });
+  }
+};
+
+export const mobileBookingDetails = async (req: Request, res: Response) => {
+  try {
+    const { bookingId } = req.params as unknown as { bookingId: string };
+
+    if (!bookingId) {
+      return res.status(400).json({
+        success: false,
+        message: "Booking ID is required",
+      });
+    }
+
+    const data = await mobileBookingDetailsService(bookingId);
+
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Internal server error";
+
+    return res.status(500).json({
+      success: false,
+      message,
     });
   }
 };

@@ -711,3 +711,132 @@ export const mobileBookingListService = async (
     total,
   };
 };
+
+export const mobileBookingDetailsService = async (bookingId: string) => {
+  if (!Types.ObjectId.isValid(bookingId)) {
+    throw new Error("INVALID_BOOKING_ID");
+  }
+
+  const details = await Booking.aggregate([
+    { $match: { _id: new Types.ObjectId(bookingId) } },
+    { $unwind: { path: "$serviceDetails", preserveNullAndEmptyArrays: true } },
+    {
+      $lookup: {
+        from: "services",
+        localField: "serviceDetails.service_id",
+        foreignField: "_id",
+        as: "serviceDetails.serviceData",
+      },
+    },
+    {
+      $unwind: {
+        path: "$serviceDetails.serviceData",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "technicians",
+        localField: "assigned_to",
+        foreignField: "_id",
+        as: "technician_data",
+      },
+    },
+    { $unwind: { path: "$technician_data", preserveNullAndEmptyArrays: true } },
+    {
+      $group: {
+        _id: {
+          bookingId: "$_id",
+          date: "$date",
+          status: "$status",
+          slot: "$slot",
+          invoiceUrl: "$invoiceUrl",
+          addressDetails: "$addressDetails",
+          order_id: "$order_id",
+          couponDetails: "$couponDetails",
+          technician_data: "$technician_data",
+          service_id: "$serviceDetails.service_id",
+          service_name: "$serviceDetails.serviceData.name",
+        },
+        technician_data: { $first: "$technician_data" },
+        addressDetails: { $first: "$addressDetails" },
+        bookingId: { $first: "$bookingId" },
+        order_id: { $first: "$order_id" },
+        couponDetails: { $first: "$couponDetails" },
+        invoiceUrl: { $first: "$invoiceUrl" },
+        status: { $first: "$status" },
+        date: { $first: "$date" },
+        slot: { $first: "$slot" },
+        amount: { $first: "$amount" },
+        isCouponApply: { $first: "$isCouponApply" },
+        serviceDetails: {
+          $push: {
+            serviceType: "$serviceDetails.serviceType",
+            quantity: "$serviceDetails.quantity",
+            acType: "$serviceDetails.acType",
+            otherService: { $ifNull: ["$serviceDetails.otherService", ""] },
+            place: "$serviceDetails.place",
+            comment: "$serviceDetails.comment",
+            services: "$serviceDetails.services",
+            service_name: "$serviceDetails.serviceData.name",
+          },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: "$_id.bookingId",
+        bookingId: { $first: "$bookingId" },
+        status: { $first: "$status" },
+        amount: { $first: "$amount" },
+        isCouponApply: { $first: "$isCouponApply" },
+        date: { $first: "$date" },
+        invoiceUrl: { $first: "$invoiceUrl" },
+        addressDetails: { $first: "$addressDetails" },
+        order_id: { $first: "$order_id" },
+        couponDetails: { $first: "$couponDetails" },
+        technician_data: { $first: "$technician_data" },
+        slot: { $first: "$slot" },
+        serviceDetails: {
+          $push: {
+            service_name: "$_id.service_name",
+            service_id: "$_id.service_id",
+            as_details: "$serviceDetails",
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        bookingId: 1,
+        status: { $ifNull: ["$status", ""] },
+        date: { $ifNull: ["$date", ""] },
+        amount: { $ifNull: [{ $toDouble: "$amount" }, 0] },
+        isCouponApply: { $ifNull: ["$isCouponApply", "2"] },
+        invoiceUrl: { $ifNull: ["$invoiceUrl", ""] },
+        addressDetails: { $ifNull: ["$addressDetails", ""] },
+        order_id: { $ifNull: ["$order_id", ""] },
+        couponDetails: { $ifNull: ["$couponDetails", {}] },
+        technician_data: {
+          _id: 1,
+          name: 1,
+          phoneNumber: 1,
+        },
+        slot: { $ifNull: ["$slot", ""] },
+        serviceDetails: 1,
+      },
+    },
+  ]);
+
+  if (!details || details.length === 0) {
+    throw new Error("BOOKING_NOT_FOUND");
+  }
+
+  const result = details[0];
+  if (!result.technician_data) {
+    result.technician_data = {};
+  }
+
+  return result;
+};
