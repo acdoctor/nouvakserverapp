@@ -36,7 +36,6 @@ interface ICreateBookingInput {
   name: string;
 }
 
-// Return type (simplified)
 interface IBookingResponse {
   _id: Types.ObjectId;
   bookingId: string;
@@ -298,7 +297,6 @@ export const updateBooking = async ({
 };
 
 // Service function to get list of bookings with filters, pagination, and sorting
-
 export const fetchBookingList = async (query: BookingQuery) => {
   const page = parseInt(query.page || "1", 10);
   const limit = parseInt(query.limit || "10", 10);
@@ -956,7 +954,7 @@ export const mobileBookingSummaryService = async (bookingId: string) => {
     throw new Error("INVALID_BOOKING_ID");
   }
 
-  // 1️⃣ Fetch coupon + discount summary
+  // Fetch coupon + discount summary
   const summary = await Booking.aggregate([
     {
       $match: { _id: new Types.ObjectId(bookingId) },
@@ -976,7 +974,7 @@ export const mobileBookingSummaryService = async (bookingId: string) => {
 
   const summaryData = summary.length ? summary[0] : {};
 
-  // 2️⃣ Fetch order items for calculating total amount
+  // Fetch order items for calculating total amount
   const items = await Booking.aggregate([
     { $match: { _id: new Types.ObjectId(bookingId) } },
     { $unwind: "$orderItems" },
@@ -990,7 +988,7 @@ export const mobileBookingSummaryService = async (bookingId: string) => {
     },
   ]);
 
-  // 3️⃣ Total calculation
+  // Total calculation
   const totalPrice = calculateTotal(items);
 
   return {
