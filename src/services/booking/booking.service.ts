@@ -840,3 +840,52 @@ export const mobileBookingDetailsService = async (bookingId: string) => {
 
   return result;
 };
+
+export const mobileBookingSummaryService = async (bookingId: string) => {
+  if (!Types.ObjectId.isValid(bookingId)) {
+    throw new Error("INVALID_BOOKING_ID");
+  }
+
+  // 1️⃣ Fetch coupon + discount summary
+  const summary = await Booking.aggregate([
+    {
+      $match: { _id: new Types.ObjectId(bookingId) },
+    },
+    {
+      $project: {
+        originalTotal: { $ifNull: ["$originalTotal", ""] },
+        discountAmount: { $ifNull: ["$discountAmount", ""] },
+        discountedTotal: { $ifNull: ["$discountedTotal", ""] },
+        couponDetails: { $ifNull: ["$couponDetails", {}] },
+        isCouponApply: { $ifNull: ["$isCouponApply", 0] },
+        discount: { $ifNull: ["$discount", ""] },
+        _id: 0,
+      },
+    },
+  ]);
+
+  const summaryData = summary.length ? summary[0] : {};
+
+  // 2️⃣ Fetch order items for calculating total amount
+  const items = await Booking.aggregate([
+    { $match: { _id: new Types.ObjectId(bookingId) } },
+    { $unwind: "$orderItems" },
+    {
+      $project: {
+        _id: "$orderItems._id",
+        item: "$orderItems.item",
+        quantity: "$orderItems.quantity",
+        price: { $toDouble: "$orderItems.price" },
+      },
+    },
+  ]);
+
+  // 3️⃣ Total calculation
+  const totalPrice = calculateTotal(items);
+
+  return {
+    orderItem: items,
+    totalPrice,
+    ...summaryData,
+  };
+};

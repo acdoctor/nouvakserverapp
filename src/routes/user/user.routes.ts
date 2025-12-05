@@ -131,6 +131,12 @@ router.get(
   bookingController.mobileBookingDetails,
 );
 
+router.get(
+  "/user/booking/summary/:bookingId",
+  authenticate,
+  bookingController.mobileBookingSummary,
+);
+
 // Brand List for User
 router.post(
   "/user/brand/list",
