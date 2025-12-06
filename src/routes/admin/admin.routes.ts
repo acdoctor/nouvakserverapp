@@ -171,7 +171,7 @@ router.get("/admin/user/profile/:id", authenticate, userController.getUserById);
 router.get(
   "/admin/user/addresses-list/:userId",
   authenticate,
-  userController.userAddressesList,
+  userController.userAddresses,
 );
 router.put(
   "/admin/user/update/:id",
