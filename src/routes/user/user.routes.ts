@@ -56,7 +56,7 @@ router.put(
 router.delete("/user/delete/:id", userController.deleteUser);
 
 // User Addresses
-router.get("/user/addresses/:userId", userController.userAddresses);
+router.get("/user/addresses/:userId", userController.userActiveAddresses);
 
 router.post(
   "/user/address/add-edit/:addressId",
