@@ -259,7 +259,7 @@ export const deleteUserAddressService = async (
   const address = await Address.findOne({
     _id: addressId,
     userId,
-    isActive: 1,
+    isActive: true,
   });
 
   if (!address) {
@@ -269,7 +269,7 @@ export const deleteUserAddressService = async (
     };
   }
 
-  await Address.updateOne({ _id: addressId }, { isActive: 0 });
+  await Address.updateOne({ _id: addressId }, { isActive: false });
 
   return {
     statusCode: 200,

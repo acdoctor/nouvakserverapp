@@ -9,7 +9,7 @@ export interface IAddress extends Document {
   zipcode: string;
   saveAs?: string;
   landmark?: string;
-  isActive?: number;
+  isActive?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -28,7 +28,7 @@ const addressSchema = new Schema<IAddress>(
     zipcode: { type: String, required: true },
     saveAs: { type: String, trim: true, default: "" },
     landmark: { type: String, trim: true, default: "" },
-    isActive: { type: Number, default: 1 },
+    isActive: { type: Boolean, default: true },
   },
   { timestamps: true },
 );
