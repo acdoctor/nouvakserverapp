@@ -90,6 +90,28 @@ export const getUserAddresses = async (userId: string) => {
   return addresses;
 };
 
+export const getUserActiveAddresses = async (userId: string) => {
+  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+    throw new Error("Invalid or missing userId");
+  }
+
+  const user = await User.findOne({ _id: new Types.ObjectId(userId) });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const addresses = await Address.find({ userId, isActive: true })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  if (!addresses || addresses.length === 0) {
+    throw new Error("No addresses found for this user");
+  }
+
+  return addresses;
+};
+
 export const toggleUserActiveStatus = async (userId: string) => {
   if (!userId) throw new Error("User ID is required");
 
