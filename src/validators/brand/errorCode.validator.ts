@@ -28,3 +28,9 @@ export const createEditErrorCodeSchema = Joi.object({
     .valid("INVERTOR", "NON_INVERTOR")
     .default("NON_INVERTOR"),
 });
+
+export const errorCodeListSchema = Joi.object({
+  brandId: Joi.string().required(),
+  errorCode: Joi.string().required(),
+  acType: Joi.string().valid("INVERTOR", "NON_INVERTOR").required(),
+});

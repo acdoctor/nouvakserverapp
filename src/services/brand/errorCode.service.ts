@@ -1,4 +1,5 @@
 import { Brand } from "../../models/brand/brand.model";
+import { Types } from "mongoose";
 
 interface IUpdateOrCreateErrorCodeInput {
   brandId: string;
@@ -9,6 +10,12 @@ interface IUpdateOrCreateErrorCodeInput {
   solution: string[];
   category: "INVERTOR" | "NON_INVERTOR";
   description: string;
+}
+
+export interface IErrorCodeListRequest {
+  brandId: string;
+  errorCode: string;
+  acType: "INVERTOR" | "NON_INVERTOR";
 }
 
 export const createOrUpdateErrorCodeService = async (
@@ -76,4 +83,27 @@ export const createOrUpdateErrorCodeService = async (
     success: true,
     message: "Error code saved successfully",
   };
+};
+
+export const errorCodeListService = async (
+  payload: IErrorCodeListRequest,
+): Promise<unknown> => {
+  const { brandId, errorCode, acType } = payload;
+
+  const brand = await Brand.findOne(
+    {
+      _id: new Types.ObjectId(brandId),
+      "globalErrorCodes.code": errorCode,
+      "globalErrorCodes.acType": acType,
+    },
+    {
+      globalErrorCodes: { $elemMatch: { code: errorCode } },
+    },
+  );
+
+  if (!brand) {
+    return null;
+  }
+
+  return brand.globalErrorCodes[0];
 };

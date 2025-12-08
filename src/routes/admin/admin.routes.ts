@@ -72,7 +72,10 @@ import {
   couponListQuerySchema,
   couponSchema,
 } from "../../validators/coupon/coupon.validator";
-import { createEditErrorCodeSchema } from "../../validators/brand/errorCode.validator";
+import {
+  createEditErrorCodeSchema,
+  errorCodeListSchema,
+} from "../../validators/brand/errorCode.validator";
 
 const router = Router();
 
@@ -517,6 +520,13 @@ router.post(
   authenticate,
   validateRequest(createEditErrorCodeSchema),
   errorCodeController.adminCreateEditErrorCode,
+);
+
+router.get(
+  "/admin/error-code/list",
+  authenticate,
+  validateRequest(errorCodeListSchema),
+  errorCodeController.errorCodeList,
 );
 
 export default router;
