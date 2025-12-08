@@ -24,6 +24,7 @@ import { createConsultancySchema } from "../../validators/consultancy/consultanc
 import { userBrandListQuerySchema } from "../../validators/brand/brand.validator";
 import { applyCouponSchema } from "../../validators/coupon/coupon.validator";
 import { bannerValidatorSchema } from "../../validators/homeBanner/homeBanner.validator";
+import { errorCodeListSchema } from "../../validators/brand/errorCode.validator";
 
 const router = Router();
 
