@@ -34,3 +34,17 @@ export const errorCodeListSchema = Joi.object({
   errorCode: Joi.string().required(),
   acType: Joi.string().valid("INVERTOR", "NON_INVERTOR").required(),
 });
+
+export const adminErrorCodeListSchema = Joi.object({
+  brandId: Joi.string().required(),
+
+  page: Joi.number().integer().min(1).optional(),
+  limit: Joi.number().integer().min(1).optional(),
+
+  search: Joi.string().allow("").optional(),
+
+  category: Joi.string().valid("INVERTOR", "NON_INVERTOR").optional(),
+
+  sortby: Joi.string().optional(),
+  orderby: Joi.string().valid("asc", "desc").optional(),
+});

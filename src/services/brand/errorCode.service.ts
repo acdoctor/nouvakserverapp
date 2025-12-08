@@ -17,6 +17,18 @@ export interface IErrorCodeListRequest {
   errorCode: string;
   acType: "INVERTOR" | "NON_INVERTOR";
 }
+export interface AdminErrorCodeListParams {
+  brandId: string;
+}
+
+export interface AdminErrorCodeListQuery {
+  page: unknown;
+  limit: unknown;
+  search: unknown;
+  category: unknown;
+  sortby: unknown;
+  orderby: unknown;
+}
 
 export const createOrUpdateErrorCodeService = async (
   payload: IUpdateOrCreateErrorCodeInput,
@@ -106,4 +118,71 @@ export const errorCodeListService = async (
   }
 
   return brand.globalErrorCodes[0];
+};
+
+export const adminErrorCodeListService = async (
+  params: AdminErrorCodeListParams,
+  query: AdminErrorCodeListQuery,
+) => {
+  const brandId = params.brandId;
+
+  const page = parseInt((query.page as string) || "1", 10);
+  const limit = parseInt((query.limit as string) || "10", 10);
+  const search = (query.search as string)?.trim() || "";
+  const category = (query.category as string)?.trim() || "";
+  const sortField = (query.sortby as string) || "createdAt";
+  const sortOrder = query.orderby && query.orderby === "desc" ? -1 : 1;
+
+  const matchConditions: Record<string, unknown> = {
+    $and: [{ _id: new Types.ObjectId(brandId) }],
+  };
+
+  if (search) {
+    (matchConditions.$and as unknown[]).push({
+      $or: [
+        { name: { $regex: search, $options: "i" } },
+        { "globalErrorCodes.code": { $regex: search, $options: "i" } },
+        { "globalErrorCodes.models": { $regex: search, $options: "i" } },
+        { "globalErrorCodes.acType": { $regex: search, $options: "i" } },
+      ],
+    });
+  }
+
+  if (category) {
+    (matchConditions.$and as unknown[]).push({
+      "globalErrorCodes.category": category,
+    });
+  }
+
+  const errorCodeList = await Brand.aggregate([
+    { $unwind: "$globalErrorCodes" },
+    { $match: matchConditions },
+    {
+      $project: {
+        _id: "$globalErrorCodes._id",
+        code: "$globalErrorCodes.code",
+        acType: "$globalErrorCodes.acType",
+        models: "$globalErrorCodes.models",
+        createdAt: "$globalErrorCodes.createdAt",
+        solution: "$globalErrorCodes.solution",
+        category: "$globalErrorCodes.category",
+        description: "$globalErrorCodes.description",
+      },
+    },
+    { $sort: { [sortField]: sortOrder } },
+    { $skip: (page - 1) * limit },
+    { $limit: limit },
+  ]);
+
+  const totalRecords = await Brand.aggregate([
+    { $match: { _id: new Types.ObjectId(brandId) } },
+    { $unwind: "$globalErrorCodes" },
+    { $match: matchConditions },
+    { $count: "count" },
+  ]);
+
+  return {
+    list: errorCodeList,
+    total: totalRecords.length ? totalRecords[0].count : 0,
+  };
 };

@@ -523,10 +523,10 @@ router.post(
 );
 
 router.get(
-  "/admin/error-code/list",
+  "/admin/error-code/list/:brandId",
   authenticate,
   validateRequest(errorCodeListSchema),
-  errorCodeController.errorCodeList,
+  errorCodeController.adminErrorCodeList,
 );
 
 export default router;

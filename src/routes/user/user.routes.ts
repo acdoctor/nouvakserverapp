@@ -9,6 +9,7 @@ import * as partnerController from "../../controllers/partner/partner.controller
 import * as couponController from "../../controllers/coupon/coupon.controller";
 import * as serviceController from "../../controllers/service/service.controller";
 import * as bookingController from "../../controllers/booking/booking.controller";
+import * as errorCodeController from "../../controllers/brand/errorCode.controller";
 
 import { authenticate } from "../../middlewares/user/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
@@ -165,6 +166,14 @@ router.get(
   "/admin/service/mobile-list",
   authenticate,
   serviceController.mobileServiceList,
+);
+
+// ErrorCode
+router.get(
+  "/user/error-code/list",
+  authenticate,
+  validateRequest(errorCodeListSchema),
+  errorCodeController.errorCodeList,
 );
 
 export default router;

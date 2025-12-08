@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import {
+  adminErrorCodeListService,
   createOrUpdateErrorCodeService,
   errorCodeListService,
 } from "../../services/brand/errorCode.service";
@@ -78,6 +79,51 @@ export const errorCodeList = async (req: Request, res: Response) => {
     return res.status(500).json({
       status: false,
       message: "Internal server error",
+    });
+  }
+};
+
+export const adminErrorCodeList = async (req: Request, res: Response) => {
+  try {
+    const { brandId } = req.params;
+
+    if (!brandId) {
+      return res.status(400).json({
+        status: false,
+        message: "Brand ID is required",
+      });
+    }
+
+    const query = {
+      page: parseInt((req.query.page as string) || "1", 10),
+      limit: parseInt((req.query.limit as string) || "10", 10),
+      search: (req.query.search as string) || "",
+      category: (req.query.category as string) || "",
+      sortby: (req.query.sortby as string) || "",
+      orderby: (req.query.orderby as string) || "asc",
+    };
+    const result = await adminErrorCodeListService({ brandId }, query);
+
+    return res.status(200).json({
+      status: true,
+      data: result.list,
+      count: result.total,
+      pagination: {
+        page: parseInt((req.query.page as string) || "1", 10),
+        limit: parseInt((req.query.limit as string) || "10", 10),
+        totalRecords: result.total,
+        totalPages: Math.ceil(
+          result.total / parseInt((req.query.limit as string) || "10", 10),
+        ),
+      },
+    });
+  } catch (error) {
+    console.error("Error listing error codes:", error);
+
+    return res.status(500).json({
+      status: false,
+      message: "Failed to retrieve error code list",
+      error: (error as Error).message,
     });
   }
 };
