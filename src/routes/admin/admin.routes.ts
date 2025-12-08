@@ -378,9 +378,9 @@ router.post(
 );
 
 // Leads controller routes
-router.get("/admin/leads/list", authenticate, leadsController.getAdminLeadList);
+router.get("/admin/leads", authenticate, leadsController.getAdminLeadList);
 router.get(
-  "/admin/leads/:leadId",
+  "/admin/lead/:leadId",
   authenticate,
   leadsController.getAdminLeadDetails,
 );
