@@ -15,6 +15,7 @@ import * as brandController from "../../controllers/brand/brand.controller";
 import * as homeBannerController from "../../controllers/homeBanner/homeBanner.controller";
 import * as partnerController from "../../controllers/partner/partner.controller";
 import * as couponController from "../../controllers/coupon/coupon.controller";
+import * as errorCodeController from "../../controllers/brand/errorCode.controller";
 import { authenticate } from "../../middlewares/admin/auth";
 import { authSchema } from "../../validators/auth/auth.validator";
 import { validateRequest } from "../../middlewares/request/validateRequest";
@@ -71,6 +72,7 @@ import {
   couponListQuerySchema,
   couponSchema,
 } from "../../validators/coupon/coupon.validator";
+import { createEditErrorCodeSchema } from "../../validators/brand/errorCode.validator";
 
 const router = Router();
 
@@ -507,6 +509,14 @@ router.put(
   "/admin/coupon/active-inactive/:couponId",
   authenticate,
   couponController.couponActiveInactive,
+);
+
+// ErrorCode
+router.post(
+  "/admin/error-code/createEdit",
+  authenticate,
+  validateRequest(createEditErrorCodeSchema),
+  errorCodeController.adminCreateEditErrorCode,
 );
 
 export default router;
