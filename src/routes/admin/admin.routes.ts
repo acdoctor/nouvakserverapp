@@ -421,7 +421,7 @@ router.post(
 );
 
 router.get(
-  "/admin/brand/list",
+  "/admin/brands",
   authenticate,
   validateRequest(brandListQuerySchema),
   brandController.adminBrandList,
