@@ -275,7 +275,16 @@ export const adminExcelErrorCodeUploadService = async (fileBuffer: Buffer) => {
       }
     });
 
-    rows.push(rowData as ParsedExcelRow);
+    // rows.push(rowData as ParsedExcel);
+    rows.push({
+      brandname: rowData["brandname"]?.toString() ?? "",
+      modelname: rowData["modelname"]?.toString() ?? "",
+      actype: rowData["actype"]?.toString() ?? "",
+      ["error code"]: rowData["error code"]?.toString() ?? "",
+      description: rowData["description"]?.toString() ?? "",
+      solution: rowData["solution"]?.toString() ?? "",
+      category: rowData["category"]?.toString() ?? "",
+    });
   });
 
   if (!rows.length) {
