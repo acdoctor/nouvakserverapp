@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   adminErrorCodeListService,
+  adminExcelErrorCodeUploadService,
   createOrUpdateErrorCodeService,
   errorCodeListService,
 } from "../../services/brand/errorCode.service";
@@ -124,6 +125,38 @@ export const adminErrorCodeList = async (req: Request, res: Response) => {
       status: false,
       message: "Failed to retrieve error code list",
       error: (error as Error).message,
+    });
+  }
+};
+
+export const adminExcelErrorCodeUpload = async (
+  req: Request<unknown, unknown, unknown, unknown>,
+  res: Response,
+) => {
+  try {
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({
+        status: false,
+        message: "No file uploaded",
+      });
+    }
+
+    const result = await adminExcelErrorCodeUploadService(file.buffer);
+
+    if (!result.status) {
+      return res.status(400).json(result);
+    }
+
+    return res.status(200).json(result);
+  } catch (error: unknown) {
+    const err = error as Error;
+
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error",
+      error: err.message,
     });
   }
 };

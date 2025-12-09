@@ -1,5 +1,6 @@
 import { Brand } from "../../models/brand/brand.model";
 import { Types } from "mongoose";
+import ExcelJS from "exceljs";
 
 interface IUpdateOrCreateErrorCodeInput {
   brandId: string;
@@ -29,15 +30,17 @@ export interface AdminErrorCodeListQuery {
   sortby: unknown;
   orderby: unknown;
 }
-interface ExcelRow {
+interface ParsedExcelRow {
   brandname: string;
   modelname: string;
-  acType: string;
+  actype: string;
   ["error code"]: string;
   description?: string;
   solution?: string;
   category?: string;
 }
+
+type ParsedExcel = Record<string, string | number | boolean | null | undefined>;
 
 export const createOrUpdateErrorCodeService = async (
   payload: IUpdateOrCreateErrorCodeInput,
@@ -196,7 +199,6 @@ export const adminErrorCodeListService = async (
   };
 };
 
-import xlsx from "xlsx";
 export const adminExcelErrorCodeUploadService = async (fileBuffer: Buffer) => {
   if (!fileBuffer) {
     return {
@@ -205,50 +207,49 @@ export const adminExcelErrorCodeUploadService = async (fileBuffer: Buffer) => {
     };
   }
 
-  const workbook = xlsx.read(fileBuffer, { type: "buffer" });
-  const sheetName = workbook.SheetNames[0];
+  const workbook = new ExcelJS.Workbook();
 
-  if (!sheetName) {
+  try {
+    // Load buffer directly — no Uint8Array conversion!
+    await workbook.xlsx.load(fileBuffer);
+  } catch {
+    return {
+      status: false,
+      message: "Invalid or corrupted Excel file",
+    };
+  }
+
+  const sheet = workbook.worksheets[0];
+
+  if (!sheet) {
     return {
       status: false,
       message: "No sheets found in the workbook",
     };
   }
 
-  const sheet = workbook.Sheets[sheetName];
-
-  if (!sheet) {
-    return {
-      status: false,
-      message: "Sheet is empty or invalid",
-    };
-  }
-
-  const data: ExcelRow[] = xlsx.utils.sheet_to_json(sheet);
-
-  if (!data.length) {
-    return {
-      status: false,
-      message: "Uploaded file is empty",
-    };
-  }
+  // ---------- Extract Headers ----------
+  const headerRow = sheet.getRow(1);
+  const headers = (headerRow.values as (string | number | undefined)[])
+    .slice(1)
+    .map((h) => h?.toString().trim().toLowerCase());
 
   const expectedColumns = [
     "brandname",
     "modelname",
-    "acType",
+    "actype",
     "error code",
     "description",
     "solution",
     "category",
   ];
 
-  const firstRow = data[0]!;
-  const hasAllColumns = expectedColumns.every((col) => col in firstRow);
+  // Validate headers
+  const missingColumns = expectedColumns.filter(
+    (col) => !headers.includes(col.toLowerCase()),
+  );
 
-  if (!hasAllColumns) {
-    const missingColumns = expectedColumns.filter((col) => !(col in firstRow));
-
+  if (missingColumns.length > 0) {
     return {
       status: false,
       message: "Invalid column names",
@@ -256,11 +257,40 @@ export const adminExcelErrorCodeUploadService = async (fileBuffer: Buffer) => {
     };
   }
 
-  for (const row of data) {
+  // ---------- Parse rows ----------
+  const rows: ParsedExcelRow[] = [];
+
+  sheet.eachRow((row, rowNumber) => {
+    if (rowNumber === 1) return;
+
+    const values = row.values as (string | number | null | undefined)[];
+
+    const rowData: ParsedExcel = {};
+
+    values.slice(1).forEach((cellValue, index) => {
+      const key = headers[index];
+
+      if (key) {
+        rowData[key] = cellValue?.toString().trim();
+      }
+    });
+
+    rows.push(rowData as ParsedExcelRow);
+  });
+
+  if (!rows.length) {
+    return {
+      status: false,
+      message: "Uploaded file is empty",
+    };
+  }
+
+  // ---------- Process each row ----------
+  for (const row of rows) {
     const {
       brandname,
       modelname,
-      acType,
+      actype,
       ["error code"]: errorCode,
       description,
       solution,
@@ -270,7 +300,7 @@ export const adminExcelErrorCodeUploadService = async (fileBuffer: Buffer) => {
     const errorCodeObj = {
       code: errorCode || "",
       models: modelname || "",
-      acType: acType || "",
+      acType: actype || "",
       solution: solution ? solution.split(",").map((i) => i.trim()) : [],
       description: description || "",
       category: category || "NON_INVERTOR",
@@ -286,6 +316,7 @@ export const adminExcelErrorCodeUploadService = async (fileBuffer: Buffer) => {
       continue;
     }
 
+    // Check duplicate
     const matched = await Brand.aggregate([
       {
         $match: {
@@ -301,7 +332,6 @@ export const adminExcelErrorCodeUploadService = async (fileBuffer: Buffer) => {
       {
         $project: {
           _id: 0,
-          name: 1,
           matchedErrorCode: {
             $filter: {
               input: "$globalErrorCodes",
@@ -319,7 +349,7 @@ export const adminExcelErrorCodeUploadService = async (fileBuffer: Buffer) => {
     ]);
 
     if (matched.length > 0) {
-      const existing = matched[0]?.matchedErrorCode[0];
+      const existing = matched[0].matchedErrorCode[0];
 
       await Brand.updateOne(
         {
@@ -336,9 +366,10 @@ export const adminExcelErrorCodeUploadService = async (fileBuffer: Buffer) => {
             "globalErrorCodes.$.code": errorCodeObj.code || existing.code,
             "globalErrorCodes.$.models": errorCodeObj.models || existing.models,
             "globalErrorCodes.$.acType": errorCodeObj.acType || existing.acType,
-            "globalErrorCodes.$.solution": errorCodeObj.solution.length
-              ? errorCodeObj.solution
-              : existing.solution,
+            "globalErrorCodes.$.solution":
+              errorCodeObj.solution.length > 0
+                ? errorCodeObj.solution
+                : existing.solution,
             "globalErrorCodes.$.description":
               errorCodeObj.description || existing.description,
             "globalErrorCodes.$.category":

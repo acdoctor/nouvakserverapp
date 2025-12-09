@@ -529,4 +529,9 @@ router.get(
   errorCodeController.adminErrorCodeList,
 );
 
+router.post(
+  "/admin/error-code/excel/upload",
+  authenticate,
+  errorCodeController.adminExcelErrorCodeUpload,
+);
 export default router;

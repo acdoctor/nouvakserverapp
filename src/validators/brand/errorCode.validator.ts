@@ -48,3 +48,8 @@ export const adminErrorCodeListSchema = Joi.object({
   sortby: Joi.string().optional(),
   orderby: Joi.string().valid("asc", "desc").optional(),
 });
+
+export const adminExcelErrorCodeUploadSchema = Joi.object({
+  // If you want to pass additional fields with the Excel file,
+  // declare them here. For now only "file" is required.
+}).unknown(true); // allow multipart form-data fields
