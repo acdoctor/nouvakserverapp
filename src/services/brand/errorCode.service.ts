@@ -29,6 +29,15 @@ export interface AdminErrorCodeListQuery {
   sortby: unknown;
   orderby: unknown;
 }
+interface ExcelRow {
+  brandname: string;
+  modelname: string;
+  acType: string;
+  ["error code"]: string;
+  description?: string;
+  solution?: string;
+  category?: string;
+}
 
 export const createOrUpdateErrorCodeService = async (
   payload: IUpdateOrCreateErrorCodeInput,
@@ -184,5 +193,169 @@ export const adminErrorCodeListService = async (
   return {
     list: errorCodeList,
     total: totalRecords.length ? totalRecords[0].count : 0,
+  };
+};
+
+import xlsx from "xlsx";
+export const adminExcelErrorCodeUploadService = async (fileBuffer: Buffer) => {
+  if (!fileBuffer) {
+    return {
+      status: false,
+      message: "No file provided",
+    };
+  }
+
+  const workbook = xlsx.read(fileBuffer, { type: "buffer" });
+  const sheetName = workbook.SheetNames[0];
+
+  if (!sheetName) {
+    return {
+      status: false,
+      message: "No sheets found in the workbook",
+    };
+  }
+
+  const sheet = workbook.Sheets[sheetName];
+
+  if (!sheet) {
+    return {
+      status: false,
+      message: "Sheet is empty or invalid",
+    };
+  }
+
+  const data: ExcelRow[] = xlsx.utils.sheet_to_json(sheet);
+
+  if (!data.length) {
+    return {
+      status: false,
+      message: "Uploaded file is empty",
+    };
+  }
+
+  const expectedColumns = [
+    "brandname",
+    "modelname",
+    "acType",
+    "error code",
+    "description",
+    "solution",
+    "category",
+  ];
+
+  const firstRow = data[0]!;
+  const hasAllColumns = expectedColumns.every((col) => col in firstRow);
+
+  if (!hasAllColumns) {
+    const missingColumns = expectedColumns.filter((col) => !(col in firstRow));
+
+    return {
+      status: false,
+      message: "Invalid column names",
+      missingColumns,
+    };
+  }
+
+  for (const row of data) {
+    const {
+      brandname,
+      modelname,
+      acType,
+      ["error code"]: errorCode,
+      description,
+      solution,
+      category,
+    } = row;
+
+    const errorCodeObj = {
+      code: errorCode || "",
+      models: modelname || "",
+      acType: acType || "",
+      solution: solution ? solution.split(",").map((i) => i.trim()) : [],
+      description: description || "",
+      category: category || "NON_INVERTOR",
+    };
+
+    const brand = await Brand.findOne({ name: brandname });
+
+    if (!brand) {
+      await Brand.create({
+        name: brandname,
+        globalErrorCodes: [errorCodeObj],
+      });
+      continue;
+    }
+
+    const matched = await Brand.aggregate([
+      {
+        $match: {
+          name: brandname,
+          globalErrorCodes: {
+            $elemMatch: {
+              code: errorCode,
+              models: modelname,
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          name: 1,
+          matchedErrorCode: {
+            $filter: {
+              input: "$globalErrorCodes",
+              as: "err",
+              cond: {
+                $and: [
+                  { $eq: ["$$err.code", errorCode] },
+                  { $eq: ["$$err.models", modelname] },
+                ],
+              },
+            },
+          },
+        },
+      },
+    ]);
+
+    if (matched.length > 0) {
+      const existing = matched[0]?.matchedErrorCode[0];
+
+      await Brand.updateOne(
+        {
+          name: brandname,
+          globalErrorCodes: {
+            $elemMatch: {
+              code: errorCode,
+              models: modelname,
+            },
+          },
+        },
+        {
+          $set: {
+            "globalErrorCodes.$.code": errorCodeObj.code || existing.code,
+            "globalErrorCodes.$.models": errorCodeObj.models || existing.models,
+            "globalErrorCodes.$.acType": errorCodeObj.acType || existing.acType,
+            "globalErrorCodes.$.solution": errorCodeObj.solution.length
+              ? errorCodeObj.solution
+              : existing.solution,
+            "globalErrorCodes.$.description":
+              errorCodeObj.description || existing.description,
+            "globalErrorCodes.$.category":
+              errorCodeObj.category || existing.category,
+          },
+        },
+      );
+    } else {
+      await Brand.updateOne(
+        { name: brandname },
+        { $push: { globalErrorCodes: errorCodeObj } },
+      );
+    }
+  }
+
+  return {
+    status: true,
+    message: "File processed successfully",
   };
 };
