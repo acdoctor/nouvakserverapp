@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as adminController from "../../controllers/admin/admin.controller";
+import * as promoNotificationController from "../../controllers/admin/promoNotification.controller";
 import * as otpController from "../../controllers/admin/otp.controller";
 import * as authController from "../../controllers/admin/auth.controller";
 import * as technicianController from "../../controllers/technician/technician.controller";
@@ -535,5 +536,12 @@ router.post(
   authenticate,
   upload.single("file"),
   errorCodeController.adminExcelErrorCodeUpload,
+);
+
+// promo notification
+router.post(
+  "/admin/promotion-notification",
+  authenticate,
+  promoNotificationController.sendPromoNotification,
 );
 export default router;
