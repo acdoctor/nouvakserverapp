@@ -211,7 +211,7 @@ export const adminExcelErrorCodeUploadService = async (fileBuffer: Buffer) => {
 
   try {
     // Load buffer directly — no Uint8Array conversion!
-    await workbook.xlsx.load(fileBuffer);
+    // await workbook.xlsx.load(fileBuffer);
   } catch {
     return {
       status: false,

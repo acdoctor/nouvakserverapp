@@ -76,6 +76,7 @@ import {
   createEditErrorCodeSchema,
   errorCodeListSchema,
 } from "../../validators/brand/errorCode.validator";
+import { upload } from "../../middlewares/fileHandler/fileHandler";
 
 const router = Router();
 
@@ -532,6 +533,7 @@ router.get(
 router.post(
   "/admin/error-code/excel/upload",
   authenticate,
+  upload.single("file"),
   errorCodeController.adminExcelErrorCodeUpload,
 );
 export default router;
