@@ -550,4 +550,5 @@ router.get(
   authenticate,
   promoNotificationController.adminPromoNotificationList,
 );
+
 export default router;
