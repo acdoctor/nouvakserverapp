@@ -544,4 +544,10 @@ router.post(
   authenticate,
   promoNotificationController.sendPromoNotification,
 );
+
+router.get(
+  "/admin/promotion-notification/list",
+  authenticate,
+  promoNotificationController.adminPromoNotificationList,
+);
 export default router;
