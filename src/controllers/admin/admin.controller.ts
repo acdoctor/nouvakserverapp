@@ -1,3 +1,4 @@
+import { HTTP_CODE, MESSAGE } from "../../constants/responseConstants";
 import * as adminService from "../../services/admin/admin.service";
 import { Request, Response } from "express";
 
@@ -5,26 +6,28 @@ export const registerAdmin = async (req: Request, res: Response) => {
   try {
     const { countryCode, phoneNumber } = req.body;
     if (!countryCode || !phoneNumber) {
-      return res.status(400).json({
+      return res.status(HTTP_CODE.BAD_REQUEST).json({
         success: false,
-        message: "Country code and phone number are required.",
+        message: MESSAGE.FIELDS_REQUIRED,
       });
     }
 
     const admin = await adminService.createAdmin(countryCode, phoneNumber);
 
-    return res.status(201).json({
+    return res.status(HTTP_CODE.CREATED).json({
       success: true,
-      message: "OTP sent for verification",
+      message: MESSAGE.OTP_SENT,
       adminId: Object(admin._id),
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
-    const statusCode = message.includes("Admin already registered") ? 409 : 500;
+    const statusCode = message.includes("Admin already registered")
+      ? HTTP_CODE.CONFLICT
+      : HTTP_CODE.SERVER_ERROR;
 
     return res.status(statusCode).json({
       success: false,
-      error: statusCode === 409 ? message : "Something went wrong",
+      error: statusCode === HTTP_CODE.CONFLICT ? message : MESSAGE.SERVER_ERROR,
     });
   }
 };
@@ -34,9 +37,9 @@ export const loginRegisterAdmin = async (req: Request, res: Response) => {
     const { countryCode, phoneNumber } = req.body;
 
     if (!countryCode || !phoneNumber) {
-      return res.status(400).json({
+      return res.status(HTTP_CODE.BAD_REQUEST).json({
         success: false,
-        message: "Country code and phone number are required.",
+        message: MESSAGE.FIELDS_REQUIRED,
       });
     }
 
@@ -45,22 +48,22 @@ export const loginRegisterAdmin = async (req: Request, res: Response) => {
     if (!admin) {
       const newAdmin = await adminService.createAdmin(countryCode, phoneNumber);
 
-      return res.status(201).json({
+      return res.status(HTTP_CODE.CREATED).json({
         success: true,
-        message: "OTP sent for verification",
+        message: MESSAGE.OTP_SENT,
         adminId: newAdmin._id,
       });
     }
 
-    return res.status(200).json({
+    return res.status(HTTP_CODE.SUCCESS).json({
       success: true,
-      message: "OTP sent for login",
+      message: MESSAGE.LOGIN_OTP_SENT,
       adminId: admin._id,
     });
   } catch (err: unknown) {
-    return res.status(500).json({
+    return res.status(HTTP_CODE.SERVER_ERROR).json({
       success: false,
-      message: "Something went wrong",
+      message: MESSAGE.SERVER_ERROR,
       error: err instanceof Error ? err.message : String(err),
     });
   }
@@ -69,9 +72,9 @@ export const loginRegisterAdmin = async (req: Request, res: Response) => {
 export const getAdmins = async (_req: Request, res: Response) => {
   try {
     const admins = await adminService.fetchAdmins();
-    res.status(200).json({ success: true, data: admins });
+    res.status(HTTP_CODE.SUCCESS).json({ success: true, data: admins });
   } catch (err: unknown) {
-    res.status(500).json({
+    res.status(HTTP_CODE.SERVER_ERROR).json({
       success: false,
       error: err instanceof Error ? err.message : String(err),
     });
@@ -83,15 +86,15 @@ export const getAdminById = async (req: Request, res: Response) => {
     const { id } = req.params;
     if (!id) {
       return res
-        .status(400)
-        .json({ success: false, error: "Admin ID is required" });
+        .status(HTTP_CODE.BAD_REQUEST)
+        .json({ success: false, message: MESSAGE.ADMIN_ID_REQUIRED });
     }
 
     const admin = await adminService.fetchAdminById(id);
-    return res.status(200).json({
+    return res.status(HTTP_CODE.SUCCESS).json({
       success: true,
       data: admin,
-      message: "Admin fetched successfully",
+      message: MESSAGE.ADMIN_FETCHED,
     });
   } catch (err: unknown) {
     return res.status(404).json({
@@ -106,18 +109,18 @@ export const updateAdmin = async (req: Request, res: Response) => {
     const { id } = req.params;
     if (!id) {
       return res
-        .status(400)
+        .status(HTTP_CODE.BAD_REQUEST)
         .json({ success: false, error: "Admin ID is required" });
     }
 
     const admin = await adminService.updateAdminById(id, req.body);
-    return res.status(200).json({
+    return res.status(HTTP_CODE.SUCCESS).json({
       success: true,
       message: "Admin updated successfully",
       data: admin,
     });
   } catch (err: unknown) {
-    return res.status(400).json({
+    return res.status(HTTP_CODE.BAD_REQUEST).json({
       success: false,
       error: err instanceof Error ? err.message : String(err),
     });
@@ -129,16 +132,16 @@ export const deleteAdmin = async (req: Request, res: Response) => {
     const { id } = req.params;
     if (!id) {
       return res
-        .status(400)
+        .status(HTTP_CODE.BAD_REQUEST)
         .json({ success: false, error: "Admin ID is required" });
     }
 
     await adminService.deleteAdminById(id);
     return res
-      .status(200)
+      .status(HTTP_CODE.SUCCESS)
       .json({ success: true, message: "Admin deleted successfully" });
   } catch (err: unknown) {
-    res.status(400).json({
+    res.status(HTTP_CODE.BAD_REQUEST).json({
       success: false,
       error: err instanceof Error ? err.message : String(err),
     });

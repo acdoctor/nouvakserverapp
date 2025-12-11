@@ -58,8 +58,12 @@ export enum MESSAGE {
   USER_DEACTIVATED = "User deactivated",
 
   // Validation messages
+  FIELDS_REQUIRED = "Country code and phone number are required.",
   REQUIRED_FIELDS = "Phone number, country code, and username are required",
   NAME_REQUIRED_FOR_BOOKING = "Name is required for booking",
+
+  OTP_SENT = "OTP sent for verification",
+  LOGIN_OTP_SENT = "OTP sent for login",
 
   // Booking management messages
   BOOKING_ID_REQUIRED = "Booking ID is required",
@@ -75,6 +79,9 @@ export enum MESSAGE {
   BOOKING_AMOUNT = "Invalid or missing amount",
   BOOKING_CREATED = "Booking created successfully",
   BOOKING_UPDATED = "Booking updated successfully",
+
+  ADMIN_ID_REQUIRED = "Admin ID is required",
+  ADMIN_FETCHED = "Admin fetched successfully",
 
   // Technician management messages
   BOOKING_ID_AND_TECHNICIAN_ID_REQUIRED = "Booking Id and Technician Id are required",
