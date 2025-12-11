@@ -1,6 +1,6 @@
 // Boolean enum for response status
 
-export const RESPONSE_STATUS = {
+export const STATUS = {
   SUCCESS: true,
   FAIL: false,
 } as const;

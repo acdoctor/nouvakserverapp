@@ -1,4 +1,4 @@
-import { HTTP_CODE, MESSAGE } from "../../constants/responseConstants";
+import { HTTP_CODE, MESSAGE, STATUS } from "../../constants/responseConstants";
 import * as adminService from "../../services/admin/admin.service";
 import { Request, Response } from "express";
 
@@ -7,7 +7,7 @@ export const registerAdmin = async (req: Request, res: Response) => {
     const { countryCode, phoneNumber } = req.body;
     if (!countryCode || !phoneNumber) {
       return res.status(HTTP_CODE.BAD_REQUEST).json({
-        success: false,
+        success: STATUS.FAIL,
         message: MESSAGE.FIELDS_REQUIRED,
       });
     }
@@ -15,7 +15,7 @@ export const registerAdmin = async (req: Request, res: Response) => {
     const admin = await adminService.createAdmin(countryCode, phoneNumber);
 
     return res.status(HTTP_CODE.CREATED).json({
-      success: true,
+      success: STATUS.SUCCESS,
       message: MESSAGE.OTP_SENT,
       adminId: Object(admin._id),
     });
@@ -26,7 +26,7 @@ export const registerAdmin = async (req: Request, res: Response) => {
       : HTTP_CODE.SERVER_ERROR;
 
     return res.status(statusCode).json({
-      success: false,
+      success: STATUS.FAIL,
       error: statusCode === HTTP_CODE.CONFLICT ? message : MESSAGE.SERVER_ERROR,
     });
   }
@@ -38,7 +38,7 @@ export const loginRegisterAdmin = async (req: Request, res: Response) => {
 
     if (!countryCode || !phoneNumber) {
       return res.status(HTTP_CODE.BAD_REQUEST).json({
-        success: false,
+        success: STATUS.FAIL,
         message: MESSAGE.FIELDS_REQUIRED,
       });
     }
@@ -49,20 +49,20 @@ export const loginRegisterAdmin = async (req: Request, res: Response) => {
       const newAdmin = await adminService.createAdmin(countryCode, phoneNumber);
 
       return res.status(HTTP_CODE.CREATED).json({
-        success: true,
+        success: STATUS.SUCCESS,
         message: MESSAGE.OTP_SENT,
         adminId: newAdmin._id,
       });
     }
 
     return res.status(HTTP_CODE.SUCCESS).json({
-      success: true,
+      success: STATUS.SUCCESS,
       message: MESSAGE.LOGIN_OTP_SENT,
       adminId: admin._id,
     });
   } catch (err: unknown) {
     return res.status(HTTP_CODE.SERVER_ERROR).json({
-      success: false,
+      success: STATUS.FAIL,
       message: MESSAGE.SERVER_ERROR,
       error: err instanceof Error ? err.message : String(err),
     });
@@ -72,10 +72,12 @@ export const loginRegisterAdmin = async (req: Request, res: Response) => {
 export const getAdmins = async (_req: Request, res: Response) => {
   try {
     const admins = await adminService.fetchAdmins();
-    res.status(HTTP_CODE.SUCCESS).json({ success: true, data: admins });
+    res
+      .status(HTTP_CODE.SUCCESS)
+      .json({ success: STATUS.SUCCESS, data: admins });
   } catch (err: unknown) {
     res.status(HTTP_CODE.SERVER_ERROR).json({
-      success: false,
+      success: STATUS.FAIL,
       error: err instanceof Error ? err.message : String(err),
     });
   }
@@ -87,18 +89,18 @@ export const getAdminById = async (req: Request, res: Response) => {
     if (!id) {
       return res
         .status(HTTP_CODE.BAD_REQUEST)
-        .json({ success: false, message: MESSAGE.ADMIN_ID_REQUIRED });
+        .json({ success: STATUS.FAIL, message: MESSAGE.ADMIN_ID_REQUIRED });
     }
 
     const admin = await adminService.fetchAdminById(id);
     return res.status(HTTP_CODE.SUCCESS).json({
-      success: true,
+      success: STATUS.SUCCESS,
       data: admin,
       message: MESSAGE.ADMIN_FETCHED,
     });
   } catch (err: unknown) {
     return res.status(404).json({
-      success: false,
+      success: STATUS.FAIL,
       error: err instanceof Error ? err.message : String(err),
     });
   }
@@ -110,18 +112,18 @@ export const updateAdmin = async (req: Request, res: Response) => {
     if (!id) {
       return res
         .status(HTTP_CODE.BAD_REQUEST)
-        .json({ success: false, error: "Admin ID is required" });
+        .json({ success: STATUS.FAIL, error: "Admin ID is required" });
     }
 
     const admin = await adminService.updateAdminById(id, req.body);
     return res.status(HTTP_CODE.SUCCESS).json({
-      success: true,
+      success: STATUS.SUCCESS,
       message: "Admin updated successfully",
       data: admin,
     });
   } catch (err: unknown) {
     return res.status(HTTP_CODE.BAD_REQUEST).json({
-      success: false,
+      success: STATUS.FAIL,
       error: err instanceof Error ? err.message : String(err),
     });
   }
@@ -133,16 +135,16 @@ export const deleteAdmin = async (req: Request, res: Response) => {
     if (!id) {
       return res
         .status(HTTP_CODE.BAD_REQUEST)
-        .json({ success: false, error: "Admin ID is required" });
+        .json({ success: STATUS.FAIL, error: "Admin ID is required" });
     }
 
     await adminService.deleteAdminById(id);
     return res
       .status(HTTP_CODE.SUCCESS)
-      .json({ success: true, message: "Admin deleted successfully" });
+      .json({ success: STATUS.SUCCESS, message: "Admin deleted successfully" });
   } catch (err: unknown) {
     res.status(HTTP_CODE.BAD_REQUEST).json({
-      success: false,
+      success: STATUS.FAIL,
       error: err instanceof Error ? err.message : String(err),
     });
   }
