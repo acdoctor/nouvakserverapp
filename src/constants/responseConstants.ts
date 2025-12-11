@@ -24,7 +24,8 @@ export enum HTTP_CODE {
 // String enum for messages
 export enum MESSAGE {
   // General messages
-  SERVER_ERROR = "Internal Server Error",
+  SERVER_ERROR = "Something went wrong",
+  INTERNAL_SERVER_ERROR = "Internal Server Error",
   NOT_FOUND = "No data found",
 
   // User messages
@@ -106,4 +107,10 @@ export enum MESSAGE {
   TOOL_ID_REQUIRED = "Tool ID is required",
   TOOL_NOT_FOUND = "Tool not found",
   TOOL_REMOVED = "Tool removed successfully",
+
+  // Promotion notification messages
+  PROMO_REQUIRED_FIELDS = "Title and body are required",
+  PROMO_SENT_SUCCESS = "Promotional notification sent successfully",
+  FETCH_SUCCESS = "Promotional notifications fetched successfully",
+  FETCH_FAILED = "Failed to fetch promotional notifications",
 }

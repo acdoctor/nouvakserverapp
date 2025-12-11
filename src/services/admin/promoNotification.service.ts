@@ -1,4 +1,3 @@
-// services/notification.service.ts
 import User from "../../models/user/user.model";
 import { Notification } from "../../models/notification/notification.model";
 import {

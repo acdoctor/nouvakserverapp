@@ -1,25 +1,26 @@
-// controllers/notification.controller.ts
 import { Request, Response } from "express";
 import {
   getAdminPromoNotificationListService,
   sendPromoNotificationService,
 } from "../../services/admin/promoNotification.service";
+import { HTTP_CODE, MESSAGE } from "../../constants/responseConstants";
+
 export const sendPromoNotification = async (req: Request, res: Response) => {
   try {
     const { title, body } = req.body;
 
     if (!title || !body) {
-      return res.status(400).json({
+      return res.status(HTTP_CODE.BAD_REQUEST).json({
         success: false,
-        message: "Title and body are required",
+        message: MESSAGE.PROMO_REQUIRED_FIELDS,
       });
     }
 
     const result = await sendPromoNotificationService(title, body);
 
-    return res.status(200).json({
+    return res.status(HTTP_CODE.SUCCESS).json({
       success: true,
-      message: "Promotional notification sent successfully",
+      message: MESSAGE.PROMO_SENT_SUCCESS,
       data: {
         sentCount: result.sentCount,
         totalUsers: result.totalUsers,
@@ -32,10 +33,11 @@ export const sendPromoNotification = async (req: Request, res: Response) => {
       },
     });
   } catch (error: unknown) {
-    return res.status(500).json({
+    return res.status(HTTP_CODE.SERVER_ERROR).json({
       success: false,
-      message: "Something went wrong",
-      error: error instanceof Error ? error.message : "Internal server error",
+      message: MESSAGE.SERVER_ERROR,
+      error:
+        error instanceof Error ? error.message : MESSAGE.INTERNAL_SERVER_ERROR,
     });
   }
 };
@@ -60,18 +62,20 @@ export const adminPromoNotificationList = async (
       sortOrder,
     );
 
-    return res.status(200).json({
+    return res.status(HTTP_CODE.SUCCESS).json({
       success: true,
+      message: MESSAGE.FETCH_SUCCESS,
       data: notifications,
       count: total,
       page,
       limit,
     });
   } catch (error: unknown) {
-    return res.status(500).json({
+    return res.status(HTTP_CODE.SERVER_ERROR).json({
       success: false,
-      message: "Failed to fetch promotional notifications",
-      error: error instanceof Error ? error.message : "Unknown error",
+      message: MESSAGE.FETCH_FAILED,
+      error:
+        error instanceof Error ? error.message : MESSAGE.INTERNAL_SERVER_ERROR,
     });
   }
 };
