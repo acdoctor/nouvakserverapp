@@ -112,7 +112,7 @@ export const updateAdmin = async (req: Request, res: Response) => {
     if (!id) {
       return res
         .status(HTTP_CODE.BAD_REQUEST)
-        .json({ success: STATUS.FAIL, error: "Admin ID is required" });
+        .json({ success: STATUS.FAIL, message: MESSAGE.ADMIN_ID_REQUIRED });
     }
 
     const admin = await adminService.updateAdminById(id, req.body);
@@ -135,13 +135,13 @@ export const deleteAdmin = async (req: Request, res: Response) => {
     if (!id) {
       return res
         .status(HTTP_CODE.BAD_REQUEST)
-        .json({ success: STATUS.FAIL, error: "Admin ID is required" });
+        .json({ success: STATUS.FAIL, message: MESSAGE.ADMIN_ID_REQUIRED });
     }
 
     await adminService.deleteAdminById(id);
     return res
       .status(HTTP_CODE.SUCCESS)
-      .json({ success: STATUS.SUCCESS, message: "Admin deleted successfully" });
+      .json({ success: STATUS.SUCCESS, message: MESSAGE.ADMIN_DELETED });
   } catch (err: unknown) {
     res.status(HTTP_CODE.BAD_REQUEST).json({
       success: STATUS.FAIL,

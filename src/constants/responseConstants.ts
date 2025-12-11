@@ -82,6 +82,7 @@ export enum MESSAGE {
 
   ADMIN_ID_REQUIRED = "Admin ID is required",
   ADMIN_FETCHED = "Admin fetched successfully",
+  ADMIN_DELETED = "Admin deleted successfully",
 
   // Technician management messages
   BOOKING_ID_AND_TECHNICIAN_ID_REQUIRED = "Booking Id and Technician Id are required",
